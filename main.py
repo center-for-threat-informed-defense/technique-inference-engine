@@ -1,6 +1,8 @@
 import numpy as np
 import json
 from mitreattack.stix20 import MitreAttackData
+import tensorflow as tf
+from model import FactorizationRecommender
 
 
 def get_mitre_technique_ids(stix_filepath: str) -> frozenset[str]:
@@ -22,15 +24,17 @@ def get_mitre_technique_ids(stix_filepath: str) -> frozenset[str]:
 def get_campaign_techniques(filepath: str) -> tuple[frozenset[str]]:
     """Gets a set of MITRE technique ids present in each campaign."""
 
-    data = json.load(filepath)
-    campaigns = data["technique_chains"]
+    with open(filepath) as f:
+        data = json.load(f)
+
+    campaigns = data["bags_of_techniques"]
 
     ret = []
 
     for campaign in campaigns:
 
-        techniques = campaign["list_of_techniques"]
-        ret.append(frozenset(techniques))
+        techniques = campaign["mitre_techniques"]
+        ret.append(frozenset(techniques.keys()))
 
     return ret
         
@@ -39,27 +43,35 @@ def get_campaign_techniques(filepath: str) -> tuple[frozenset[str]]:
 def main():
     # want matrix of campaigns on horizontal, techniques on vertical
     all_mitre_technique_ids = tuple(get_mitre_technique_ids("enterprise-attack.json"))
-    num_techniques = len(all_mitre_technique_ids)
     mitre_technique_ids_to_index = {all_mitre_technique_ids[i]: i for i in range(len(all_mitre_technique_ids))}
 
-    campaigns = get_campaign_techniques("data/combined_dataset.json")
+    campaigns = get_campaign_techniques("data/combined_dataset_full_frequency.json")
 
-    campaign_vectors = []
+    indices = []
+    values = []
 
     # for each campaign, make a vector, filling in each present technique with a 1
-    for campaign in campaigns:
-        
-        technique_vector = np.zeros((num_techniques,))
+    for i in range(len(campaigns)):
+
+        campaign = campaigns[i]
 
         for mitre_technique_id in campaign:
-            index = mitre_technique_ids_to_index[mitre_technique_id]
-            technique_vector[index] = 1
-        
-        campaign_vectors.append(technique_vector)
+            if mitre_technique_id in mitre_technique_ids_to_index:
+                # campaign id, technique id
+                index = [i, mitre_technique_ids_to_index[mitre_technique_id]]
+                
+                indices.append(index)
+                values.append(1)
 
-    data = np.vstack(campaign_vectors)
+    data = tf.SparseTensor(
+        indices=indices,
+        values=values,
+        dense_shape=(len(campaigns), len(all_mitre_technique_ids))
+    )
 
     # train
+    model = FactorizationRecommender(m=len(campaigns), n=len(all_mitre_technique_ids), k=10)
+    print(model.train(data, num_iterations=1000, learning_rate=10.))
 
     
 
