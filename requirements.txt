@@ -1,4 +1,0 @@
-mitreattack_python==3.0.2
-numpy==1.26.4
-tensorflow==2.15.0
-tensorflow_macos==2.15.0

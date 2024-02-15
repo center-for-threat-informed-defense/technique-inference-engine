@@ -1,8 +1,7 @@
-import numpy as np
 import json
 from mitreattack.stix20 import MitreAttackData
 import tensorflow as tf
-from model import FactorizationRecommender
+from recommender import FactorizationRecommender
 import random
 import math
 
@@ -64,10 +63,10 @@ def train_test_split(indices: list, values: list, test_ratio: float=0.1) -> tupl
 
 def main():
     # want matrix of campaigns on horizontal, techniques on vertical
-    all_mitre_technique_ids = tuple(get_mitre_technique_ids("enterprise-attack.json"))
+    all_mitre_technique_ids = tuple(get_mitre_technique_ids("../enterprise-attack.json"))
     mitre_technique_ids_to_index = {all_mitre_technique_ids[i]: i for i in range(len(all_mitre_technique_ids))}
 
-    campaigns = get_campaign_techniques("data/combined_dataset_full_frequency.json")
+    campaigns = get_campaign_techniques("../data/combined_dataset_full_frequency.json")
 
     indices = []
     values = []
@@ -81,7 +80,7 @@ def main():
             if mitre_technique_id in mitre_technique_ids_to_index:
                 # campaign id, technique id
                 index = [i, mitre_technique_ids_to_index[mitre_technique_id]]
-                
+
                 indices.append(index)
                 values.append(1)
 
