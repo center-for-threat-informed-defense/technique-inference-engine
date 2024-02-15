@@ -3,11 +3,13 @@ import json
 from mitreattack.stix20 import MitreAttackData
 import tensorflow as tf
 from model import FactorizationRecommender
+import random
+import math
 
 
 def get_mitre_technique_ids(stix_filepath: str) -> frozenset[str]:
     """Gets all MITRE technique ids."""
-    mitre_attack_data = MitreAttackData("enterprise-attack.json")
+    mitre_attack_data = MitreAttackData(stix_filepath)
     techniques = mitre_attack_data.get_techniques(remove_revoked_deprecated=True)
 
     all_technique_ids = set()
@@ -37,7 +39,27 @@ def get_campaign_techniques(filepath: str) -> tuple[frozenset[str]]:
         ret.append(frozenset(techniques.keys()))
 
     return ret
-        
+
+def train_test_split(indices: list, values: list, test_ratio: float=0.1) -> tuple:
+    n = len(indices)
+    assert len(values) == n
+
+    indices_for_test_set = frozenset(random.sample(range(n), k=math.floor(test_ratio * n)))
+
+    train_indices = []
+    test_indices = []
+    train_values = []
+    test_values = []
+
+    for i in range(n):
+        if i in indices_for_test_set:
+            test_indices.append(indices[i])
+            test_values.append(values[i])
+        else:
+            train_indices.append(indices[i])
+            train_values.append(values[i])
+
+    return train_indices, train_values, test_indices, test_values
 
 
 def main():
@@ -63,23 +85,25 @@ def main():
                 indices.append(index)
                 values.append(1)
 
-    data = tf.SparseTensor(
-        indices=indices,
-        values=values,
+    train_indices, train_values, test_indices, test_values = train_test_split(indices, values)
+
+    training_data = tf.SparseTensor(
+        indices=train_indices,
+        values=train_values,
+        dense_shape=(len(campaigns), len(all_mitre_technique_ids))
+    )
+    test_data = tf.SparseTensor(
+        indices=test_indices,
+        values=test_values,
         dense_shape=(len(campaigns), len(all_mitre_technique_ids))
     )
 
     # train
     model = FactorizationRecommender(m=len(campaigns), n=len(all_mitre_technique_ids), k=10)
-    print(model.train(data, num_iterations=1000, learning_rate=10.))
+    model.fit(training_data, num_iterations=1000, learning_rate=10.)
 
-    
-
-    
-
-    
-
-
+    evaluation = model.evaluate(test_data)
+    print(evaluation)
 
 
 if __name__ == "__main__":

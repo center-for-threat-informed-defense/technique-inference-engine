@@ -1,15 +1,31 @@
 # Code adapted from https://colab.research.google.com/github/google/eng-edu/blob/main/ml/recommendation-systems/recommendation-systems.ipynb?utm_source=ss-recommendation-systems&utm_campaign=colab-external&utm_medium=referral&utm_content=recommendation-systems
 
 import collections
-import numpy as np
 import tensorflow as tf
 
 tf.compat.v1.disable_v2_behavior()
+tf.compat.v1.disable_eager_execution()
 
 class FactorizationRecommender:
+    """A matrix factorization collaborative filtering recommender model."""
+
+    # Abstraction function:
+    #   AF(m, n, k) = a matrix factorization recommender model
+    #       on m entities, n items to recommend, and 
+    #       embedding dimension k (a hyperparameter)
+    # Rep invariant:
+    #   - U.shape[1] == V.shape[1]
+    #   - U and V are 2D
+    #   - U.shape[0] > 0
+    #   - U.shape[1] > 0
+    #   - V.shape[0] > 0
+    #   - V.shape[1] > 0
+    # Safety from rep exposure:
+    #   - U and V are private and not reassigned
 
     def __init__(self, m, n, k):
-        """
+        """Initializes a FactorizationRecommender object.
+
         Args:
             m: number of individual embeddings
             n: number of item embeddings
@@ -25,18 +41,26 @@ class FactorizationRecommender:
         self._session = None
         self._U = U
         self._V = V
-        self._embedding_vars = {
-            "user_id": U,
-            "movie_id": V
-        }
-        self._embeddings = {k: None for k in self._embedding_vars}
 
         self._checkrep()
 
     def _checkrep(self):
         """Asserts the rep invariant."""
-        pass
+        #   - U.shape[1] == V.shape[1]
+        assert self._U.shape[1] == self._V.shape[1]
+        #   - U and V are 2D
+        assert len(self._U.shape) == 2
+        assert len(self._V.shape) == 2
+        #   - U.shape[0] > 0
+        assert self._U.shape[0] > 0
+        #   - U.shape[1] > 0
+        assert self._U.shape[1] > 0
+        #   - V.shape[0] > 0
+        assert self._V.shape[0] > 0
+        #   - V.shape[1] > 0
+        assert self._V.shape[1] > 0
 
+    @tf.function
     def _calculate_mean_square_error(self, data: tf.SparseTensor, U: tf.Tensor, V: tf.Tensor):
         """Calculates the mean squared error between observed values in the
         data and predictions from UV^T.
@@ -60,13 +84,20 @@ class FactorizationRecommender:
         loss = tf.losses.mean_squared_error(data.values, predictions)
         return loss
 
-    def train(self, data: np.ndarray, num_iterations: int, learning_rate: float):
-        """Trains the model."""
+    def fit(self, data: tf.SparseTensor, num_iterations: int, learning_rate: float):
+        """Fits the model to data.
+        
+        Args:
+            data: an mxn tensor of training data
+            num_iterations: number of training iterations to execute
+            learning_rate: the learning rate
+        """
         # preliminaries
         optimizer = tf.compat.v1.train.GradientDescentOptimizer
+
         loss = self._calculate_mean_square_error(data, self._U, self._V)
         metrics = [{
-            'train_error': loss
+            'train_error': loss,
         }]
 
         with loss.graph.as_default():
@@ -93,17 +124,27 @@ class FactorizationRecommender:
             for i in range(num_iterations + 1):
                 _, results = self._session.run((train_op, metrics))
                 if (i % 10 == 0) or i == num_iterations:
-                    print("\r iteration %d: " % i + ", ".join(
-                            ["%s=%f" % (k, v) for r in results for k, v in r.items()]),
-                            end='')
                     iterations.append(i)
                     for metric_val, result in zip(metrics_vals, results):
                         for k, v in result.items():
                             metric_val[k].append(v)
+    
+    def evaluate(self, test_data: tf.SparseTensor) -> float:
+        """Evaluates the solution.
 
-            for k, v in self._embedding_vars.items():
-                self._embeddings[k] = v.eval()
+        Requires that the model has been trained.
+        
+        Args:
+            test_data: mxn tensor on which to evaluate the model.
+                Requires that mxn match the dimensions of the training tensor and
+                each row i and column j correspond to the same entity and item
+                in the training tensor, respectively.
 
-        return results
+        Returns: the mean squared error of the test data.
+        """
 
+        with self._session as sess:
+            error = self._calculate_mean_square_error(test_data, self._U, self._V).eval()
+
+        return error
  
