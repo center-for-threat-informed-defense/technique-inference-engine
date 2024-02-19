@@ -6,12 +6,13 @@ import tensorflow as tf
 tf.compat.v1.disable_v2_behavior()
 tf.compat.v1.disable_eager_execution()
 
+
 class FactorizationRecommender:
     """A matrix factorization collaborative filtering recommender model."""
 
     # Abstraction function:
     #   AF(m, n, k) = a matrix factorization recommender model
-    #       on m entities, n items to recommend, and 
+    #       on m entities, n items to recommend, and
     #       embedding dimension k (a hyperparameter)
     # Rep invariant:
     #   - U.shape[1] == V.shape[1]
@@ -33,10 +34,8 @@ class FactorizationRecommender:
         """
         init_stddev = 0.5
 
-        U = tf.Variable(tf.random.normal(
-            [m, k], stddev=init_stddev))
-        V = tf.Variable(tf.random.normal(
-            [n, k], stddev=init_stddev))
+        U = tf.Variable(tf.random.normal([m, k], stddev=init_stddev))
+        V = tf.Variable(tf.random.normal([n, k], stddev=init_stddev))
 
         self._session = None
         self._U = U
@@ -61,7 +60,9 @@ class FactorizationRecommender:
         assert self._V.shape[1] > 0
 
     @tf.function
-    def _calculate_mean_square_error(self, data: tf.SparseTensor, U: tf.Tensor, V: tf.Tensor):
+    def _calculate_mean_square_error(
+        self, data: tf.SparseTensor, U: tf.Tensor, V: tf.Tensor
+    ):
         """Calculates the mean squared error between observed values in the
         data and predictions from UV^T.
 
@@ -78,15 +79,13 @@ class FactorizationRecommender:
             A scalar Tensor representing the MSE between the true ratings and the
             model's predictions.
         """
-        predictions = tf.gather_nd(
-            tf.matmul(U, V, transpose_b=True),
-            data.indices)
+        predictions = tf.gather_nd(tf.matmul(U, V, transpose_b=True), data.indices)
         loss = tf.losses.mean_squared_error(data.values, predictions)
         return loss
 
     def fit(self, data: tf.SparseTensor, num_iterations: int, learning_rate: float):
         """Fits the model to data.
-        
+
         Args:
             data: an mxn tensor of training data
             num_iterations: number of training iterations to execute
@@ -96,9 +95,11 @@ class FactorizationRecommender:
         optimizer = tf.compat.v1.train.GradientDescentOptimizer
 
         loss = self._calculate_mean_square_error(data, self._U, self._V)
-        metrics = [{
-            'train_error': loss,
-        }]
+        metrics = [
+            {
+                "train_error": loss,
+            }
+        ]
 
         with loss.graph.as_default():
             opt = optimizer(learning_rate)
@@ -106,7 +107,8 @@ class FactorizationRecommender:
             train_op = opt.minimize(loss)
             local_init_op = tf.group(
                 tf.compat.v1.variables_initializer(opt.variables()),
-                tf.compat.v1.local_variables_initializer())
+                tf.compat.v1.local_variables_initializer(),
+            )
             if self._session is None:
                 self._session = tf.compat.v1.Session()
                 with self._session.as_default():
@@ -128,12 +130,12 @@ class FactorizationRecommender:
                     for metric_val, result in zip(metrics_vals, results):
                         for k, v in result.items():
                             metric_val[k].append(v)
-    
+
     def evaluate(self, test_data: tf.SparseTensor) -> float:
         """Evaluates the solution.
 
         Requires that the model has been trained.
-        
+
         Args:
             test_data: mxn tensor on which to evaluate the model.
                 Requires that mxn match the dimensions of the training tensor and
@@ -144,7 +146,8 @@ class FactorizationRecommender:
         """
 
         with self._session as sess:
-            error = self._calculate_mean_square_error(test_data, self._U, self._V).eval()
+            error = self._calculate_mean_square_error(
+                test_data, self._U, self._V
+            ).eval()
 
         return error
- 
