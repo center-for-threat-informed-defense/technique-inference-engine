@@ -1,8 +1,8 @@
 # Code adapted from https://colab.research.google.com/github/google/eng-edu/blob/main/ml/recommendation-systems/recommendation-systems.ipynb?utm_source=ss-recommendation-systems&utm_campaign=colab-external&utm_medium=referral&utm_content=recommendation-systems
 
-import collections
 import tensorflow as tf
 import numpy as np
+import keras
 
 tf.config.run_functions_eagerly(True)
 tf.compat.v1.enable_eager_execution()
@@ -42,7 +42,7 @@ class FactorizationRecommender:
         self._U = U
         self._V = V
 
-        self._loss = tf.keras.losses.MeanSquaredError()
+        self._loss = keras.losses.MeanSquaredError()
 
         self._checkrep()
 
@@ -117,7 +117,7 @@ class FactorizationRecommender:
             learning_rate: the learning rate
         """
         # preliminaries
-        optimizer = tf.keras.optimizers.legacy.SGD(learning_rate=learning_rate)
+        optimizer = keras.optimizers.legacy.SGD(learning_rate=learning_rate)
 
         for i in range(num_iterations + 1):
             with tf.GradientTape() as tape:
