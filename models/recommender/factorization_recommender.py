@@ -64,6 +64,10 @@ class FactorizationRecommender:
         #   - loss is not None
         assert self._loss is not None
 
+    def _get_estimated_matrix(self) -> tf.Tensor:
+        """Gets the estimated matrix UV^T."""
+        return tf.matmul(self._U, self._V, transpose_b=True)
+
     def _predict(self, data: tf.SparseTensor) -> tf.Tensor:
         """Predicts the results for data.
 
@@ -84,7 +88,7 @@ class FactorizationRecommender:
         # of data
         # gather_nd will get those entries in order and
         # add to an array
-        return tf.gather_nd(tf.matmul(self._U, self._V, transpose_b=True), data.indices)
+        return tf.gather_nd(self._get_estimated_matrix(), data.indices)
 
     def _calculate_mean_square_error(self, data: tf.SparseTensor) -> tf.Tensor:
         """Calculates the mean squared error between observed values in the
@@ -143,3 +147,14 @@ class FactorizationRecommender:
         """
         error = self._calculate_mean_square_error(test_data)
         return error.numpy()
+
+    def predict(self) -> np.ndarray:
+        """Gets the model predictions.
+
+        The predictions consist of the estimated matrix A_hat of the truth
+        matrix A, of which the training data contains a sparse subset of the entries.
+
+        Returns:
+            An mxn array of values.
+        """
+        return self._get_estimated_matrix().numpy()
