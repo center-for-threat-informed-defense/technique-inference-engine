@@ -62,7 +62,7 @@ class FactorizationRecommender:
         #   - V.shape[1] > 0
         assert self._V.shape[1] > 0
         #   - loss is not None
-        assert self._loss is not None
+        # assert self._loss is not None
 
     def _get_estimated_matrix(self) -> tf.Tensor:
         """Gets the estimated matrix UV^T."""
@@ -78,17 +78,62 @@ class FactorizationRecommender:
         of entries as the training data.
 
         Args:
-            data: An mxn sparse tensor of data.
+            data: An mxn sparse tensor of data containing p nonzero entries.
 
         Returns:
-            A tensor of predictions.
+            A length-p tensor of predictions, where predictions[i] corresponds to the
+                prediction for index data.indices[i].
         """
-
         # indices contains indices of non-null entries
         # of data
         # gather_nd will get those entries in order and
         # add to an array
         return tf.gather_nd(self._get_estimated_matrix(), data.indices)
+
+    def _calculate_regularized_loss(
+        self,
+        data: tf.SparseTensor,
+        predictions: tf.Tensor,
+        regularization_coefficient: float,
+        gravity_coefficient: float,
+    ) -> float:
+        """Gets the regularized loss function.
+
+        The regularized loss is the sum of:
+        - The MSE between data and predictions.
+        - A regularization term which is the average of the squared norm of each
+            entity embedding, plus the average of the squared norm of each item embedding
+            r = 1/m \sum_i ||U_i||^2 + 1/n \sum_j ||V_j||^2
+        - A gravity term which is the average of the squares of all predictions.
+            g = 1/(MN) \sum_{ij} (UV^T)_{ij}^2
+
+        Args:
+            data: the data on which to evaluate.  Predictions will be evaluated for
+                every non-null entry of data.
+            predictions: the model predictions on which to evaluate.  Requires that
+                predictions[i] contains the predictions for data.indices[i].
+            regularization_coefficient: the coefficient for the regularization component
+                of the loss function.
+            gravity_coefficient: the coefficient for the gravity component of the loss
+                function.
+
+        Returns:
+            The regularized loss.
+        """
+        regularization_loss = regularization_coefficient * (
+            tf.reduce_sum(self._U * self._U) / self._U.shape[0]
+            + tf.reduce_sum(self._V * self._V) / self._V.shape[0]
+        )
+
+        gravity = (
+            1.0
+            / (self._U.shape[0] * self._V.shape[0])
+            * tf.reduce_sum(tf.square(tf.matmul(self._U, self._V, transpose_b=True)))
+        )
+
+        gravity_loss = gravity_coefficient * gravity
+
+        return self._loss(data, predictions) + regularization_loss + gravity_loss
 
     def _calculate_mean_square_error(self, data: tf.SparseTensor) -> tf.Tensor:
         """Calculates the mean squared error between observed values in the
@@ -98,11 +143,7 @@ class FactorizationRecommender:
         where Omega is the set of observed entries in training_data.
 
         Args:
-            data: A matrix of observations of dense_shape [N, M]
-            UY: A dense Tensor of shape [N, k] where k is the embedding
-            dimension, such that U_i is the embedding of element i.
-            V: A dense Tensor of shape [M, k] where k is the embedding
-            dimension, such that V_j is the embedding of element j.
+            data: A matrix of observations of dense_shape m, n
 
         Returns:
             A scalar Tensor representing the MSE between the true ratings and the
@@ -112,7 +153,14 @@ class FactorizationRecommender:
         loss = self._loss(data.values, predictions)
         return loss
 
-    def fit(self, data: tf.SparseTensor, num_iterations: int, learning_rate: float):
+    def fit(
+        self,
+        data: tf.SparseTensor,
+        num_iterations: int,
+        learning_rate: float,
+        regularization_coefficient: float,
+        gravity_coefficient: float,
+    ):
         """Fits the model to data.
 
         Args:
@@ -125,10 +173,15 @@ class FactorizationRecommender:
 
         for i in range(num_iterations + 1):
             with tf.GradientTape() as tape:
-                predictions = tf.gather_nd(
-                    tf.matmul(self._U, self._V, transpose_b=True), data.indices
+                # need to predict here and not in loss so doesn't affect gradient
+                predictions = self._predict(data)
+
+                loss = self._calculate_regularized_loss(
+                    data.values,
+                    predictions,
+                    regularization_coefficient,
+                    gravity_coefficient,
                 )
-                loss = self._loss(data.values, predictions)
             gradients = tape.gradient(loss, [self._U, self._V])
             optimizer.apply_gradients(zip(gradients, [self._U, self._V]))
 
