@@ -11,7 +11,9 @@ packages = [
 license = "Apache"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.10, <3.12"
+tensorflow = "~2.15"
+mitreattack-python = "^3.0.2"
 
 [tool.poetry.group.dev.dependencies]
 bandit = "1.7.0"
