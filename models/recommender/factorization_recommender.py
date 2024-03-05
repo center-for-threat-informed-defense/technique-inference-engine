@@ -1,10 +1,11 @@
 # Code adapted from https://colab.research.google.com/github/google/eng-edu/blob/main/ml/recommendation-systems/recommendation-systems.ipynb?utm_source=ss-recommendation-systems&utm_campaign=colab-external&utm_medium=referral&utm_content=recommendation-systems
 
-import collections
 import tensorflow as tf
+import numpy as np
+import keras
 
-tf.compat.v1.disable_v2_behavior()
-tf.compat.v1.disable_eager_execution()
+tf.config.run_functions_eagerly(True)
+tf.compat.v1.enable_eager_execution()
 
 
 class FactorizationRecommender:
@@ -21,6 +22,7 @@ class FactorizationRecommender:
     #   - U.shape[1] > 0
     #   - V.shape[0] > 0
     #   - V.shape[1] > 0
+    #   - loss is not None
     # Safety from rep exposure:
     #   - U and V are private and not reassigned
 
@@ -28,7 +30,7 @@ class FactorizationRecommender:
         """Initializes a FactorizationRecommender object.
 
         Args:
-            m: number of individual embeddings
+            m: number of entity embeddings
             n: number of item embeddings
             k: embedding dimension
         """
@@ -37,9 +39,10 @@ class FactorizationRecommender:
         U = tf.Variable(tf.random.normal([m, k], stddev=init_stddev))
         V = tf.Variable(tf.random.normal([n, k], stddev=init_stddev))
 
-        self._session = None
         self._U = U
         self._V = V
+
+        self._loss = keras.losses.MeanSquaredError()
 
         self._checkrep()
 
@@ -58,11 +61,36 @@ class FactorizationRecommender:
         assert self._V.shape[0] > 0
         #   - V.shape[1] > 0
         assert self._V.shape[1] > 0
+        #   - loss is not None
+        assert self._loss is not None
 
-    @tf.function
-    def _calculate_mean_square_error(
-        self, data: tf.SparseTensor, U: tf.Tensor, V: tf.Tensor
-    ):
+    def _get_estimated_matrix(self) -> tf.Tensor:
+        """Gets the estimated matrix UV^T."""
+        return tf.matmul(self._U, self._V, transpose_b=True)
+
+    def _predict(self, data: tf.SparseTensor) -> tf.Tensor:
+        """Predicts the results for data.
+
+        Requires that data be the same shape as the training data.
+        Where each row corresponds to the same entity as the training data
+        and each column represents the same item to recommend.  However,
+        the tensor may be sparse and contain more, fewer, or the same number
+        of entries as the training data.
+
+        Args:
+            data: An mxn sparse tensor of data.
+
+        Returns:
+            A tensor of predictions.
+        """
+
+        # indices contains indices of non-null entries
+        # of data
+        # gather_nd will get those entries in order and
+        # add to an array
+        return tf.gather_nd(self._get_estimated_matrix(), data.indices)
+
+    def _calculate_mean_square_error(self, data: tf.SparseTensor) -> tf.Tensor:
         """Calculates the mean squared error between observed values in the
         data and predictions from UV^T.
 
@@ -75,12 +103,13 @@ class FactorizationRecommender:
             dimension, such that U_i is the embedding of element i.
             V: A dense Tensor of shape [M, k] where k is the embedding
             dimension, such that V_j is the embedding of element j.
+
         Returns:
             A scalar Tensor representing the MSE between the true ratings and the
             model's predictions.
         """
-        predictions = tf.gather_nd(tf.matmul(U, V, transpose_b=True), data.indices)
-        loss = tf.losses.mean_squared_error(data.values, predictions)
+        predictions = self._predict(data)
+        loss = self._loss(data.values, predictions)
         return loss
 
     def fit(self, data: tf.SparseTensor, num_iterations: int, learning_rate: float):
@@ -92,44 +121,16 @@ class FactorizationRecommender:
             learning_rate: the learning rate
         """
         # preliminaries
-        optimizer = tf.compat.v1.train.GradientDescentOptimizer
+        optimizer = keras.optimizers.legacy.SGD(learning_rate=learning_rate)
 
-        loss = self._calculate_mean_square_error(data, self._U, self._V)
-        metrics = [
-            {
-                "train_error": loss,
-            }
-        ]
-
-        with loss.graph.as_default():
-            opt = optimizer(learning_rate)
-            # TODO what is impact of defining loss lcoally rather than class var
-            train_op = opt.minimize(loss)
-            local_init_op = tf.group(
-                tf.compat.v1.variables_initializer(opt.variables()),
-                tf.compat.v1.local_variables_initializer(),
-            )
-            if self._session is None:
-                self._session = tf.compat.v1.Session()
-                with self._session.as_default():
-                    self._session.run(tf.compat.v1.global_variables_initializer())
-                    self._session.run(tf.compat.v1.tables_initializer())
-                    tf.compat.v1.train.start_queue_runners()
-
-        with self._session.as_default():
-            local_init_op.run()
-            iterations = []
-            # metrics = self._metrics or ({},)
-            metrics_vals = [collections.defaultdict(list) for _ in metrics]
-
-            # Train and append results.
-            for i in range(num_iterations + 1):
-                _, results = self._session.run((train_op, metrics))
-                if (i % 10 == 0) or i == num_iterations:
-                    iterations.append(i)
-                    for metric_val, result in zip(metrics_vals, results):
-                        for k, v in result.items():
-                            metric_val[k].append(v)
+        for i in range(num_iterations + 1):
+            with tf.GradientTape() as tape:
+                predictions = tf.gather_nd(
+                    tf.matmul(self._U, self._V, transpose_b=True), data.indices
+                )
+                loss = self._loss(data.values, predictions)
+            gradients = tape.gradient(loss, [self._U, self._V])
+            optimizer.apply_gradients(zip(gradients, [self._U, self._V]))
 
     def evaluate(self, test_data: tf.SparseTensor) -> float:
         """Evaluates the solution.
@@ -144,10 +145,16 @@ class FactorizationRecommender:
 
         Returns: the mean squared error of the test data.
         """
+        error = self._calculate_mean_square_error(test_data)
+        return error.numpy()
 
-        with self._session as sess:
-            error = self._calculate_mean_square_error(
-                test_data, self._U, self._V
-            ).eval()
+    def predict(self) -> np.ndarray:
+        """Gets the model predictions.
 
-        return error
+        The predictions consist of the estimated matrix A_hat of the truth
+        matrix A, of which the training data contains a sparse subset of the entries.
+
+        Returns:
+            An mxn array of values.
+        """
+        return self._get_estimated_matrix().numpy()
