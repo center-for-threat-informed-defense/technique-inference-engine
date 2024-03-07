@@ -1,6 +1,6 @@
 {
     "name": "TIE_training_dataset",
-    "create_date": "02/06/2024",
+    "create_date": "03/06/2024",
     "description": "dataset combining sources of adversary emulation plans, attackflow, Vectr, and tram",
     "bags_of_techniques": [
         {
@@ -23,29 +23,98 @@
                 "T1082": 1
             },
             "references": [
-                "https://advantage.mandiant.com/malware/malware--6003da78-0f1f-54f8-9444-90278b993bdc?sri=0",
-                "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1003.001",
-                "https://www.mandiant.com/resources/blog/hunting-com-objects",
-                "https://www.govinfosecurity.com/sockdetour-backup-backdoor-targets-us-defense-contractors-a-18616",
-                "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1003.002",
-                "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1070.003",
-                "https://media.defense.gov/2023/May/24/2003229517/-1/-1/0/CSA_Living_off_the_Land.PDFce 0",
-                "https://advantage.mandiant.com/malware/malware--8c8b8c8a-c1bf-5f1a-9cd1-7d9cd8d33789?sri=0",
-                "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1003",
-                "https://media.defense.gov/2023/May/24/2003229517/-1/-1/0/CSA_Living_off_the_Land.PDF",
-                "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1562.002",
-                "https://www.microsoft.com/en-us/security/blog/2018/09/27/out-of-sight-but-not-invisible-defeating-fileless-malware-with-behavior-monitoring-amsi-and-next-gen-av/",
-                "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1012",
-                "https://advantage.mandiant.com/reports/23-00008990",
-                "https://securityaffairs.co/86316/apt/emissary-panda-middle-east-gov.html",
-                "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1070.001",
-                "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1069.001",
-                "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1003.003",
-                "https://www.microsoft.com/en-us/security/blog/2023/05/24/volt-typhoon-targets-us-critical-infrastructure-with-living-off-the-land-techniques/",
-                "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1003.006",
-                "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1082",
-                "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1090.001",
-                "https://media.defense.gov/2023/May/24/2003229517/-1/-1/0/CSA_Living_off_the_Land.PDFe 1"
+                {
+                    "name": "",
+                    "url": "https://advantage.mandiant.com/malware/malware--8c8b8c8a-c1bf-5f1a-9cd1-7d9cd8d33789?sri=0"
+                },
+                {
+                    "name": "",
+                    "url": "https://www.govinfosecurity.com/sockdetour-backup-backdoor-targets-us-defense-contractors-a-18616"
+                },
+                {
+                    "name": "",
+                    "url": "https://securityaffairs.co/86316/apt/emissary-panda-middle-east-gov.html"
+                },
+                {
+                    "name": "",
+                    "url": "https://www.microsoft.com/en-us/security/blog/2023/05/24/volt-typhoon-targets-us-critical-infrastructure-with-living-off-the-land-techniques/"
+                },
+                {
+                    "name": "",
+                    "url": "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1003.002"
+                },
+                {
+                    "name": "",
+                    "url": "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1069.001"
+                },
+                {
+                    "name": "",
+                    "url": "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1003.003"
+                },
+                {
+                    "name": "",
+                    "url": "https://advantage.mandiant.com/malware/malware--6003da78-0f1f-54f8-9444-90278b993bdc?sri=0"
+                },
+                {
+                    "name": "",
+                    "url": "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1003.001"
+                },
+                {
+                    "name": "",
+                    "url": "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1003"
+                },
+                {
+                    "name": "",
+                    "url": "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1070.003"
+                },
+                {
+                    "name": "",
+                    "url": "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1003.006"
+                },
+                {
+                    "name": "",
+                    "url": "https://media.defense.gov/2023/May/24/2003229517/-1/-1/0/CSA_Living_off_the_Land.PDFe 1"
+                },
+                {
+                    "name": "",
+                    "url": "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1082"
+                },
+                {
+                    "name": "",
+                    "url": "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1090.001"
+                },
+                {
+                    "name": "",
+                    "url": "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1070.001"
+                },
+                {
+                    "name": "",
+                    "url": "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1562.002"
+                },
+                {
+                    "name": "",
+                    "url": "https://media.defense.gov/2023/May/24/2003229517/-1/-1/0/CSA_Living_off_the_Land.PDFce 0"
+                },
+                {
+                    "name": "",
+                    "url": "https://www.microsoft.com/en-us/security/blog/2018/09/27/out-of-sight-but-not-invisible-defeating-fileless-malware-with-behavior-monitoring-amsi-and-next-gen-av/"
+                },
+                {
+                    "name": "",
+                    "url": "https://media.defense.gov/2023/May/24/2003229517/-1/-1/0/CSA_Living_off_the_Land.PDF"
+                },
+                {
+                    "name": "",
+                    "url": "https://www.mandiant.com/resources/blog/hunting-com-objects"
+                },
+                {
+                    "name": "",
+                    "url": "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1012"
+                },
+                {
+                    "name": "",
+                    "url": "https://advantage.mandiant.com/reports/23-00008990"
+                }
             ],
             "associated_groups": [
                 "Volt Typhoon"
@@ -330,8 +399,8 @@
                 }
             ],
             "associated_groups": [
-                "Snake",
-                "Turla"
+                "Turla",
+                "Snake"
             ],
             "associated_software": [
                 "Snake"
@@ -1199,6 +1268,913 @@
             "origin_of_data": "attack flow"
         },
         {
+            "mitre_techniques": {
+                "T1572": 1,
+                "T1190": 1,
+                "T1087.004": 1,
+                "T1102": 1,
+                "T1069.003": 1,
+                "T1598.004": 1,
+                "T1003.006": 1,
+                "T1105": 1,
+                "T1098.003": 1,
+                "T1578.002": 1,
+                "T1046": 1,
+                "T1021.007": 1,
+                "T1213.002": 1,
+                "T1078.004": 1,
+                "T1087.003": 1,
+                "T1598.001": 1,
+                "T1621": 1,
+                "T1098.005": 1,
+                "T1219": 1,
+                "T1047": 1,
+                "T1656": 1,
+                "T1098.001": 1,
+                "T1133": 1,
+                "T1530": 1,
+                "T1588.002": 1,
+                "T1589.001": 1,
+                "T1090": 1,
+                "T1566.004": 1
+            },
+            "references": [
+                {
+                    "name": "Crowdstrike TELCO BPO Campaign December 2022",
+                    "url": "https://www.crowdstrike.com/blog/analysis-of-intrusion-campaign-targeting-telecom-and-bpo-companies/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "C0027"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1012": 1,
+                "T1003.001": 1,
+                "T1056.001": 1,
+                "T1518.001": 1,
+                "T1018": 1,
+                "T1573.002": 1,
+                "T1587.001": 1,
+                "T1059.003": 1,
+                "T1555.005": 1,
+                "T1552.004": 1,
+                "T1119": 1,
+                "T1049": 1,
+                "T1585.002": 1,
+                "T1124": 1,
+                "T1571": 1,
+                "T1111": 1,
+                "T1190": 1,
+                "T1090.003": 1,
+                "T1074.001": 1,
+                "T1033": 1,
+                "T1071.001": 1,
+                "T1569.002": 1,
+                "T1005": 1,
+                "T1115": 1,
+                "T1583.004": 1,
+                "T1560.001": 1,
+                "T1106": 1,
+                "T1069.001": 1,
+                "T1078": 1,
+                "T1135": 1,
+                "T1070.004": 1,
+                "T1001": 1,
+                "T1588.002": 1,
+                "T1558.003": 1,
+                "T1021.002": 1,
+                "T1570": 1,
+                "T1059.005": 1,
+                "T1016.001": 1,
+                "T1087.002": 1,
+                "T1078.002": 1,
+                "T1055": 1,
+                "T1083": 1,
+                "T1589": 1,
+                "T1059.006": 1,
+                "T1112": 1,
+                "T1090.001": 1,
+                "T1090": 1,
+                "T1041": 1,
+                "T1036.005": 1,
+                "T1562.004": 1,
+                "T1007": 1,
+                "T1120": 1,
+                "T1003.006": 1,
+                "T1027.005": 1,
+                "T1053.005": 1,
+                "T1082": 1,
+                "T1027.010": 1,
+                "T1059.001": 1,
+                "T1047": 1,
+                "T1046": 1,
+                "T1095": 1,
+                "T1016": 1,
+                "T1133": 1,
+                "T1070.001": 1,
+                "T1505.003": 1,
+                "T1518": 1,
+                "T1105": 1,
+                "T1078.003": 1,
+                "T1057": 1
+            },
+            "references": [
+                {
+                    "name": "FoxIT Wocao December 2019",
+                    "url": "https://www.fox-it.com/media/kadlze5c/201912_report_operation_wocao.pdf"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Operation Wocao"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+
+        {
+            "mitre_techniques": {
+                "T1585.002": 1,
+                "T1083": 1,
+                "T1106": 1,
+                "T1070.004": 1,
+                "T1074.001": 1,
+                "T1583.001": 1,
+                "T1027": 1,
+                "T1553.002": 1,
+                "T1041": 1,
+                "T1112": 1,
+                "T1059.003": 1,
+                "T1082": 1,
+                "T1569.002": 1,
+                "T1560.001": 1,
+                "T1574.011": 1,
+                "T1588.004": 1,
+                "T1071.002": 1,
+                "T1548.002": 1,
+                "T1005": 1,
+                "T1543.003": 1,
+                "T1583.004": 1,
+                "T1036.005": 1,
+                "T1204.002": 1,
+                "T1105": 1,
+                "T1059.005": 1,
+                "T1057": 1,
+                "T1140": 1,
+                "T1036": 1
+            },
+            "references": [
+                {
+                    "name": "McAfee Honeybee",
+                    "url": "https://www.mcafee.com/blogs/other-blogs/mcafee-labs/mcafee-uncovers-operation-honeybee-malicious-document-campaign-targeting-humanitarian-aid-groups/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Operation Honeybee"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1059.005": 1,
+                "T1036.008": 1,
+                "T1059.001": 1,
+                "T1036.005": 1,
+                "T1505.001": 1,
+                "T1136": 1,
+                "T1570": 1,
+                "T1059.003": 1,
+                "T1027": 1,
+                "T1543.003": 1,
+                "T1027.002": 1,
+                "T1003.001": 1,
+                "T1047": 1,
+                "T1098": 1,
+                "T1110": 1,
+                "T1136.002": 1,
+                "T1018": 1,
+                "T1554": 1,
+                "T1562.002": 1,
+                "T1021.002": 1
+            },
+            "references": [
+                {
+                    "name": "Dragos Crashoverride 2018",
+                    "url": "https://www.dragos.com/wp-content/uploads/CRASHOVERRIDE2018.pdf"
+                },
+                {
+                    "name": "Dragos Crashoverride 2017",
+                    "url": "https://dragos.com/blog/crashoverride/CrashOverride-01.pdf"
+                },
+                {
+                    "name": "ESET Industroyer",
+                    "url": "https://www.welivesecurity.com/wp-content/uploads/2017/06/Win32_Industroyer.pdf"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "2016 Ukraine Electric Power Attack"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1566.001": 1,
+                "T1112": 1,
+                "T1070.004": 1,
+                "T1018": 1,
+                "T1133": 1,
+                "T1105": 1,
+                "T1204.002": 1,
+                "T1078": 1,
+                "T1040": 1,
+                "T1136.002": 1,
+                "T1218.011": 1,
+                "T1059.005": 1,
+                "T1071.001": 1,
+                "T1570": 1,
+                "T1056.001": 1,
+                "T1055": 1,
+                "T1562.001": 1
+            },
+            "references": [
+                {
+                    "name": "Ukraine15 - EISAC - 201603",
+                    "url": "https://nsarchive.gwu.edu/sites/default/files/documents/3891751/SANS-and-Electricity-Information-Sharing-and.pdf"
+                },
+                {
+                    "name": "Booz Allen Hamilton",
+                    "url": "https://www.boozallen.com/content/dam/boozallen/documents/2016/09/ukraine-report-when-the-lights-went-out.pdf"
+                },
+                {
+                    "name": "Charles McLellan March 2016",
+                    "url": "https://www.zdnet.com/article/how-hackers-attacked-ukraines-power-grid-implications-for-industrial-iot-security/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "2015 Ukraine Electric Power Attack"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1614.001": 1,
+                "T1608.001": 1,
+                "T1218.011": 1,
+                "T1106": 1,
+                "T1585.001": 1,
+                "T1036.008": 1,
+                "T1070.004": 1,
+                "T1547.001": 1,
+                "T1497.001": 1,
+                "T1059.005": 1,
+                "T1608.002": 1,
+                "T1105": 1,
+                "T1585.002": 1,
+                "T1584.001": 1,
+                "T1583.004": 1,
+                "T1573.001": 1,
+                "T1204.001": 1,
+                "T1059.001": 1,
+                "T1591": 1,
+                "T1583.001": 1,
+                "T1221": 1,
+                "T1497.003": 1,
+                "T1589": 1,
+                "T1553.002": 1,
+                "T1005": 1,
+                "T1110": 1,
+                "T1041": 1,
+                "T1534": 1,
+                "T1583.006": 1,
+                "T1566.003": 1,
+                "T1591.004": 1,
+                "T1053.005": 1,
+                "T1204.002": 1,
+                "T1588.003": 1,
+                "T1656": 1,
+                "T1087.002": 1,
+                "T1587.002": 1,
+                "T1566.001": 1,
+                "T1505.004": 1,
+                "T1083": 1,
+                "T1218.010": 1,
+                "T1047": 1,
+                "T1027.002": 1,
+                "T1588.002": 1,
+                "T1071.001": 1,
+                "T1567.002": 1,
+                "T1622": 1,
+                "T1027": 1,
+                "T1220": 1,
+                "T1587.001": 1,
+                "T1059.003": 1,
+                "T1584.004": 1,
+                "T1593.001": 1,
+                "T1566.002": 1,
+                "T1560.001": 1
+            },
+            "references": [
+                {
+                    "name": "ClearSky Lazarus Aug 2020",
+                    "url": "https://www.clearskysec.com/wp-content/uploads/2020/08/Dream-Job-Campaign.pdf"
+                },
+                {
+                    "name": "McAfee Lazarus Nov 2020",
+                    "url": "https://www.mcafee.com/blogs/other-blogs/mcafee-labs/operation-north-star-behind-the-scenes/"
+                },
+                {
+                    "name": "ESET Lazarus Jun 2020",
+                    "url": "https://www.welivesecurity.com/wp-content/uploads/2020/06/ESET_Operation_Interception.pdf"
+                },
+                {
+                    "name": "McAfee Lazarus Jul 2020",
+                    "url": "https://www.mcafee.com/blogs/other-blogs/mcafee-labs/operation-north-star-a-job-offer-thats-too-good-to-be-true/?hilite=%27Operation%27%2C%27North%27%2C%27Star%27"
+                },
+                {
+                    "name": "The Hacker News Lazarus Aug 2022",
+                    "url": "https://thehackernews.com/2022/08/north-korea-hackers-spotted-targeting.html"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Operation Dream Job"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1135": 1,
+                "T1047": 1,
+                "T1083": 1,
+                "T1553.002": 1,
+                "T1567.002": 1,
+                "T1204.002": 1,
+                "T1074.001": 1,
+                "T1218.011": 1,
+                "T1566.001": 1,
+                "T1005": 1,
+                "T1069.001": 1,
+                "T1057": 1,
+                "T1069.002": 1,
+                "T1105": 1,
+                "T1055.001": 1,
+                "T1059.005": 1,
+                "T1486": 1,
+                "T1027": 1,
+                "T1059.003": 1,
+                "T1218.010": 1,
+                "T1588.001": 1,
+                "T1021.001": 1,
+                "T1124": 1,
+                "T1030": 1,
+                "T1219": 1,
+                "T1039": 1,
+                "T1570": 1,
+                "T1018": 1,
+                "T1016": 1,
+                "T1588.002": 1,
+                "T1059.007": 1,
+                "T1036": 1,
+                "T1482": 1,
+                "T1218.005": 1
+            },
+            "references": [
+                {
+                    "name": "DFIR Conti Bazar Nov 2021",
+                    "url": "https://thedfirreport.com/2021/11/29/continuing-the-bazar-ransomware-story/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "C0015"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1046": 1,
+                "T1105": 1,
+                "T1090.003": 1,
+                "T1053.005": 1,
+                "T1588.002": 1,
+                "T1133": 1,
+                "T1583.001": 1,
+                "T1587.001": 1,
+                "T1005": 1,
+                "T1572": 1
+            },
+            "references": [
+                {
+                    "name": "BlackBerry CostaRicto November 2020",
+                    "url": "https://blogs.blackberry.com/en/2020/11/the-costaricto-campaign-cyber-espionage-outsourced"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "CostaRicto"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1583.001": 1,
+                "T1218.011": 1,
+                "T1027.010": 1,
+                "T1584.001": 1,
+                "T1204.001": 1,
+                "T1095": 1,
+                "T1588.002": 1,
+                "T1071.001": 1,
+                "T1608.001": 1,
+                "T1105": 1,
+                "T1140": 1,
+                "T1566.002": 1,
+                "T1573.002": 1,
+                "T1059.001": 1,
+                "T1027.009": 1
+            },
+            "references": [
+                {
+                    "name": "FireEye APT29 Nov 2018",
+                    "url": "https://www.fireeye.com/blog/threat-research/2018/11/not-so-cozy-an-uncomfortable-examination-of-a-suspected-apt29-phishing-campaign.html"
+                },
+                {
+                    "name": "Microsoft Unidentified Dec 2018",
+                    "url": "https://www.microsoft.com/security/blog/2018/12/03/analysis-of-cyberattack-on-u-s-think-tanks-non-profits-public-sector-by-unidentified-attackers/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "C0021"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1057": 1,
+                "T1082": 1,
+                "T1027.010": 1,
+                "T1020": 1,
+                "T1053.005": 1,
+                "T1204.002": 1,
+                "T1566.001": 1,
+                "T1105": 1,
+                "T1059.001": 1,
+                "T1518.001": 1,
+                "T1059.005": 1,
+                "T1071.001": 1,
+                "T1221": 1,
+                "T1203": 1,
+                "T1059.003": 1,
+                "T1497.001": 1,
+                "T1047": 1,
+                "T1119": 1,
+                "T1036.004": 1,
+                "T1005": 1,
+                "T1041": 1,
+                "T1016": 1,
+                "T1140": 1,
+                "T1588.002": 1,
+                "T1127.001": 1,
+                "T1033": 1,
+                "T1573.001": 1
+            },
+            "references": [
+                {
+                    "name": "Talos Frankenstein June 2019",
+                    "url": "https://blog.talosintelligence.com/2019/06/frankenstein-campaign.html"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Frankenstein"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1120": 1,
+                "T1018": 1,
+                "T1543.003": 1,
+                "T1560.001": 1,
+                "T1133": 1,
+                "T1083": 1,
+                "T1082": 1,
+                "T1124": 1,
+                "T1078.002": 1,
+                "T1016": 1,
+                "T1201": 1,
+                "T1588.002": 1,
+                "T1036.005": 1,
+                "T1087.001": 1,
+                "T1033": 1,
+                "T1027.010": 1,
+                "T1087.002": 1,
+                "T1053.005": 1,
+                "T1190": 1,
+                "T1069.001": 1,
+                "T1027.011": 1,
+                "T1059.003": 1,
+                "T1505.003": 1,
+                "T1003.002": 1,
+                "T1071.001": 1,
+                "T1049": 1,
+                "T1059.005": 1,
+                "T1135": 1,
+                "T1574.002": 1,
+                "T1057": 1,
+                "T1547.006": 1,
+                "T1007": 1,
+                "T1005": 1
+            },
+            "references": [
+                {
+                    "name": "Cybereason OperationCuckooBees May 2022",
+                    "url": "https://www.cybereason.com/blog/operation-cuckoobees-deep-dive-into-stealthy-winnti-techniques"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Operation CuckooBees"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1078.002": 1,
+                "T1608.001": 1,
+                "T1588.001": 1,
+                "T1566.002": 1,
+                "T1204.001": 1,
+                "T1133": 1,
+                "T1005": 1,
+                "T1059.003": 1,
+                "T1027.002": 1,
+                "T1190": 1,
+                "T1078": 1,
+                "T1027": 1,
+                "T1033": 1,
+                "T1588.002": 1,
+                "T1112": 1,
+                "T1003.002": 1,
+                "T1071.001": 1,
+                "T1114.001": 1,
+                "T1008": 1,
+                "T1083": 1,
+                "T1583.004": 1,
+                "T1550.002": 1,
+                "T1219": 1,
+                "T1110.002": 1,
+                "T1584.004": 1,
+                "T1568": 1,
+                "T1105": 1,
+                "T1074.002": 1,
+                "T1562.001": 1
+            },
+            "references": [
+                {
+                    "name": "McAfee Night Dragon",
+                    "url": "https://scadahacker.com/library/Documents/Cyber_Events/McAfee%20-%20Night%20Dragon%20-%20Global%20Energy%20Cyberattacks.pdf"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Night Dragon"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1078.002": 1,
+                "T1102.002": 1,
+                "T1001.002": 1,
+                "T1583.001": 1,
+                "T1587.001": 1,
+                "T1546.003": 1,
+                "T1585.001": 1,
+                "T1027.003": 1
+            },
+            "references": [
+                {
+                    "name": "ESET Dukes October 2019",
+                    "url": "https://www.welivesecurity.com/wp-content/uploads/2019/10/ESET_Operation_Ghost_Dukes.pdf"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Operation Ghost"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1082": 1,
+                "T1027.002": 1,
+                "T1033": 1,
+                "T1036.004": 1,
+                "T1016": 1,
+                "T1053.005": 1,
+                "T1190": 1,
+                "T1505.003": 1,
+                "T1140": 1,
+                "T1003.002": 1,
+                "T1027": 1,
+                "T1041": 1,
+                "T1048.003": 1,
+                "T1068": 1,
+                "T1074.001": 1,
+                "T1071.001": 1,
+                "T1005": 1,
+                "T1102.001": 1,
+                "T1059.007": 1,
+                "T1574": 1,
+                "T1090": 1,
+                "T1036.005": 1,
+                "T1059.003": 1,
+                "T1001.003": 1,
+                "T1134": 1,
+                "T1567": 1,
+                "T1560.003": 1,
+                "T1588.002": 1,
+                "T1105": 1,
+                "T1102": 1
+            },
+            "references": [
+                {
+                    "name": "Mandiant APT41",
+                    "url": "https://www.mandiant.com/resources/apt41-us-state-governments"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "C0017"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1588.002": 1,
+                "T1583.001": 1,
+                "T1027.003": 1,
+                "T1588.001": 1,
+                "T1568": 1,
+                "T1140": 1,
+                "T1059": 1,
+                "T1204.001": 1,
+                "T1566.002": 1,
+                "T1102": 1,
+                "T1027.002": 1,
+                "T1608.001": 1,
+                "T1497": 1,
+                "T1204.002": 1,
+                "T1566.001": 1,
+                "T1218.011": 1,
+                "T1027": 1
+            },
+            "references": [
+                {
+                    "name": "ESET Operation Spalax Jan 2021",
+                    "url": "https://www.welivesecurity.com/2021/01/12/operation-spalax-targeted-malware-attacks-colombia/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Operation Spalax"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1559.002": 1,
+                "T1584.004": 1,
+                "T1608.001": 1,
+                "T1583.006": 1,
+                "T1106": 1,
+                "T1055": 1,
+                "T1059.005": 1,
+                "T1547.001": 1,
+                "T1105": 1,
+                "T1587.001": 1,
+                "T1204.002": 1,
+                "T1036.005": 1,
+                "T1090": 1
+            },
+            "references": [
+                {
+                    "name": "McAfee Sharpshooter December 2018",
+                    "url": "https://www.mcafee.com/enterprise/en-us/assets/reports/rp-operation-sharpshooter.pdf"
+                },
+                {
+                    "name": "Bleeping Computer Op Sharpshooter March 2019",
+                    "url": "https://www.bleepingcomputer.com/news/security/op-sharpshooter-connected-to-north-koreas-lazarus-group/"
+                },
+                {
+                    "name": "Threatpost New Op Sharpshooter Data March 2019",
+                    "url": "https://threatpost.com/sharpshooter-complexity-scope/142359/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Operation Sharpshooter"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1608.001": 1,
+                "T1566.002": 1,
+                "T1204.001": 1,
+                "T1204.002": 1,
+                "T1566.001": 1,
+                "T1059.005": 1,
+                "T1583.001": 1,
+                "T1587.003": 1
+            },
+            "references": [
+                {
+                    "name": "Cisco Talos Transparent Tribe Education Campaign July 2022",
+                    "url": "https://blog.talosintelligence.com/2022/07/transparent-tribe-targets-education.html"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "C0011"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1190": 1,
+                "T1036.005": 1,
+                "T1571": 1,
+                "T1021.001": 1,
+                "T1219": 1,
+                "T1570": 1,
+                "T1033": 1,
+                "T1486": 1,
+                "T1046": 1,
+                "T1059.001": 1,
+                "T1027.010": 1,
+                "T1016": 1,
+                "T1588.002": 1,
+                "T1071.001": 1,
+                "T1072": 1,
+                "T1105": 1,
+                "T1036": 1,
+                "T1047": 1,
+                "T1218.011": 1
+            },
+            "references": [
+                {
+                    "name": "Cisco Talos Avos Jun 2022",
+                    "url": "https://blog.talosintelligence.com/avoslocker-new-arsenal/"
+                },
+                {
+                    "name": "Costa AvosLocker May 2022",
+                    "url": "https://www.linkedin.com/pulse/raas-avoslocker-incident-response-analysis-fl%C3%A1vio-costa?trk=articles_directory"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "C0018"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1059.005": 1,
+                "T1018": 1,
+                "T1016": 1,
+                "T1560.001": 1,
+                "T1059.003": 1,
+                "T1105": 1,
+                "T1588.001": 1,
+                "T1057": 1,
+                "T1583.001": 1,
+                "T1049": 1,
+                "T1585.002": 1,
+                "T1047": 1,
+                "T1588.002": 1,
+                "T1082": 1
+            },
+            "references": [
+                {
+                    "name": "Bitdefender FunnyDream Campaign November 2020",
+                    "url": "https://www.bitdefender.com/files/News/CaseStudies/study/379/Bitdefender-Whitepaper-Chinese-APT.pdf"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "FunnyDream"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1204.002": 1,
+                "T1204.001": 1,
+                "T1583.001": 1,
+                "T1027.002": 1,
+                "T1566.001": 1,
+                "T1189": 1,
+                "T1027": 1,
+                "T1036": 1,
+                "T1218.005": 1,
+                "T1568": 1,
+                "T1059.005": 1,
+                "T1518": 1,
+                "T1203": 1,
+                "T1059.007": 1,
+                "T1585.002": 1,
+                "T1140": 1,
+                "T1566.002": 1
+            },
+            "references": [
+                {
+                    "name": "Cylance Dust Storm",
+                    "url": "https://s7d2.scene7.com/is/content/cylance/prod/cylance-web/en-us/resources/knowledge-center/resource-library/reports/Op_Dust_Storm_Report.pdf"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Operation Dust Storm"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1030": 1,
+                "T1568": 1,
+                "T1560.001": 1,
+                "T1583.001": 1,
+                "T1105": 1,
+                "T1005": 1
+            },
+            "references": [
+                {
+                    "name": "Mandiant Suspected Turla Campaign February 2023",
+                    "url": "https://www.mandiant.com/resources/blog/turla-galaxy-opportunity"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "C0026"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
+            "mitre_techniques": {
+                "T1584.001": 1,
+                "T1608.001": 1,
+                "T1189": 1,
+                "T1608.004": 1,
+                "T1587.001": 1,
+                "T1583.001": 1,
+                "T1105": 1,
+                "T1608.002": 1,
+                "T1588.002": 1
+            },
+            "references": [
+                {
+                    "name": "Mandiant UNC3890 Aug 2022",
+                    "url": "https://www.mandiant.com/resources/blog/suspected-iranian-actor-targeting-israeli-shipping"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "C0010"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns"
+        },
+        {
             "origin_of_data": "TRAM",
             "mitre_techniques": {
                 "T1110": 1,
@@ -1455,13 +2431,13 @@
             },
             "associated_campaigns": [],
             "associated_groups": [
-                "Earth Vetala",
                 "MERCURY",
                 "MuddyWater",
+                "Earth Vetala",
                 "Static Kitten",
-                "Earth Vetala",
                 "MERCURY",
                 "MuddyWater",
+                "Earth Vetala",
                 "Static Kitten"
             ],
             "associated_software": [
@@ -1855,8 +2831,8 @@
             },
             "associated_campaigns": [],
             "associated_groups": [
-                "LuckyMouse",
-                "APT27"
+                "APT27",
+                "LuckyMouse"
             ],
             "associated_software": [
                 "SEASHARPEE",
@@ -2012,8 +2988,8 @@
             "associated_groups": [],
             "associated_software": [
                 "Conti",
-                "BlackCat",
-                "ALPHV"
+                "ALPHV",
+                "BlackCat"
             ],
             "references": [
                 {
@@ -2072,8 +3048,8 @@
                 "BITSAdmin",
                 "cmd.exe",
                 "cmd",
-                "Reg",
                 "reg.exe",
+                "Reg",
                 "Tor",
                 "PsExec"
             ],
@@ -2136,8 +3112,8 @@
             "associated_groups": [],
             "associated_software": [
                 "Bumblebee",
-                "Ursnif",
                 "Dreambot",
+                "Ursnif",
                 "IcedID",
                 "Cobalt Strike",
                 "Net",
@@ -2152,8 +3128,8 @@
                 "Ping",
                 "cmd.exe",
                 "cmd",
-                "Reg",
-                "reg.exe"
+                "reg.exe",
+                "Reg"
             ],
             "references": [
                 {
@@ -2198,11 +3174,11 @@
             "associated_groups": [
                 "APT10",
                 "APT41",
+                "APT27",
+                "Iron Tiger",
+                "Emissary Panda",
                 "LuckyMouse",
                 "BRONZE UNION",
-                "APT27",
-                "Emissary Panda",
-                "Iron Tiger",
                 "TA459"
             ],
             "associated_software": [
@@ -2387,8 +3363,8 @@
             ],
             "associated_software": [
                 "cmd",
-                "schtasks",
-                "schtasks.exe"
+                "schtasks.exe",
+                "schtasks"
             ],
             "references": [
                 {
@@ -2455,8 +3431,8 @@
             },
             "associated_campaigns": [],
             "associated_groups": [
-                "NOBELIUM",
                 "UNC2452",
+                "NOBELIUM",
                 "TeamTNT",
                 "UNC2452",
                 "NOBELIUM"
@@ -2706,8 +3682,8 @@
             },
             "associated_campaigns": [],
             "associated_groups": [
-                "FIN12",
                 "Wizard Spider",
+                "FIN12",
                 "EXOTIC LILY"
             ],
             "associated_software": [
@@ -2785,14 +3761,14 @@
                 "Cobalt Strike",
                 "Sodinokibi",
                 "REvil",
-                "net.exe",
                 "Net",
+                "net.exe",
                 "ngrok",
                 "Systeminfo",
                 "cmd.exe",
                 "cmd",
-                "Reg",
-                "reg.exe"
+                "reg.exe",
+                "Reg"
             ],
             "references": [
                 {
@@ -3085,8 +4061,8 @@
             "associated_software": [
                 "Net",
                 "cmd",
-                "schtasks",
-                "schtasks.exe"
+                "schtasks.exe",
+                "schtasks"
             ],
             "references": [
                 {
@@ -3458,8 +4434,8 @@
             "associated_campaigns": [],
             "associated_groups": [],
             "associated_software": [
-                "BlackCat",
                 "ALPHV",
+                "BlackCat",
                 "Page",
                 "Net",
                 "netsh",
@@ -3557,8 +4533,8 @@
                 "ComRAT",
                 "Net",
                 "Tasklist",
-                "PowerShell Empire",
                 "Empire",
+                "PowerShell Empire",
                 "IronNetInjector"
             ],
             "references": [
@@ -3870,8 +4846,8 @@
                 "Amadey",
                 "Epic",
                 "Page",
-                "net.exe",
-                "Net"
+                "Net",
+                "net.exe"
             ],
             "references": [
                 {
@@ -3929,8 +4905,8 @@
             },
             "associated_campaigns": [],
             "associated_groups": [
-                "Cobalt Gang",
                 "Cobalt Group",
+                "Cobalt Gang",
                 "Windshift"
             ],
             "associated_software": [
@@ -4080,8 +5056,8 @@
             "associated_campaigns": [],
             "associated_groups": [],
             "associated_software": [
-                "BlackCat",
                 "ALPHV",
+                "BlackCat",
                 "Ngrok",
                 "Cobalt Strike",
                 "Impacket",
@@ -4137,8 +5113,8 @@
                 "Ryuk",
                 "Cobalt Strike",
                 "Proton",
-                "Tirion",
                 "Lizar",
+                "Tirion",
                 "Net",
                 "ftp"
             ],
@@ -4339,8 +5315,8 @@
                 "Page",
                 "Black Basta",
                 "Cobalt Strike",
-                "QBot",
                 "QakBot",
+                "QBot",
                 "Net",
                 "netstat",
                 "Rclone",
@@ -4373,8 +5349,8 @@
                 "AvosLocker",
                 "PS1",
                 "Conti",
-                "BlackCat",
                 "ALPHV",
+                "BlackCat",
                 "Avaddon",
                 "Mimikatz",
                 "LaZagne",
@@ -4463,8 +5439,8 @@
                 "MegaCortex",
                 "Cobalt Strike",
                 "Egregor",
-                "QBot",
                 "QakBot",
+                "QBot",
                 "Net",
                 "Mimikatz",
                 "cmd",
@@ -4588,8 +5564,8 @@
             },
             "associated_campaigns": [],
             "associated_groups": [
-                "Transparent Tribe",
-                "APT36"
+                "APT36",
+                "Transparent Tribe"
             ],
             "associated_software": [
                 "Crimson",
@@ -4774,10 +5750,10 @@
             "associated_campaigns": [],
             "associated_groups": [
                 "StellarParticle",
-                "The Dukes",
                 "Cozy Bear",
-                "StellarParticle",
-                "APT29"
+                "APT29",
+                "The Dukes",
+                "StellarParticle"
             ],
             "associated_software": [
                 "GoldMax",
@@ -4865,8 +5841,8 @@
             "associated_groups": [],
             "associated_software": [
                 "PS1",
-                "Ursnif",
                 "Dreambot",
+                "Ursnif",
                 "Page",
                 "Cobalt Strike",
                 "QakBot",
@@ -4877,8 +5853,8 @@
                 "Systeminfo",
                 "Nltest",
                 "cmd",
-                "Reg",
                 "reg.exe",
+                "Reg",
                 "ftp",
                 "Tor"
             ],
@@ -4957,8 +5933,8 @@
             "associated_campaigns": [],
             "associated_groups": [
                 "APT37",
-                "Reaper",
-                "ScarCruft"
+                "ScarCruft",
+                "Reaper"
             ],
             "associated_software": [
                 "Page",
@@ -5241,10 +6217,10 @@
             "associated_groups": [],
             "associated_software": [
                 "Babuk",
-                "net.exe",
                 "Net",
-                "netsh",
-                "netsh.exe"
+                "net.exe",
+                "netsh.exe",
+                "netsh"
             ],
             "references": [
                 {
@@ -5367,8 +6343,8 @@
             "associated_groups": [],
             "associated_software": [
                 "Page",
-                "Adwind",
-                "jRAT"
+                "jRAT",
+                "Adwind"
             ],
             "references": [
                 {
@@ -5393,11 +6369,11 @@
             },
             "associated_campaigns": [],
             "associated_groups": [
-                "APT28",
-                "Pawn Storm",
-                "Tsar Team",
                 "Fancy Bear",
-                "Sednit"
+                "APT28",
+                "Tsar Team",
+                "Sednit",
+                "Pawn Storm"
             ],
             "associated_software": [
                 "Sednit",
@@ -5523,10 +6499,10 @@
             },
             "associated_campaigns": [],
             "associated_groups": [
-                "Phosphorus",
-                "COBALT ILLUSION",
-                "APT35",
                 "TA453",
+                "COBALT ILLUSION",
+                "Phosphorus",
+                "APT35",
                 "Charming Kitten",
                 "Charming Kitten"
             ],
@@ -5635,8 +6611,8 @@
                 "IcedID",
                 "Cobalt Strike",
                 "Sodinokibi",
-                "net.exe",
                 "Net",
+                "net.exe",
                 "ipconfig",
                 "Empire",
                 "dsquery",
@@ -5675,8 +6651,8 @@
             "associated_campaigns": [],
             "associated_groups": [
                 "APT41",
-                "Operation Soft Cell",
-                "GALLIUM"
+                "GALLIUM",
+                "Operation Soft Cell"
             ],
             "associated_software": [
                 "PingPull",
@@ -5923,8 +6899,8 @@
                 "Mimikatz",
                 "cmd.exe",
                 "cmd",
-                "Reg",
                 "reg.exe",
+                "Reg",
                 "Wevtutil",
                 "PsExec"
             ],
@@ -6026,8 +7002,8 @@
             ],
             "associated_software": [
                 "ZLib",
-                "PlugX",
                 "Korplug",
+                "PlugX",
                 "Page",
                 "Royal",
                 "LookBack",
@@ -6183,19 +7159,19 @@
             },
             "associated_campaigns": [],
             "associated_groups": [
-                "BRONZE MOHAWK",
                 "MUDCARP",
+                "TEMP.Jumper",
                 "TEMP.Periscope",
+                "Leviathan",
+                "APT40",
                 "Kryptonite Panda",
                 "Gadolinium",
-                "APT40",
-                "TEMP.Jumper",
-                "Leviathan"
+                "BRONZE MOHAWK"
             ],
             "associated_software": [
                 "MURKYTOP",
-                "Orz",
                 "AIRBREAK",
+                "Orz",
                 "BADFLICK",
                 "China Chopper",
                 "NanHaiShu",
@@ -6205,8 +7181,8 @@
                 "Net",
                 "PowerSploit",
                 "ipconfig",
-                "PowerShell Empire",
                 "Empire",
+                "PowerShell Empire",
                 "Responder",
                 "Ping",
                 "cmd.exe",
@@ -6311,8 +7287,8 @@
             "associated_campaigns": [],
             "associated_groups": [],
             "associated_software": [
-                "Reg",
                 "reg.exe",
+                "Reg",
                 "Tor"
             ],
             "references": [
@@ -6427,11 +7403,19 @@
             "references": [
                 {
                     "report_title": "",
-                    "url": "https://www.fireeye.com/blog/threat-research/2019/04/carbanak-week-part-four-desktop-video-player.html"
+                    "url": "https://www.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s04-hello-carbanak.pdf"
                 },
                 {
                     "report_title": "",
-                    "url": "https://www.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s04-hello-carbanak.pdf"
+                    "url": "https://www.rsa.com/en-us/blog/2017-11/the-carbanak-fin7-syndicate"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2018/03/08064518/Carbanak_APT_eng.pdf"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/new-carbanak-anunak-attack-methodology/"
                 },
                 {
                     "report_title": "",
@@ -6443,7 +7427,7 @@
                 },
                 {
                     "report_title": "",
-                    "url": "https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/new-carbanak-anunak-attack-methodology/"
+                    "url": "https://www.fireeye.com/blog/threat-research/2019/04/carbanak-week-part-four-desktop-video-player.html"
                 },
                 {
                     "report_title": "",
@@ -6452,14 +7436,6 @@
                 {
                     "report_title": "",
                     "url": "https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/operation-grand-mars-a-comprehensive-profile-of-carbanak-activity-in-201617/"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2018/03/08064518/Carbanak_APT_eng.pdf"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://www.rsa.com/en-us/blog/2017-11/the-carbanak-fin7-syndicate"
                 }
             ],
             "associated_groups": [
@@ -6517,7 +7493,7 @@
             "references": [
                 {
                     "report_title": "",
-                    "url": "https://www.slideshare.net/MatthewDunwoody1/no-easy-breach-derby-con-2016"
+                    "url": "https://www.volexity.com/blog/2016/11/09/powerduke-post-election-spear-phishing-campaigns-targeting-think-tanks-and-ngos/"
                 },
                 {
                     "report_title": "",
@@ -6525,27 +7501,7 @@
                 },
                 {
                     "report_title": "",
-                    "url": "https://blog-assets.f-secure.com/wp-content/uploads/2019/10/15163405/CosmicDuke.pdf"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
-                },
-                {
-                    "report_title": "",
                     "url": "https://community.broadcom.com/symantecenterprise/communities/community-home/librarydocuments/viewdocument?DocumentKey=6ab66701-25d7-4685-ae9d-93d63708a11c&CommunityKey=1ecf5f55-9545-44d6-b0f4-4e4a7f5f5e68&tab=librarydocuments"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://www.fireeye.com/blog/products-and-services/2019/02/state-of-the-hack-no-easy-breach-revisited.html"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://www.fireeye.com/blog/threat-research/2018/11/not-so-cozy-an-uncomfortable-examination-of-a-suspected-apt29-phishing-campaign.html"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://www.fireeye.com/blog/threat-research/2017/03/dissecting_one_ofap.html"
                 },
                 {
                     "report_title": "",
@@ -6553,7 +7509,27 @@
                 },
                 {
                     "report_title": "",
-                    "url": "https://www.volexity.com/blog/2016/11/09/powerduke-post-election-spear-phishing-campaigns-targeting-think-tanks-and-ngos/"
+                    "url": "https://www.fireeye.com/blog/products-and-services/2019/02/state-of-the-hack-no-easy-breach-revisited.html"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://www.fireeye.com/blog/threat-research/2017/03/dissecting_one_ofap.html"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://blog-assets.f-secure.com/wp-content/uploads/2020/03/18122307/F-Secure_Dukes_Whitepaper.pdf"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://www.slideshare.net/MatthewDunwoody1/no-easy-breach-derby-con-2016"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://www.fireeye.com/blog/threat-research/2018/11/not-so-cozy-an-uncomfortable-examination-of-a-suspected-apt29-phishing-campaign.html"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://blog-assets.f-secure.com/wp-content/uploads/2019/10/15163405/CosmicDuke.pdf"
                 },
                 {
                     "report_title": "",
@@ -6595,27 +7571,7 @@
             "references": [
                 {
                     "report_title": "",
-                    "url": "https://www.cert.ssi.gouv.fr/uploads/CERTFR-2021-CTI-005.pdf"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://securelist.com/be2-custom-plugins-router-abuse-and-target-profiles/67353/"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://www.welivesecurity.com/2016/12/13/rise-telebots-analyzing-disruptive-killdisk-attacks/"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://blog.talosintelligence.com/2017/06/worldwide-ransomware-variant.html"
-                },
-                {
-                    "report_title": "",
                     "url": "https://www.justice.gov/opa/press-release/file/1328521/download"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://www.welivesecurity.com/2018/10/11/new-telebots-backdoor-linking-industroyer-notpetya/"
                 },
                 {
                     "report_title": "",
@@ -6623,7 +7579,27 @@
                 },
                 {
                     "report_title": "",
+                    "url": "https://www.welivesecurity.com/2016/12/13/rise-telebots-analyzing-disruptive-killdisk-attacks/"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://www.welivesecurity.com/2018/10/11/new-telebots-backdoor-linking-industroyer-notpetya/"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://www.cert.ssi.gouv.fr/uploads/CERTFR-2021-CTI-005.pdf"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://blog.talosintelligence.com/2017/06/worldwide-ransomware-variant.html"
+                },
+                {
+                    "report_title": "",
                     "url": "https://www.welivesecurity.com/2017/07/04/analysis-of-telebots-cunning-backdoor/"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://securelist.com/be2-custom-plugins-router-abuse-and-target-profiles/67353/"
                 }
             ],
             "associated_groups": [
@@ -6719,6 +7695,14 @@
                 },
                 {
                     "report_title": "",
+                    "url": "https://pwc.co.uk/cyber-security/pdf/cloud-hopper-report-final-v4.pdf"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf"
+                },
+                {
+                    "report_title": "",
                     "url": "https://pwc.co.uk/cyber-security/pdf/cloud-hopper-anex-b-final.pdf"
                 },
                 {
@@ -6727,19 +7711,11 @@
                 },
                 {
                     "report_title": "",
-                    "url": "https://pwc.co.uk/cyber-security/pdf/cloud-hopper-report-final-v4.pdf"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://go.recordedfuture.com/hubfs/reports/cta-2019-0206.pdf"
-                },
-                {
-                    "report_title": "",
                     "url": "https://recordedfuture.com/apt10-cyberespionage-campaign/"
                 },
                 {
                     "report_title": "",
-                    "url": "https://pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf"
+                    "url": "https://go.recordedfuture.com/hubfs/reports/cta-2019-0206.pdf"
                 }
             ],
             "associated_groups": [
@@ -6764,11 +7740,7 @@
             "references": [
                 {
                     "report_title": "",
-                    "url": "https://www.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s05-att&cking-fin7.pdf"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://blog.gigamon.com/2017/07/26/footprints-of-fin7-tracking-actor-patterns-part-2/"
+                    "url": "https://securelist.com/fin7-5-the-infamous-cybercrime-rig-fin7-continues-its-activities/90703/"
                 },
                 {
                     "report_title": "",
@@ -6776,7 +7748,7 @@
                 },
                 {
                     "report_title": "",
-                    "url": "https://www.fireeye.com/blog/threat-research/2019/10/mahalo-fin7-responding-to-new-tools-and-techniques.html"
+                    "url": "https://www.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s05-att&cking-fin7.pdf"
                 },
                 {
                     "report_title": "",
@@ -6784,7 +7756,11 @@
                 },
                 {
                     "report_title": "",
-                    "url": "https://securelist.com/fin7-5-the-infamous-cybercrime-rig-fin7-continues-its-activities/90703/"
+                    "url": "https://blog.gigamon.com/2017/07/26/footprints-of-fin7-tracking-actor-patterns-part-2/"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://www.fireeye.com/blog/threat-research/2019/10/mahalo-fin7-responding-to-new-tools-and-techniques.html"
                 }
             ],
             "associated_groups": [
@@ -6815,19 +7791,7 @@
             "references": [
                 {
                     "report_title": "",
-                    "url": "https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html"
-                },
-                {
-                    "report_title": "",
                     "url": "https://blog.morphisec.com/new-global-attack-on-point-of-sale-systems"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf"
                 },
                 {
                     "report_title": "",
@@ -6835,7 +7799,19 @@
                 },
                 {
                     "report_title": "",
+                    "url": "https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html"
+                },
+                {
+                    "report_title": "",
                     "url": "https://exchange.xforce.ibmcloud.com/threat-group/f8409554b71a79792ff099081bc5ac24"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html"
                 }
             ],
             "associated_groups": [
@@ -6875,39 +7851,7 @@
             "references": [
                 {
                     "report_title": "",
-                    "url": "https://www.symantec.com/blogs/threat-intelligence/evolution-emotet-trojan-distributor"
-                },
-                {
-                    "report_title": "",
                     "url": "https://www.cybereason.com/blog/dropping-anchor-from-a-trickbot-infection-to-the-discovery-of-the-anchor-malware"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://www.cisecurity.org/white-papers/ms-isac-security-primer-emotet/"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://www.picussecurity.com/blog/the-christmas-card-you-never-wanted-a-new-wave-of-emotet-is-back-to-wreak-havoc.html"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://thedfirreport.com/2020/11/05/ryuk-speed-run-2-hours-to-ransom/"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://www.crowdstrike.com/blog/timelining-grim-spiders-big-game-hunting-tactics/"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://www.cynet.com/attack-techniques-hands-on/emotet-vs-trump-deep-dive-analysis-of-a-killer-info-stealer/"
-                },
-                {
-                    "report_title": "",
-                    "url": "https://www.securityartwork.es/wp-content/uploads/2017/07/Trickbot-report-S2-Grupo.pdf"
                 },
                 {
                     "report_title": "",
@@ -6915,7 +7859,7 @@
                 },
                 {
                     "report_title": "",
-                    "url": "https://thedfirreport.com/2020/10/08/ryuks-return/"
+                    "url": "https://www.cisecurity.org/white-papers/ms-isac-security-primer-emotet/"
                 },
                 {
                     "report_title": "",
@@ -6923,7 +7867,15 @@
                 },
                 {
                     "report_title": "",
+                    "url": "https://www.us-cert.gov/ncas/alerts/TA18-201A"
+                },
+                {
+                    "report_title": "",
                     "url": "https://www.cert.ssi.gouv.fr/uploads/CERTFR-2021-CTI-006.pdf"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://www.picussecurity.com/blog/the-christmas-card-you-never-wanted-a-new-wave-of-emotet-is-back-to-wreak-havoc.html"
                 },
                 {
                     "report_title": "",
@@ -6931,7 +7883,31 @@
                 },
                 {
                     "report_title": "",
-                    "url": "https://www.us-cert.gov/ncas/alerts/TA18-201A"
+                    "url": "https://www.crowdstrike.com/blog/timelining-grim-spiders-big-game-hunting-tactics/"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://www.securityartwork.es/wp-content/uploads/2017/07/Trickbot-report-S2-Grupo.pdf"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://www.cynet.com/attack-techniques-hands-on/emotet-vs-trump-deep-dive-analysis-of-a-killer-info-stealer/"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://thedfirreport.com/2020/11/05/ryuk-speed-run-2-hours-to-ransom/"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://www.symantec.com/blogs/threat-intelligence/evolution-emotet-trojan-distributor"
+                },
+                {
+                    "report_title": "",
+                    "url": "https://thedfirreport.com/2020/10/08/ryuks-return/"
                 }
             ],
             "associated_groups": [
