@@ -211,3 +211,9 @@ class FactorizationRecommender:
             An mxn array of values.
         """
         return self._get_estimated_matrix().numpy()
+
+    def predict_new_entity(self, entity: np.array) -> np.array:
+        """Predicts for an unseen entity.
+
+        Args:
+            entity: a new length"""
