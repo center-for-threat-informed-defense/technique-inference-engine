@@ -52,7 +52,7 @@ class ReportTechniqueMatrixBuilder:
         with open(filepath) as f:
             data = json.load(f)
 
-        reports = data["bags_of_techniques"]
+        reports = data["reports"]
 
         report_techniques = []
 
