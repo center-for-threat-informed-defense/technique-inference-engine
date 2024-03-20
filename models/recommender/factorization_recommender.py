@@ -36,6 +36,9 @@ class FactorizationRecommender:
         """
         init_stddev = 0.5
 
+        # TODO remove
+        self._k = k
+
         U = tf.Variable(tf.random.normal([m, k], stddev=init_stddev))
         V = tf.Variable(tf.random.normal([n, k], stddev=init_stddev))
 
@@ -212,8 +215,53 @@ class FactorizationRecommender:
         """
         return self._get_estimated_matrix().numpy()
 
-    def predict_new_entity(self, entity: np.array) -> np.array:
+    def predict_new_entity(
+        self,
+        entity: tf.SparseTensor,
+        num_iterations: int,
+        learning_rate: float,
+        regularization_coefficient: float,
+        gravity_coefficient: float,
+    ) -> np.array:
         """Predicts for an unseen entity.
 
         Args:
-            entity: a new length"""
+            entity: a length-n sparse tensor of consisting of the new entity's
+                ratings for each item, indexed exactly as the items used to
+                train this model.
+
+        Returns:
+            An array of predicted values for the new entity.
+        """
+        # TODO factor out
+        init_stddev = 0.5
+        n = entity.dense_shape[0]
+        # preliminaries
+        optimizer = keras.optimizers.legacy.SGD(learning_rate=learning_rate)
+
+        embedding = tf.Variable(
+            tf.random.normal(
+                [self._k, 1],
+                stddev=init_stddev,
+            )
+        )
+
+        for i in range(num_iterations + 1):
+            with tf.GradientTape() as tape:
+                # need to predict here and not in loss so doesn't affect gradient
+                # V is nxk, embedding is kx1
+                predictions = tf.matmul(self._V, embedding)
+
+                loss = self._loss(
+                    entity.values, tf.gather_nd(predictions, entity.indices)
+                )
+
+            gradients = tape.gradient(loss, [embedding])
+            optimizer.apply_gradients(zip(gradients, [embedding]))
+
+        # nxk, kx1
+
+        print(
+            "loss", self._loss(entity.values, tf.gather_nd(predictions, entity.indices))
+        )
+        return tf.matmul(self._V, embedding)
