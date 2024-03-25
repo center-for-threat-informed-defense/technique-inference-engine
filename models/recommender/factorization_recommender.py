@@ -128,10 +128,8 @@ class FactorizationRecommender:
             + tf.reduce_sum(self._V * self._V) / self._V.shape[0]
         )
 
-        gravity = (
-            1.0
-            / (self._U.shape[0] * self._V.shape[0])
-            * tf.reduce_sum(tf.square(tf.matmul(self._U, self._V, transpose_b=True)))
+        gravity = (1.0 / (self._U.shape[0] * self._V.shape[0])) * tf.reduce_sum(
+            tf.square(tf.matmul(self._U, self._V, transpose_b=True))
         )
 
         gravity_loss = gravity_coefficient * gravity
@@ -235,7 +233,7 @@ class FactorizationRecommender:
         """
         # TODO factor out
         init_stddev = 0.5
-        n = entity.dense_shape[0]
+
         # preliminaries
         optimizer = keras.optimizers.legacy.SGD(learning_rate=learning_rate)
 
@@ -253,7 +251,17 @@ class FactorizationRecommender:
                 predictions = tf.matmul(self._V, embedding)
 
                 loss = self._loss(
-                    entity.values, tf.gather_nd(predictions, entity.indices)
+                    entity.values,
+                    tf.gather_nd(predictions, entity.indices)
+                    + (
+                        regularization_coefficient
+                        * tf.reduce_sum(tf.math.square(embedding))
+                        / self._U.shape[0]
+                    )
+                    + (
+                        (gravity_coefficient / (self._U.shape[0] * self._V.shape[0]))
+                        * tf.reduce_sum(tf.square(tf.matmul(self._V, embedding)))
+                    ),
                 )
 
             gradients = tape.gradient(loss, [embedding])
