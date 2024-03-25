@@ -259,9 +259,4 @@ class FactorizationRecommender:
             gradients = tape.gradient(loss, [embedding])
             optimizer.apply_gradients(zip(gradients, [embedding]))
 
-        # nxk, kx1
-
-        print(
-            "loss", self._loss(entity.values, tf.gather_nd(predictions, entity.indices))
-        )
-        return tf.matmul(self._V, embedding)
+        return np.squeeze(tf.matmul(self._V, embedding).numpy())
