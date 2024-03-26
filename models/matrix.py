@@ -4,6 +4,8 @@ import pandas as pd
 
 
 class ReportTechniqueMatrix:
+    """An immutable report technique matrix."""
+
     # Abstraction function:
     # 	AF(indices, values, report_ids, technique_ids) = a sparse matrix A where
     #       A_{ij} = values[k] where k is the index for (i, j) in indices, if present.
@@ -75,8 +77,15 @@ class ReportTechniqueMatrix:
         return self._indices
 
     @property
+    def report_ids(self) -> tuple[int]:
+        """Gets the report ids that make up the row index of the matrix."""
+        self._checkrep()
+        return self._report_ids
+
+    @property
     def technique_ids(self) -> tuple[str]:
         """Gets the technique ids that make up the column index of the matrix."""
+        self._checkrep()
         return self._technique_ids
 
     def to_sparse_tensor(self) -> tf.SparseTensor:

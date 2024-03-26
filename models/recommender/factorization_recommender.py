@@ -267,4 +267,5 @@ class FactorizationRecommender:
             gradients = tape.gradient(loss, [embedding])
             optimizer.apply_gradients(zip(gradients, [embedding]))
 
+        self._checkrep()
         return np.squeeze(tf.matmul(self._V, embedding).numpy())
