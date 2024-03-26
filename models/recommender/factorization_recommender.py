@@ -3,6 +3,7 @@
 import tensorflow as tf
 import numpy as np
 import keras
+import copy
 
 tf.config.run_functions_eagerly(True)
 tf.compat.v1.enable_eager_execution()
@@ -25,6 +26,7 @@ class FactorizationRecommender:
     #   - loss is not None
     # Safety from rep exposure:
     #   - U and V are private and not reassigned
+    #   - methods to get U and V return a deepcopy of the numpy representation
 
     def __init__(self, m, n, k):
         """Initializes a FactorizationRecommender object.
@@ -65,7 +67,19 @@ class FactorizationRecommender:
         #   - V.shape[1] > 0
         assert self._V.shape[1] > 0
         #   - loss is not None
-        # assert self._loss is not None
+        assert self._loss is not None
+
+    @property
+    def U(self) -> np.ndarray:
+        """Gets U as a factor of the factorization UV^T."""
+        self._checkrep()
+        return copy.deepcopy(self._U.numpy())
+
+    @property
+    def V(self) -> np.ndarray:
+        """Gets V as a factor of the factorization UV^T."""
+        self._checkrep()
+        return copy.deepcopy(self._V.numpy())
 
     def _get_estimated_matrix(self) -> tf.Tensor:
         """Gets the estimated matrix UV^T."""
