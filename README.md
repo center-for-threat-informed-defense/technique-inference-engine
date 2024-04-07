@@ -1,13 +1,7 @@
 # Technique Inference Engine
 
-<!-- TODO Put a one paragraph summary of the project here. -->
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-mollit anim id est laborum.
+The goal of the Technique Inference Engine (TIE) project is to, given a small set of
+observed MITRE ATT&CK techniques, predict the next most likely techniques.
 
 **Table Of Contents:**
 
@@ -26,15 +20,17 @@ Set the extension's TOC:Levels setting to "2..6"
 
 ## Getting Started
 
-<!-- TODO Write one paragraph about how users should get started,
-     and update the table of resources below. -->
+To get started, clone the repository using git.  All required packages may be installed
+via
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-mollit anim id est laborum.
+`poetry build`
+
+See https://python-poetry.org for details.
+
+As the UI is still in the early stages of development, please utilize the provided
+notebook main.ipynb in the models folder to play with the model during development.
+All cells should be executed in order.  Feel free to play with the hyperparameters,
+such as learning_rate, regularization_coefficient, gravity_coefficient, etc.
 
 | Resource        | Description              |
 | --------------- | ------------------------ |
