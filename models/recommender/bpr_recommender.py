@@ -2,9 +2,10 @@ import tensorflow as tf
 import math
 import numpy as np
 import keras
+from .recommender import Recommender
 
 
-class BPRRecommender:
+class BPRRecommender(Recommender):
     """A Bayesian Personalized Ranking recommender.
 
     Based on BPR: Bayesian Personalized Ranking from Implicit Feedback.
@@ -57,6 +58,14 @@ class BPRRecommender:
         #   - V.shape[1] > 0
         assert self._V.shape[1] > 0
 
+    @property
+    def U(self) -> np.ndarray:
+        return np.copy(self._U)
+
+    @property
+    def V(self) -> np.ndarray:
+        return np.copy(self._V)
+
     def _sample_dataset(self, data: np.ndarray) -> tuple[int, int, int]:
         """Samples the dataset according to the bootstrapped sampling for BPR.
 
@@ -105,17 +114,12 @@ class BPRRecommender:
     def fit(
         self,
         data: tf.SparseTensor,
-        num_iterations: int,
         learning_rate: float,
+        num_iterations: int,
         w_regularization: float,
-        v_i_regularization,
-        v_j_regularization,
+        v_i_regularization: float,
+        v_j_regularization: float,
     ):
-        """Fits the model to data.
-
-        Args:
-            data: an mxn tensor of training data.
-        """
         data = tf.sparse.reorder(data)
         data = tf.sparse.to_dense(data)
 
@@ -157,21 +161,58 @@ class BPRRecommender:
         return np.dot(self._U, self._V.T)
 
     def evaluate(self, test_data: tf.SparseTensor) -> float:
-        """Evaluates the solution.
-
-        Requires that the model has been trained.
-
-        Args:
-            test_data: mxn tensor on which to evaluate the model.
-                Requires that mxn match the dimensions of the training tensor and
-                each row i and column j correspond to the same entity and item
-                in the training tensor, respectively.
-
-        Returns: the mean squared error of the test data.
-        """
         pred = self._get_estimated_matrix()
         predictions = tf.gather_nd(pred, test_data.indices)
 
         loss = keras.losses.MeanSquaredError()
 
         return loss(test_data.values, predictions).numpy()
+
+    def predict(self) -> np.ndarray:
+        return self._get_estimated_matrix()
+
+    def predict_new_entity(
+        self,
+        entity: tf.SparseTensor,
+        learning_rate: float,
+        num_iterations: int,
+        w_regularization: float,
+        **kwargs,
+    ) -> np.array:
+        new_entity = tf.sparse.reorder(entity)
+        new_entity = tf.sparse.to_dense(new_entity)
+
+        new_entity_embedding = np.random.normal(
+            loc=0, scale=math.sqrt(1 / self._U.shape[1]), size=(1, self._U.shape[1])
+        )
+
+        # initialize theta - done - init
+        # repeat
+        for i in range(num_iterations):
+
+            # draw u, i, j from D_s
+            _, i, j = self._sample_dataset(tf.expand_dims(new_entity, axis=0))
+            # print("u", u, "i", i, "j", j)
+
+            # theta = theta + alpha * (e^(-x) sigma(x) d/dtheta x + lambda theta)
+            # TODO factor out
+            x_ui = np.dot(new_entity_embedding, self._V[i, :])
+            x_uj = np.dot(new_entity_embedding, self._V[j, :])
+            x_uij = x_ui - x_uj
+
+            sigmoid_derivative = (math.e ** (-x_uij)) / (1 + math.e ** (-x_uij))
+
+            d_w = self._V[i, :] - self._V[j, :]
+
+            new_entity_embedding += learning_rate * (
+                sigmoid_derivative * d_w
+                + (w_regularization * np.sum(new_entity_embedding))
+            )
+
+        # return theta
+        # set in rep
+
+        return np.squeeze(np.dot(new_entity_embedding, self._V.T).T)
+
+
+Recommender.register(BPRRecommender)

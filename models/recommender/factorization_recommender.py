@@ -4,12 +4,13 @@ import tensorflow as tf
 import numpy as np
 import keras
 import copy
+from .recommender import Recommender
 
 tf.config.run_functions_eagerly(True)
 tf.compat.v1.enable_eager_execution()
 
 
-class FactorizationRecommender:
+class FactorizationRecommender(Recommender):
     """A matrix factorization collaborative filtering recommender model."""
 
     # Abstraction function:
@@ -179,9 +180,14 @@ class FactorizationRecommender:
         """Fits the model to data.
 
         Args:
-            data: an mxn tensor of training data
-            num_iterations: number of training iterations to execute
-            learning_rate: the learning rate
+            data: an mxn tensor of training data.
+            learning_rate: the learning rate.
+            num_iterations: number of training iterations to execute.
+            regularization_coefficient: coefficient on the embedding regularization term.
+            gravity_coefficient: coefficient on the prediction regularization term.
+
+        Mutates:
+            The recommender to the new trained state.
         """
         # preliminaries
         optimizer = keras.optimizers.legacy.SGD(learning_rate=learning_rate)
@@ -201,30 +207,10 @@ class FactorizationRecommender:
             optimizer.apply_gradients(zip(gradients, [self._U, self._V]))
 
     def evaluate(self, test_data: tf.SparseTensor) -> float:
-        """Evaluates the solution.
-
-        Requires that the model has been trained.
-
-        Args:
-            test_data: mxn tensor on which to evaluate the model.
-                Requires that mxn match the dimensions of the training tensor and
-                each row i and column j correspond to the same entity and item
-                in the training tensor, respectively.
-
-        Returns: the mean squared error of the test data.
-        """
         error = self._calculate_mean_square_error(test_data)
         return error.numpy()
 
     def predict(self) -> np.ndarray:
-        """Gets the model predictions.
-
-        The predictions consist of the estimated matrix A_hat of the truth
-        matrix A, of which the training data contains a sparse subset of the entries.
-
-        Returns:
-            An mxn array of values.
-        """
         return self._get_estimated_matrix().numpy()
 
     def predict_with_cosine(self):
@@ -240,17 +226,21 @@ class FactorizationRecommender:
     def predict_new_entity(
         self,
         entity: tf.SparseTensor,
-        num_iterations: int,
         learning_rate: float,
+        num_iterations: int,
         regularization_coefficient: float,
         gravity_coefficient: float,
     ) -> np.array:
-        """Predicts for an unseen entity.
+        """Recommends items to an unseen entity
 
         Args:
             entity: a length-n sparse tensor of consisting of the new entity's
                 ratings for each item, indexed exactly as the items used to
                 train this model.
+            learning rate: the learning rate for SGD.
+            num_iterations: the number of iterations for SGD.
+            regularization_coefficient: coefficient on the embedding regularization term.
+            gravity_coefficient: coefficient on the prediction regularization term.
 
         Returns:
             An array of predicted values for the new entity.
@@ -293,3 +283,6 @@ class FactorizationRecommender:
 
         self._checkrep()
         return np.squeeze(tf.matmul(self._V, embedding).numpy())
+
+
+Recommender.register(FactorizationRecommender)
