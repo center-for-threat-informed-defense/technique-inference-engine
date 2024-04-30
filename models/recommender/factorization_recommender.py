@@ -171,10 +171,10 @@ class FactorizationRecommender:
     def fit(
         self,
         data: tf.SparseTensor,
-        num_iterations: int,
-        learning_rate: float,
-        regularization_coefficient: float,
-        gravity_coefficient: float,
+        learning_rate: float = 10.0,
+        num_iterations: int = 1000,
+        regularization_coefficient: float = 0.1,
+        gravity_coefficient: float = 0.0,
     ):
         """Fits the model to data.
 
@@ -226,6 +226,16 @@ class FactorizationRecommender:
             An mxn array of values.
         """
         return self._get_estimated_matrix().numpy()
+
+    def predict_with_cosine(self):
+        """Gets the model predictions using cosine similarity."""
+        U_norms = tf.linalg.norm(self._U, axis=1, keepdims=True)
+        assert U_norms.shape[0] == self._U.shape[0]
+        V_norms = tf.linalg.norm(self._V, axis=1, keepdims=True)
+
+        U_normalized = self._U / U_norms
+        V_normalized = self._V / V_norms
+        return tf.matmul(U_normalized, V_normalized, transpose_b=True).numpy()
 
     def predict_new_entity(
         self,
