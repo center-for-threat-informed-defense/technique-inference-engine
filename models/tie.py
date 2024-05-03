@@ -5,7 +5,7 @@ from matrix import ReportTechniqueMatrix
 import math
 import pandas as pd
 import numpy as np
-from utils import get_mitre_technique_ids_to_names, recall_at_k
+from utils import get_mitre_technique_ids_to_names, precision_at_k, recall_at_k
 import copy
 
 tf.config.run_functions_eagerly(True)
@@ -108,6 +108,24 @@ class TechniqueInferenceEngine:
         self._checkrep()
         return mean_squared_error
 
+    def precision(self, k: int = 10) -> float:
+        """Calculates the precision of the top k model predictions.
+
+        Precision is defined as the average fraction of items in the top k predictions
+        which appear in the test set.  If k < the number of items in the test set for a
+        particular user, then the maximum precision is 1.0.
+
+        Mathematically, it is defined as
+        precision@k = (1\m) \sum_u (\sum_{i=1}^k [[pred_i in test set]] / k)
+
+        Args:
+            k: the number of predictions to include in the top k.  Requires 0 < k <= n.
+
+        Returns:
+            The computed precision for the top k model predictions.
+        """
+        return precision_at_k(self.predict(), self._test_data.to_pandas(), k)
+
     def recall(self, k: int = 10) -> float:
         """Calculates the recall of the top k model predictions.
 
@@ -122,7 +140,7 @@ class TechniqueInferenceEngine:
             k: the number of predictions to include in the top k.  Requires k > 0.
 
         Returns:
-            The computed recall for the top k predictions.
+            The computed recall for the top k model predictions.
         """
         return recall_at_k(self.predict(), self._test_data.to_pandas(), k)
 
