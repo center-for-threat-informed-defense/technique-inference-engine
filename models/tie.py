@@ -5,7 +5,12 @@ from matrix import ReportTechniqueMatrix
 import math
 import pandas as pd
 import numpy as np
-from utils import get_mitre_technique_ids_to_names, precision_at_k, recall_at_k
+from utils import (
+    get_mitre_technique_ids_to_names,
+    normalized_discounted_cumulative_gain,
+    precision_at_k,
+    recall_at_k,
+)
 import copy
 
 tf.config.run_functions_eagerly(True)
@@ -165,33 +170,9 @@ class TechniqueInferenceEngine:
         Returns:
             NDCG computed on the top k predictions.
         """
-        test_set_size = self._test_data.to_pandas().sum(axis=1).astype("int")
-        assert (self._training_data.m,) == test_set_size.shape
-
-        def max_idcg(k) -> float:
-            return sum(math.log2(i + 1) for i in range(1, k + 1))
-
-        user_idcg = test_set_size.apply(max_idcg)
-        idcg = user_idcg.sum() / self._training_data.m
-
-        prediction_ranking = self.predict().rank(
-            axis=1, method="first", ascending=False
+        return normalized_discounted_cumulative_gain(
+            self.predict(), self._test_data.to_pandas()
         )
-        assert self._training_data.m, 1 == prediction_ranking.shape
-
-        # numerator: 1 if test set is in prediction, 0 otherwise
-        numerator = np.logical_and(
-            (prediction_ranking <= k).to_numpy(), self._test_data.to_numpy()
-        )
-
-        # denominator: log_2 of ranking + 1
-        denominator = np.log2(prediction_ranking.to_numpy() + 1)
-
-        divide = np.divide(numerator, denominator)
-
-        dcg = (1 / self._training_data.m) * np.sum(divide)
-
-        return dcg / idcg
 
     def predict(self) -> pd.DataFrame:
         """Obtains model predictions.
