@@ -92,11 +92,12 @@ class WALSRecommender(Recommender):
         Mutates:
             The recommender to the new trained state.
         """
+        alpha = (1 / self._c) - 1
         self._model = AlternatingLeastSquares(
             factors=self._k,
             regularization=regularization_coefficient,
             iterations=num_iterations,
-            alpha=40,
+            alpha=alpha,
         )
 
         row_indices = tuple(index[0] for index in data.indices)
