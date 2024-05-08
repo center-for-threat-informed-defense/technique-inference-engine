@@ -33,8 +33,8 @@ class FactorizationRecommender(Recommender):
         """Initializes a FactorizationRecommender object.
 
         Args:
-            m: number of entity embeddings
-            n: number of item embeddings
+            m: number of entities
+            n: number of items
             k: embedding dimension
         """
         init_stddev = 0.5
