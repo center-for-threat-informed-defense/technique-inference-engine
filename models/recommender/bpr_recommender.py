@@ -66,7 +66,9 @@ class BPRRecommender(Recommender):
     def V(self) -> np.ndarray:
         return np.copy(self._V)
 
-    def _sample_dataset(self, data: np.ndarray) -> tuple[int, int, int]:
+    def _sample_dataset(
+        self, data: np.ndarray, sample_user_probability: np.ndarray
+    ) -> tuple[int, int, int]:
         """Samples the dataset according to the bootstrapped sampling for BPR.
 
         Sampling is performed uniformly over all triples of the form (u, i, j),
@@ -83,6 +85,25 @@ class BPRRecommender(Recommender):
         """
         m, n = data.shape
 
+        u = np.random.choice(np.arange(m), p=sample_user_probability)
+
+        user_observations = data[u, :]
+        user_non_observations = 1 - user_observations
+        num_user_observations = np.sum(user_observations)
+
+        # each observation is filled with prob 1, so sample with that prob
+        i = np.random.choice(
+            len(user_observations), p=user_observations / num_user_observations
+        )
+        j = np.random.choice(
+            len(user_observations),
+            p=user_non_observations / (n - num_user_observations),
+        )
+
+        return u, i, j
+
+    def _calculate_sample_user_probability(self, data: np.ndarray):
+        m, n = data.shape
         data = np.nan_to_num(data)
 
         observations_per_user = np.sum(data, axis=1)
@@ -90,22 +111,9 @@ class BPRRecommender(Recommender):
 
         samples_per_user = observations_per_user * (n - observations_per_user)
         sample_user_probability = samples_per_user / np.sum(samples_per_user)
+        assert sample_user_probability.shape == (m,)
 
-        u = np.random.choice(np.arange(m), p=sample_user_probability)
-
-        user_observations = data[u, :]
-        user_non_observations = 1 - user_observations
-
-        # each observation is filled with prob 1, so sample with that prob
-        i = np.random.choice(
-            len(user_observations), p=user_observations / np.sum(user_observations)
-        )
-        j = np.random.choice(
-            len(user_observations),
-            p=user_non_observations / np.sum(user_non_observations),
-        )
-
-        return u, i, j
+        return sample_user_probability
 
     def _predict_for_single_entry(self, u, i) -> float:
         """Predicts the value for a single user-item pair."""
@@ -116,19 +124,23 @@ class BPRRecommender(Recommender):
         data: tf.SparseTensor,
         learning_rate: float,
         num_iterations: int,
-        w_regularization: float,
-        v_i_regularization: float,
-        v_j_regularization: float,
+        regularization: float,
     ):
         data = tf.sparse.reorder(data)
         data = tf.sparse.to_dense(data)
+
+        w_regularization = regularization
+        v_i_regularization = regularization
+        v_j_regularization = regularization
+
+        sample_user_probability = self._calculate_sample_user_probability(data)
 
         # initialize theta - done - init
         # repeat
         for i in range(num_iterations):
 
             # draw u, i, j from D_s
-            u, i, j = self._sample_dataset(data)
+            u, i, j = self._sample_dataset(data, sample_user_probability)
             # print("u", u, "i", i, "j", j)
 
             # theta = theta + alpha * (e^(-x) sigma(x) d/dtheta x + lambda theta)
@@ -145,12 +157,12 @@ class BPRRecommender(Recommender):
             d_hj = -self._U[u, :]
 
             self._U[u, :] += learning_rate * (
-                sigmoid_derivative * d_w + (w_regularization * np.sum(self._U[u, :]))
+                sigmoid_derivative * d_w - (w_regularization * np.sum(self._U[u, :]))
             )
             self._V[i, :] += learning_rate * (
-                sigmoid_derivative * d_hi + (v_i_regularization * np.sum(self._V[i, :]))
+                sigmoid_derivative * d_hi - (v_i_regularization * np.sum(self._V[i, :]))
             )
-            self._V[j, :] += learning_rate * (sigmoid_derivative * d_hj) + (
+            self._V[j, :] += learning_rate * (sigmoid_derivative * d_hj) - (
                 v_j_regularization * np.sum(self._V[j, :])
             )
 

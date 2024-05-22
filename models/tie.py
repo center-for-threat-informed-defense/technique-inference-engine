@@ -42,6 +42,7 @@ class TechniqueInferenceEngine:
     def __init__(
         self,
         training_data: ReportTechniqueMatrix,
+        validation_data: ReportTechniqueMatrix,
         test_data: ReportTechniqueMatrix,
         model: Recommender,
         enterprise_attack_filepath: str,
@@ -57,6 +58,7 @@ class TechniqueInferenceEngine:
         self._enterprise_attack_filepath = enterprise_attack_filepath
 
         self._training_data = training_data
+        self._validation_data = validation_data
         self._test_data = test_data
         self._model = copy.deepcopy(model)
 
@@ -112,6 +114,60 @@ class TechniqueInferenceEngine:
 
         self._checkrep()
         return mean_squared_error
+
+    def fit_with_cross_validation(self, **kwargs) -> float:
+        def parameter_cartesian_product(
+            variables_names: tuple[str], values: tuple[tuple[float]]
+        ) -> dict[str, float]:
+            """Yield cartesian product of all variables.
+
+            Args:
+                variable_names: iterable of variables for which to generate combinations.
+                values: the values over which to generate combinations such that
+                    values[i] contains all values for variables[i].
+
+            Yields:
+                A dictionary mapping each variable to a value such that each dictionary yielded
+                is a unique combination of the cartesian product of values over variables.
+            """
+            assert len(variables_names) == len(values)
+
+            # base case: No variables over which to make product
+
+            if len(variables_names) == 0:
+                yield {}
+            else:
+
+                for value in values[0]:
+
+                    for remaining_parameters in parameter_cartesian_product(
+                        variables_names[1:], values[1:]
+                    ):
+                        yield remaining_parameters | {variables_names[0]: value}
+
+        best_hyperparameters = {}
+        best_score = -float("inf")
+
+        variable_names = tuple(kwargs.keys())
+        variable_values = tuple(kwargs.get(key) for key in variable_names)
+
+        for hyperparameters in parameter_cartesian_product(
+            variable_names, variable_values
+        ):
+
+            print("hyperparameters", hyperparameters)
+            self.fit(**hyperparameters)
+            score = normalized_discounted_cumulative_gain(
+                self.predict(), self._validation_data.to_pandas(), k=20
+            )
+            print("score for hyperparameters", score)
+            if score > best_score:
+
+                best_score = score
+                best_hyperparameters = hyperparameters
+
+        print("best hyper parameters", best_hyperparameters)
+        self.fit(**best_hyperparameters)
 
     def precision(self, k: int = 10) -> float:
         """Calculates the precision of the top k model predictions.
@@ -171,7 +227,7 @@ class TechniqueInferenceEngine:
             NDCG computed on the top k predictions.
         """
         return normalized_discounted_cumulative_gain(
-            self.predict(), self._test_data.to_pandas()
+            self.predict(), self._test_data.to_pandas(), k=k
         )
 
     def predict(self) -> pd.DataFrame:
