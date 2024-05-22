@@ -155,18 +155,15 @@ class TechniqueInferenceEngine:
             variable_names, variable_values
         ):
 
-            print("hyperparameters", hyperparameters)
             self.fit(**hyperparameters)
             score = normalized_discounted_cumulative_gain(
                 self.predict(), self._validation_data.to_pandas(), k=20
             )
-            print("score for hyperparameters", score)
             if score > best_score:
 
                 best_score = score
                 best_hyperparameters = hyperparameters
 
-        print("best hyper parameters", best_hyperparameters)
         self.fit(**best_hyperparameters)
 
     def precision(self, k: int = 10) -> float:

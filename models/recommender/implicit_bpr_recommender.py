@@ -1,3 +1,4 @@
+import math
 from .recommender import Recommender
 import numpy as np
 import tensorflow as tf
@@ -10,31 +11,51 @@ class ImplicitBPRRecommender:
     """A matrix factorization recommender model to suggest items for a particular entity."""
 
     # Abstraction function:
-    #   AF(k, model) = model to be trained with embedding dimension k if model is None,
-    #       or model with embedding dimension k if model
+    #   AF(m, n, k, model, num_new_users) = model to be trained with embedding dimension k
+    #       on m entities and n items if model is None,
+    #       or model trained on such data and with predictions for num_new_users
+    #       if model is not None
     # Rep invariant:
+    #   - m > 0
+    #   - n > 0
     #   - k > 0
+    #   - num_new_users >= 0
     # Safety from rep exposure:
     #   - k is private and immutable
     #   - model is never returned
 
-    def __init__(self, k: int):
+    def __init__(self, m: int, n: int, k: int):
         """Initializes an ImplicitBPRRecommender object.
 
         Args:
+            m: number of entities.  Requires m > 0.
+            n: number of items.  Requires n > 0.
             k: the embedding dimension.  Requires k > 0.
         """
         # assert preconditions
         assert k > 0
+        assert n > 0
+        assert k > 0
 
+        self._m = m
+        self._n = n
         self._k = k
         self._model = None
+
+        self._num_new_users = 0
 
         self._checkrep()
 
     def _checkrep(self):
         """Asserts the rep invariant."""
+        #   - m > 0
+        assert self._m > 0
+        #   - n > 0
+        assert self._n > 0
+        #   - k > 0
         assert self._k > 0
+        #   - num_new_users >= 0
+        assert self._num_new_users >= 0
 
     @property
     def U(self) -> np.ndarray:
@@ -128,14 +149,4 @@ class ImplicitBPRRecommender:
         return np.dot(self._model.user_factors, self._model.item_factors.T)
 
     def predict_new_entity(self, entity: tf.SparseTensor, **kwargs) -> np.array:
-        """Recommends items to an unseen entity.
-
-        Args:
-            entity: a length-n sparse tensor of consisting of the new entity's
-                ratings for each item, indexed exactly as the items used to
-                train this model.
-
-        Returns:
-            An array of predicted values for the new entity.
-        """
         raise NotImplementedError

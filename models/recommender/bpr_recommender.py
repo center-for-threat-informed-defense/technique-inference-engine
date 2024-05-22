@@ -218,7 +218,7 @@ class BPRRecommender(Recommender):
 
             new_entity_embedding += learning_rate * (
                 sigmoid_derivative * d_w
-                + (w_regularization * np.sum(new_entity_embedding))
+                - (w_regularization * np.sum(new_entity_embedding))
             )
 
         # return theta
