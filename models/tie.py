@@ -115,10 +115,19 @@ class TechniqueInferenceEngine:
         self._checkrep()
         return mean_squared_error
 
-    def fit_with_cross_validation(self, **kwargs) -> float:
+    def fit_with_cross_validation(self, **kwargs):
+        """Fits the model by validating hyperparameters on the cross validation data.
+
+        Selects the hyperparameters which maximize normalized discounted cumulative gain
+        (NDCG) on the validation data.
+
+        Args:
+            kwargs: mapping of hyperparameter to values over which to cross-validate.
+        """
+
         def parameter_cartesian_product(
             variables_names: tuple[str], values: tuple[tuple[float]]
-        ) -> dict[str, float]:
+        ):
             """Yield cartesian product of all variables.
 
             Args:
