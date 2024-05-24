@@ -1,24 +1,30 @@
-from .recommender import Recommender
 import numpy as np
 import tensorflow as tf
+from .recommender import Recommender
+from implicit.als import AlternatingLeastSquares
 from sklearn.metrics import mean_squared_error
+from scipy import sparse
+import copy
 
 
-class WalsRecommender(Recommender):
+class ImplicitWalsRecommender(Recommender):
     """A WALS matrix factorization collaborative filtering recommender model."""
 
     # Abstraction function:
-    # AF(U, V) = a matrix factorization collaborative filtering recommendation model
-    #   with user embeddings U and item embeddings V
+    # AF(model, m, n, k, num_new_users) = a matrix factorization collaborative filtering recommendation model
+    #   of embedding dimension k with m entity embeddings model.user_factors
+    #   and n item embeddings model.item_factors.
+    #   The model has performed cold start prediction for num_new_users.
     # Rep invariant:
-    #   - U is not None
-    #   - V is not None
+    #   - m > 0
+    #   - n > 0
+    #   - k > 0
     # Safety from rep exposure:
     #   - k is private and immutable
     #   - model is never returned
 
     def __init__(self, m: int, n: int, k: int = 10):
-        """Initializes a new WALSRecommender object.
+        """Initializes a new ImplicitWALSRecommender object.
 
         Args:
             m: number of entities.  Requires m > 0.
@@ -29,52 +35,40 @@ class WalsRecommender(Recommender):
         assert n > 0
         assert k > 0
 
-        init_stddev = 0.5
+        self._m = m
+        self._n = n
+        self._k = k
+        self._model = None
 
-        U = np.random.normal(loc=0.0, scale=init_stddev, size=(m, k))
-        V = np.random.normal(loc=0.0, scale=init_stddev, size=(n, k))
-
-        self._U = U
-        self._V = V
+        # for tracking how many new users we've seen so far
+        self._num_new_users = 0
 
         self._checkrep()
 
     def _checkrep(self):
         """Asserts the rep invariant."""
-        #   - U is not None
-        assert self._U is not None
-        #   - V is not None
-        assert self._V is not None
-
-    @property
-    def m(self) -> int:
-        """Gets the number of entities represented by the model."""
-        self._checkrep()
-        return self._U.shape[0]
-
-    @property
-    def n(self) -> int:
-        """Gets the number of items represented by the model."""
-        self._checkrep()
-        return self._V.shape[0]
-
-    @property
-    def k(self) -> int:
-        """Gets the embedding dimension of the model."""
-        self._checkrep()
-        return self._U.shape[1]
+        #   - m > 0
+        assert self._m > 0
+        #   - n > 0
+        assert self._n > 0
+        #   - k > 0
+        assert self._k > 0
 
     @property
     def U(self) -> np.ndarray:
         """Gets U as a factor of the factorization UV^T.  Requires model to be trained."""
+        assert self._model
+
         self._checkrep()
-        return np.copy(self._U)
+        return np.copy(self._model.user_factors)
 
     @property
     def V(self) -> np.ndarray:
         """Gets V as a factor of the factorization UV^T.  Requires model to be trained."""
+        assert self._model
+
         self._checkrep()
-        return np.copy(self._V)
+        return np.copy(self._model.item_factors)
 
     def fit(
         self,
@@ -94,64 +88,23 @@ class WalsRecommender(Recommender):
         Mutates:
             The recommender to the new trained state.
         """
-        # preconditions
         assert 0 < c < 1
 
-        P: np.ndarray = tf.sparse.to_dense(tf.sparse.reorder(data)).numpy()
-
-        assert P.shape == (self.m, self.n)
-
         alpha = (1 / c) - 1
+        self._model = AlternatingLeastSquares(
+            factors=self._k,
+            regularization=regularization_coefficient,
+            iterations=num_iterations,
+            alpha=alpha,
+        )
 
-        for _ in range(num_iterations):
+        row_indices = tuple(index[0] for index in data.indices)
+        column_indices = tuple(index[1] for index in data.indices)
+        sparse_data = sparse.csr_matrix(
+            (data.values, (row_indices, column_indices)), shape=data.shape
+        )
 
-            # step 1: update U
-            new_U = np.ndarray((self.m, self.k))
-            # for each item embedding
-
-            V_T_V = self._V.T @ self._V
-            for i in range(self.m):
-
-                P_u = P[i, :]
-                # C is c if unobserved, one otherwise
-                C_u = np.diag(np.where(P_u > 0, alpha + 1, 1))
-
-                # X = (V^T CV + \lambda I)^{-1} V^T CP
-                diff_matrix = C_u - np.identity(self.n)
-                inv = np.linalg.inv(
-                    V_T_V
-                    + self._V.T @ diff_matrix @ self._V
-                    + regularization_coefficient * np.identity(self.k)
-                )
-                U_i = inv @ self._V.T @ C_u @ P_u
-
-                new_U[i, :] = U_i
-
-            self._U = new_U
-
-            new_V = np.ndarray((self.n, self.k))
-
-            U_T_U = self._U.T @ self._U
-            for j in range(self.n):
-
-                P_j = P[:, j]
-                # C is c if unobserved, one otherwise
-
-                where = np.where(P_j > 0, alpha + 1, 1)
-                C_j = np.diag(where)
-
-                diff_matrix = C_j - np.identity(self.m)
-
-                inv = np.linalg.inv(
-                    U_T_U
-                    + self._U.T @ diff_matrix @ self._U
-                    + regularization_coefficient * np.identity(self.k)
-                )
-                V_j = inv @ self._U.T @ C_j @ P_j
-
-                new_V[j, :] = V_j
-
-            self._V = new_V
+        self._model.fit(sparse_data)
 
         self._checkrep()
 
@@ -188,7 +141,7 @@ class WalsRecommender(Recommender):
             An mxn array of values.
         """
         self._checkrep()
-        return np.dot(self._U, self._V.T)
+        return np.dot(self._model.user_factors, self._model.item_factors.T)
 
     def predict_new_entity(self, entity: tf.SparseTensor) -> np.array:
         """Recommends items to an unseen entity.
@@ -201,4 +154,19 @@ class WalsRecommender(Recommender):
         Returns:
             An array of predicted values for the new entity.
         """
-        raise NotImplementedError
+        # just need an item 0 for all entity indices
+        row_indices = np.zeros(len(entity.indices))
+        column_indices = entity.indices[:, 0]
+
+        sparse_data = sparse.csr_matrix(
+            (entity.values, (row_indices, column_indices)), shape=(1, entity.shape[0])
+        )
+
+        user_id = self._m + self._num_new_users
+
+        self._model.partial_fit_users((user_id,), sparse_data)
+
+        self._num_new_users += 1
+
+        self._checkrep()
+        return np.dot(self._model.user_factors[user_id], self._model.item_factors.T)
