@@ -103,6 +103,28 @@ class WalsRecommender(Recommender):
 
         alpha = (1 / c) - 1
 
+        def V_T_C_I_V(V, c_array):
+            _, k = V.shape
+            # print("v shape", V.shape)
+
+            c_minus_i = c_array - 1
+            nonzero_c = tuple(np.nonzero(c_minus_i)[0].tolist())
+
+            product = np.ndarray((k, k))
+
+            for i in nonzero_c:
+
+                v_i = np.expand_dims(V[i, :], axis=1)
+                # print("v_i shape", v_i.shape)
+
+                square_addition = v_i @ v_i.T
+                # print("square addition shape", square_addition.shape)
+                assert square_addition.shape == (k, k)
+
+                product += square_addition
+
+            return product
+
         for _ in range(num_iterations):
 
             # step 1: update U
@@ -114,16 +136,21 @@ class WalsRecommender(Recommender):
 
                 P_u = P[i, :]
                 # C is c if unobserved, one otherwise
-                C_u = np.diag(np.where(P_u > 0, alpha + 1, 1))
+                C_u = np.where(P_u > 0, alpha + 1, 1)
+                assert C_u.shape == (self.n,)
+
+                confidence_scaled_v_transpose_v = V_T_C_I_V(self._V, C_u)
 
                 # X = (V^T CV + \lambda I)^{-1} V^T CP
-                diff_matrix = C_u - np.identity(self.n)
                 inv = np.linalg.inv(
                     V_T_V
-                    + self._V.T @ diff_matrix @ self._V
+                    + confidence_scaled_v_transpose_v
                     + regularization_coefficient * np.identity(self.k)
                 )
-                U_i = inv @ self._V.T @ C_u @ P_u
+
+                # removed C_u here since unneccessary in binary case
+                # P_u is already binary
+                U_i = inv @ self._V.T @ P_u
 
                 new_U[i, :] = U_i
 
@@ -137,17 +164,19 @@ class WalsRecommender(Recommender):
                 P_j = P[:, j]
                 # C is c if unobserved, one otherwise
 
-                where = np.where(P_j > 0, alpha + 1, 1)
-                C_j = np.diag(where)
+                C_v = np.where(P_j > 0, alpha + 1, 1)
 
-                diff_matrix = C_j - np.identity(self.m)
+                confidence_scaled_u_transpose_u = V_T_C_I_V(self._U, C_v)
 
                 inv = np.linalg.inv(
                     U_T_U
-                    + self._U.T @ diff_matrix @ self._U
+                    + confidence_scaled_u_transpose_u
                     + regularization_coefficient * np.identity(self.k)
                 )
-                V_j = inv @ self._U.T @ C_j @ P_j
+
+                # removed C_u here since unnecessary in binary case
+                # P_u is already binary
+                V_j = inv @ self._U.T @ P_j
 
                 new_V[j, :] = V_j
 
