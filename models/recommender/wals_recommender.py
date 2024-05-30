@@ -76,6 +76,102 @@ class WalsRecommender(Recommender):
         self._checkrep()
         return np.copy(self._V)
 
+    def _update_factor(
+        self,
+        opposing_factors: np.ndarray,
+        data: np.ndarray,
+        alpha: float,
+        regularization_coefficient: float,
+    ) -> np.ndarray:
+        """Updates factors according to least squares on the opposing factors.
+
+        Determines factors which minimize loss on data based on opposing_factors.
+        For example, if opposing_factors are the item factors, determines the entity factors which
+        minimize loss on data.
+
+        Args:
+            opposing_factors: a pxk array of the fixed factors in the optimization step
+                (ie entity or item factors).  Requires p, k > 0.
+            predictions: A pxq array of the observed values for each of the entities/items associated
+                with the p opposing_factors and the q items/entities associated with factors.
+                Requires p, q > 0.
+            alpha: Weight for positive training examples such that each positive example takes value
+                alpha + 1.  Requires alpha > 0.
+            regularization_coefficient: coefficient on the embedding regularization term.  Requires
+                regularization_coefficient > 0.
+
+
+        Returns:
+            A qxk array of recomputed factors which minimize error.
+        """
+        # assert preconditions
+        p, k = opposing_factors.shape
+        q = data.shape[1]
+        assert p > 0
+        assert k == self.k
+        assert p == data.shape[0]
+        assert q > 0
+        assert alpha > 0
+        assert regularization_coefficient > 0
+
+        def V_T_C_I_V(V, c_array):
+            _, k = V.shape
+            # print("v shape", V.shape)
+
+            c_minus_i = c_array - 1
+            nonzero_c = tuple(np.nonzero(c_minus_i)[0].tolist())
+
+            product = np.ndarray((k, k))
+
+            for i in nonzero_c:
+
+                v_i = np.expand_dims(V[i, :], axis=1)
+                # print("v_i shape", v_i.shape)
+
+                square_addition = v_i @ v_i.T
+                # print("square addition shape", square_addition.shape)
+                assert square_addition.shape == (k, k)
+
+                product += square_addition
+
+            return product
+
+        # in line with the paper,
+        # we will use variable names as if we are updating user factors based
+        # on V, the item factors.  Since the process is the same for both,
+        # the variable names are interchangeable.  This just makes following
+        # along with the paper easier.
+        V = opposing_factors
+
+        new_U = np.ndarray((q, k))
+        # for each item embedding
+
+        V_T_V = V.T @ V
+        # update each of the q user factors
+        for i in range(q):
+
+            P_u = data[:, i]
+            # C is c if unobserved, one otherwise
+            C_u = np.where(P_u > 0, alpha + 1, 1)
+            assert C_u.shape == (p,)
+
+            confidence_scaled_v_transpose_v = V_T_C_I_V(V, C_u)
+
+            # X = (V^T CV + \lambda I)^{-1} V^T CP
+            inv = np.linalg.inv(
+                V_T_V
+                + confidence_scaled_v_transpose_v
+                + regularization_coefficient * np.identity(k)
+            )
+
+            # removed C_u here since unneccessary in binary case
+            # P_u is already binary
+            U_i = inv @ V.T @ P_u
+
+            new_U[i, :] = U_i
+
+        return new_U
+
     def fit(
         self,
         data: tf.SparseTensor,
@@ -103,84 +199,15 @@ class WalsRecommender(Recommender):
 
         alpha = (1 / c) - 1
 
-        def V_T_C_I_V(V, c_array):
-            _, k = V.shape
-            # print("v shape", V.shape)
-
-            c_minus_i = c_array - 1
-            nonzero_c = tuple(np.nonzero(c_minus_i)[0].tolist())
-
-            product = np.ndarray((k, k))
-
-            for i in nonzero_c:
-
-                v_i = np.expand_dims(V[i, :], axis=1)
-                # print("v_i shape", v_i.shape)
-
-                square_addition = v_i @ v_i.T
-                # print("square addition shape", square_addition.shape)
-                assert square_addition.shape == (k, k)
-
-                product += square_addition
-
-            return product
-
         for _ in range(num_iterations):
 
             # step 1: update U
-            new_U = np.ndarray((self.m, self.k))
-            # for each item embedding
+            self._U = self._update_factor(
+                self._V, P.T, alpha, regularization_coefficient
+            )
 
-            V_T_V = self._V.T @ self._V
-            for i in range(self.m):
-
-                P_u = P[i, :]
-                # C is c if unobserved, one otherwise
-                C_u = np.where(P_u > 0, alpha + 1, 1)
-                assert C_u.shape == (self.n,)
-
-                confidence_scaled_v_transpose_v = V_T_C_I_V(self._V, C_u)
-
-                # X = (V^T CV + \lambda I)^{-1} V^T CP
-                inv = np.linalg.inv(
-                    V_T_V
-                    + confidence_scaled_v_transpose_v
-                    + regularization_coefficient * np.identity(self.k)
-                )
-
-                # removed C_u here since unneccessary in binary case
-                # P_u is already binary
-                U_i = inv @ self._V.T @ P_u
-
-                new_U[i, :] = U_i
-
-            self._U = new_U
-
-            new_V = np.ndarray((self.n, self.k))
-
-            U_T_U = self._U.T @ self._U
-            for j in range(self.n):
-
-                P_j = P[:, j]
-                # C is c if unobserved, one otherwise
-
-                C_v = np.where(P_j > 0, alpha + 1, 1)
-
-                confidence_scaled_u_transpose_u = V_T_C_I_V(self._U, C_v)
-
-                inv = np.linalg.inv(
-                    U_T_U
-                    + confidence_scaled_u_transpose_u
-                    + regularization_coefficient * np.identity(self.k)
-                )
-
-                # removed C_u here since unnecessary in binary case
-                # P_u is already binary
-                V_j = inv @ self._U.T @ P_j
-
-                new_V[j, :] = V_j
-
-            self._V = new_V
+            # step 2: update V
+            self._V = self._update_factor(self._U, P, alpha, regularization_coefficient)
 
         self._checkrep()
 
@@ -219,7 +246,9 @@ class WalsRecommender(Recommender):
         self._checkrep()
         return np.dot(self._U, self._V.T)
 
-    def predict_new_entity(self, entity: tf.SparseTensor) -> np.array:
+    def predict_new_entity(
+        self, entity: tf.SparseTensor, c: float, regularization_coefficient: float
+    ) -> np.array:
         """Recommends items to an unseen entity.
 
         Args:
@@ -230,4 +259,65 @@ class WalsRecommender(Recommender):
         Returns:
             An array of predicted values for the new entity.
         """
-        raise NotImplementedError
+        entity = tf.sparse.to_dense(tf.sparse.reorder(entity)).numpy()
+        assert entity.shape == (self.n,)
+
+        def V_T_C_I_V(V, c_array):
+            _, k = V.shape
+            # print("v shape", V.shape)
+
+            c_minus_i = c_array - 1
+            nonzero_c = tuple(np.nonzero(c_minus_i)[0].tolist())
+
+            product = np.ndarray((k, k))
+
+            for i in nonzero_c:
+
+                v_i = np.expand_dims(V[i, :], axis=1)
+                # print("v_i shape", v_i.shape)
+
+                square_addition = v_i @ v_i.T
+                # print("square addition shape", square_addition.shape)
+                assert square_addition.shape == (k, k)
+
+                product += square_addition
+
+            return product
+
+        # in line with the paper,
+        # we will use variable names as if we are updating user factors based
+        # on V, the item factors.  Since the process is the same for both,
+        # the variable names are interchangeable.  This just makes following
+        # along with the paper easier.
+        V = self._V
+
+        alpha = (1 / c) - 1
+
+        # new_U = np.ndarray((q, k))
+        # for each item embedding
+
+        V_T_V = V.T @ V
+        # update each of the q user factors
+
+        P_u = entity
+        # C is c if unobserved, one otherwise
+        C_u = np.where(P_u > 0, alpha + 1, 1)
+        assert C_u.shape == (self.n,)
+
+        confidence_scaled_v_transpose_v = V_T_C_I_V(V, C_u)
+
+        # X = (V^T CV + \lambda I)^{-1} V^T CP
+        inv = np.linalg.inv(
+            V_T_V
+            + confidence_scaled_v_transpose_v
+            + regularization_coefficient * np.identity(self.k)
+        )
+
+        # removed C_u here since unneccessary in binary case
+        # P_u is already binary
+        new_embedding = inv @ V.T @ P_u
+
+        # (UV^T)^T = VU^T where U is 1xk
+        predictions = self._V @ new_embedding
+
+        return predictions
