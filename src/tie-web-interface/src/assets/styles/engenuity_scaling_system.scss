@@ -1,0 +1,366 @@
+@use 'sass:math';
+@use "sass:map";
+
+
+/** === Window Sizes === */
+
+
+/**
+ * The max desktop width.
+ */
+$max-width: 1000px;
+
+/**
+ * Tablet-mode width.
+ */
+$tablet-width: 700px;
+
+/**
+ * Mobile-mode width.
+ */
+$mobile-width: 600px;
+
+
+/** === Sizing Scale Computations === */
+
+
+/**
+ * The sizing scale's fundamental frequency.
+ */
+$f0: 1;
+
+/**
+ * The sizing scale's ratio.
+ */
+$ratio: 1.618033;
+
+/**
+ * The sizing scale's # of intervals.
+ */
+$n: 2;
+
+/**
+ * The sizing scale's units.
+ */
+$units: 1em;
+
+/**
+ * Generates a sizing scale from Tiny -> Small -> Medium -> Large -> Huge.
+ * @param i
+ *  The index to align the center of the scale to.
+ * @returns
+ *  The sizing scale.
+ */
+ @function make-scale($i) {
+  @return (
+    xxt : $i - 6,
+    xt  : $i - 5,
+    t   : $i - 4,
+    xxs : $i - 3,
+    xs  : $i - 2,
+    s   : $i - 1,
+    m   : $i,
+    l   : $i + 1,
+    xl  : $i + 2,
+    xxl : $i + 3,
+    h   : $i + 4,
+    xh  : $i + 5,
+    xxh : $i + 6
+  );
+}
+$sizes: make-scale(0);
+
+/**
+ * Rounds a number to the specified decimal place.
+ * @param $n
+ *  The number to round.
+ * @param $d
+ *  The number of decimal places.
+ * @returns
+ *  The rounded number.
+ */
+@function round($n, $d) {
+  @return math.div(math.round($n * math.pow(10, $d)), math.pow(10, $d));
+}
+
+/**
+ * Returns a size from the sizing scale.
+ * @param i
+ *  The size's index.
+ * @returns
+ *  The calculated size expressed in $units.
+ */
+@function size-of($i) {
+  @return $units * round($f0 * math.pow($ratio, math.div($i, $n)), 3);
+}
+
+/**
+ * Returns a size from the sizing scale (relative to the specified font).
+ *
+ * In order to add space between text and non-text elements (according to the sizing
+ * scale), the text's line-height needs to be accounted for. When provided a size from
+ * the sizing scale and the text's font metrics, this function returns the amount of
+ * padding to add to the text such that the space between the text's glyphs and its
+ * neighboring element are equal in size to the size requested.
+ *
+ * @param i
+ *  The index of the desired size.
+ * @param t
+ *  The index of the font's size.
+ * @param h
+ *  The index of the font's line-height.
+ * @param scale
+ *  If `true`, the padding will be sized relative to the text's font size.
+ *  If `false`, the padding will be sized relative to the container's font size.
+ * @returns
+ *  The calculated size expressed in $units.
+ */
+@function vertical-size-of-around-font($i, $t, $h, $scale) {
+  $exp: if($scale == true, $i, $i - $t);
+  $height: math.pow($ratio, math.div($exp, $n));
+  $offset: (math.pow($ratio, math.div($h, $n)) - 1) * 0.5;
+  @return $units * round($height - $offset, 3);
+}
+
+/**
+ * Returns a size from the sizing scale (relative to the specified fonts).
+ *
+ * In order to add space between text elements (according to the sizing scale), each
+ * text's line-height needs to be accounted for. When provided a size from the sizing
+ * scale, the parent text's font metrics, and the child text's font metrics, this
+ * function returns the amount of padding to add to the parent text such that the space
+ * between parent and child glyphs are equal in size to the requested size.
+ *
+ * @param i
+ *  The index of the desired size.
+ * @param t1
+ *  The index of the parent font's size.
+ * @param h1
+ *  The index of the parent font's line-height.
+ * @param t2
+ *  The index of the child font's size.
+ * @param h2
+ *  The index of the child font's line-height.
+ * @param scale
+ *  If `true`, the padding will be sized relative to the parent text's font size.
+ *  If `false`, the padding will be sized relative to the container's font size.
+ * @returns
+ *  The calculated size expressed in $units.
+ */
+@function vertical-size-of-between-fonts($i, $t1, $h1, $t2, $h2, $scale) {
+  $base: vertical-size-of-around-font($i, $t1, $h1, $scale);
+  $lh: math.pow($ratio, math.div($t2 + $h2 - $t1, $n));
+  $fs: math.pow($ratio, math.div($t2 - $t1, $n));
+  @return $base - (($lh - $fs) * 0.5);
+}
+
+/**
+ * The size of each heading's line-height
+ */
+$line-heights: (
+  h1 : size-of(0),
+  h2 : size-of(0),
+  h3 : size-of(1),
+  h4 : size-of(1),
+  h5 : size-of(1),
+  p  : size-of(2)
+);
+
+/**
+ * The size of each heading.
+ */
+$font-sizes: (
+  h1 : size-of(5),
+  h2 : size-of(4),
+  h3 : size-of(3),
+  h4 : size-of(1),
+  h5 : (size-of(0) + size-of(1)) * 0.5,  /** Semitone **/
+  p  : size-of(0)
+);
+
+/**
+ * Returns a size from the configured sizing scale.
+ * @param i
+ *  The size's id.
+ * @returns
+ *  The calculated size expressed in $units.
+ */
+@function size($i) {
+  @return size-of(map.get($sizes, $i));
+}
+
+/**
+ * Returns a font style's size.
+ * @param i
+ *  The font style. (e.g. "h1", "h2", ..., "p")
+ * @returns
+ *  The calculated size expressed in $units.
+ */
+@function font-size($i) {
+  @return map.get($font-sizes, $i);
+}
+
+/**
+ * Returns a font style's line height.
+ * @param i
+ *  The font style. (e.g. "h1", "h2", ..., "p")
+ * @returns
+ *  The calculated size expressed in $units.
+ */
+ @function line-height($i) {
+  @return map.get($line-heights, $i);
+}
+
+
+/** === Typography === */
+
+
+body {
+  font-family: "Trade Gothic";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/** TODO: Create mixins for different device media queries */
+
+@media only screen and (
+  min-width: $max-width
+) {
+  body {
+    /* font-size: 20px; */
+    font-size: 14px;
+  }
+}
+
+@media only screen and (
+  max-width: #{$max-width - 1}
+) and (
+  min-width: $mobile-width
+) {
+  body {
+    font-size: 13px;
+  }
+}
+
+@media only screen and (
+  max-width: #{$mobile-width - 1}
+) {
+  body {
+    font-size: 13px;
+  }
+}
+
+@mixin h1 {
+  font-family: "Trade Gothic Condensed";
+  font-weight: 500;
+  font-size: font-size("h1");
+  line-height: line-height("h1");
+  text-transform: uppercase;
+}
+h1 { @include h1; }
+
+@mixin h2 {
+  font-family: "Trade Gothic Condensed";
+  font-weight: 500;
+  font-size: font-size("h2");
+  line-height: line-height("h2");
+  text-transform: uppercase;
+}
+h2 { @include h2; }
+
+@mixin h3 {
+  font-family: "Trade Gothic Condensed";
+  font-weight: 500;
+  font-size: font-size("h3");
+  line-height: line-height("h3");
+  text-transform: uppercase;
+}
+h3 { @include h3; }
+
+@mixin h4 {
+  font-family: "Trade Gothic Condensed";
+  font-weight: 500;
+  font-size: font-size("h4");
+  line-height: line-height("h4");
+  text-transform: uppercase;
+}
+h4 { @include h4; }
+
+@mixin h5 {
+  font-family: "Trade Gothic Condensed";
+  font-weight: 500;
+  font-size: font-size("h5");
+  line-height: line-height("h5");
+  text-transform: uppercase;
+}
+h5 { @include h5; }
+
+@mixin p {
+  font-family: "Trade Gothic";
+  font-weight: 400;
+  font-size: font-size("p");
+  line-height: line-height("p");
+}
+p { @include p; }
+
+@mixin learn-more {
+
+  & {
+    @include h5;
+    display: inline-block;
+    text-decoration: none;
+    padding-bottom: size("xs");
+    border-bottom: solid 2px;
+  }
+
+  &::after {
+    content: var(--learn-more-arrow, "⟶");
+    padding-left: size("xl");
+    transition: padding .15s;
+  }
+
+  &:hover::after {
+    content: var(--learn-more-arrow-hover, "⟶");
+    padding-left: size("xxl");
+  }
+
+  &-hover-trigger:hover &::after {
+    content: var(--learn-more-arrow-hover, "⟶");
+    padding-left: size("xxl");
+  }
+
+}
+.learn-more { @include learn-more }
+
+
+/** === Shapes === **/
+
+
+@mixin box($size) {
+  box-sizing: border-box;
+  width: size($size);
+  height: size($size);
+}
+
+
+/** === Layouts === **/
+
+
+@mixin grid-layout-fixed($cols, $col-gap, $rows, $row-gap){
+  display: grid;
+  align-items: center;
+  grid-template-rows: repeat($rows, 1fr);
+  grid-template-columns: repeat($cols, 1fr);
+  row-gap: size($row-gap);
+  column-gap: size($col-gap);
+}
+
+@mixin grid-layout-dynamic($cols, $col-gap, $rows, $row-gap){
+  display: grid;
+  align-items: center;
+  grid-template-rows: repeat($rows, auto);
+  grid-template-columns: repeat($cols, auto);
+  row-gap: size($row-gap);
+  column-gap: size($col-gap);
+}

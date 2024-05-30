@@ -1,0 +1,232 @@
+@use "sass:map";
+@use 'sass:list';
+
+
+/** === Color Palette ==== */
+
+/**
+ * MITRE Engenuity color pallette.
+ */
+:root {
+  --engenuity-white: #ffffff;
+  --engenuity-light-default-text: #0b2338;
+  --engenuity-light-h2-highlight: #6241c5;
+  --engenuity-dark-h2-highlight: #bca9dd;
+  --engenuity-light-hyperlink: #6241c5;
+  --engenuity-dark-hyperlink: #88deff;
+  --engenuity-mitre-blue: #005b94;
+  --engenuity-blue: #0096d1;
+  --engenuity-navy: #212c5e;
+  --engenuity-dark-navy: #0f1538;
+}
+
+
+/** === Semantic Colors & Themes ==== */
+
+/**
+ * MITRE Engenuity themes.
+ */
+$themes: (
+  light: (
+    primary-font: var(--engenuity-light-default-text),
+    primary-background: var(--engenuity-white),
+    highlight: var(--engenuity-light-h2-highlight),
+    hyperlink: var(--engenuity-mitre-blue),
+    hyperlink-hover: var(--engenuity-navy),
+    box-link-font: var(--engenuity-white),
+    box-link-hover: var(--engenuity-navy),
+    box-link-background: var(--engenuity-mitre-blue),
+    learn-more-arrow: url("../images/link_arrow_005b94.svg"),
+    learn-more-arrow-hover: url("../images/link_arrow_212c5e.svg")
+  ),
+  dark: (
+    primary-font: var(--engenuity-white),
+    primary-background: var(--engenuity-dark-navy),
+    highlight: var(--engenuity-dark-h2-highlight),
+    hyperlink: var(--engenuity-white),
+    hyperlink-hover: var(--engenuity-dark-hyperlink),
+    box-link-font: var(--engenuity-dark-navy),
+    box-link-hover: var(--engenuity-dark-hyperlink),
+    box-link-background: var(--engenuity-white),
+    learn-more-arrow: url("../images/link_arrow_ffffff.svg"),
+    learn-more-arrow-hover: url("../images/link_arrow_88deff.svg")
+  )
+);
+
+/**
+ * Tests if the provided theme definition represents the "inherit" theme.
+ * @param $theme
+ *  The $theme definition.
+ * @returns
+ *  True if the theme is the "inherit" theme, false otherwise.
+ */
+@function is-inherit-theme($theme) {
+  $inherit-theme-name: "inherit";
+  @return list.nth($theme, 1) == $inherit-theme-name;
+}
+
+/**
+ * Applies a theme's color variables to a container.
+ * @param theme
+ *  The name of the theme (from $themes).
+ * @example
+ *  .theme-light { @include apply-theme("light"); }
+ *  .theme-dark  { @include apply-theme("dark"); }
+ */
+@mixin apply-theme($theme) {
+  @each $variable, $value in map.get($themes, $theme) {
+    --#{$variable}: #{$value};
+  }
+}
+
+/**
+ * Statically sets a container's theme.
+ * @param theme
+ *  The name of the theme (from $themes).
+ * @param set-background
+ *  If true, the container's background will be set according to the theme.
+ *  (Default: true)
+ * @example
+ *  .theme-light { @include static-theme("light"); }
+ *  .theme-light { @include static-theme("light", false); }
+ */
+@mixin static-theme($theme, $set-background: true) {
+  @if(not is-inherit-theme($theme)) {
+    @include apply-theme($theme);
+    color: var(--primary-font);
+  }
+  @if $set-background {
+    background: var(--primary-background);
+  }
+}
+
+/**
+ * Dynamically sets a container's theme based on the viewport's width.
+ * @param default-theme
+ *  The name of the theme (from $themes) that will act as the default theme.
+ * @param dynamic-theme
+ *  The size and name of each theme to apply dynamically.
+ * @example
+ *  Identical to `static-theme("light")`:
+ *  .light-theme {
+ *    @include dynamic-theme("light");
+ *  }
+ *
+ *  [Viewport Width >= 800px] Uses "light" theme.
+ *  [Viewport Width  < 800px] Uses "dark" theme.
+ *  .light-to-dark-theme {
+ *    @include static-theme("light", (800px, "dark"));
+ *  }
+ *
+ *  Same as above except the container's background goes unset on both themes:
+ *  .light-to-dark-theme {
+ *    @include static-theme(("light", false), (800px, ("dark", false)));
+ *  }
+ *
+ *  [Viewport Width >= 800px] Inherits parent container's theme (with no background)
+ *  [Viewport Width  < 800px] Uses "light" theme.
+ *  .inherit-to-light-theme {
+ *    @include static-theme(("inherit", false), (800px, "light"));
+ *  }
+ */
+@mixin dynamic-theme($default-theme, $dynamic-themes...) {
+  @if list.length($dynamic-themes) == 0 {
+    @include static-theme($default-theme...);
+  }
+  @else {
+    // Declare default theme
+    $next-theme: list.nth($dynamic-themes, 1);
+    $next-size: list.nth($next-theme, 1);
+    @media only screen and (
+      min-width: #{ $next-size }
+    ) {
+      & {
+        @include static-theme($default-theme...);
+      }
+    }
+    // Declare dynamic themes
+    @for $index from 1 through length($dynamic-themes) {
+      $active-theme-size: list.nth($dynamic-themes, $index);
+      $active-size: list.nth($active-theme-size, 1);
+      $active-theme: list.nth($active-theme-size, 2);
+      @if $index == length($dynamic-themes) {
+        @media only screen and (
+          max-width: #{ $active-size - 1 }
+        ) {
+          & {
+            @include static-theme($active-theme...);
+          }
+        }
+      }
+      @else {
+        $next-theme-size: list.nth($dynamic-themes, $index + 1);
+        $next-size: list.nth($next-theme-size, 1);
+        @media only screen and (
+            max-width: #{ $active-size - 1 }
+        ) and (
+            min-width: #{ $next-size }
+        )  {
+          & {
+            @include static-theme($active-theme...);
+          }
+        }
+      }
+    }
+  }
+}
+
+
+/** === Basic Themes ==== */
+
+
+body, .theme-light, .invert .theme-dark {
+  @include static-theme("light");
+}
+
+body.invert, .theme-dark, .invert .theme-light {
+  @include static-theme("dark");
+}
+
+
+/** === Typography ==== */
+
+
+a {
+  color: var(--hyperlink);
+  transition: .2s color;
+}
+
+a:hover {
+  color: var(--hyperlink-hover);
+}
+
+.link-hover-trigger:hover > a {
+  color: var(--hyperlink-hover);
+}
+
+.box-link {
+  color: var(--box-link-font);
+  background: var(--box-link-background);
+  transition: .2s background;
+}
+
+.box-link:hover {
+  color: var(--box-link-font);
+  background: var(--box-link-hover);
+}
+
+.highlight {
+  color: var(--highlight);
+}
+
+
+/** === Shadows ==== */
+
+
+@mixin shadow {
+  box-shadow:
+    0px 2px 4px 0px rgba(15, 21, 56, 0.02),
+    0px 5px 10px 0px rgba(15, 21, 56, 0.04),
+    0px 12px 24px 0px rgba(15, 21, 56, 0.05),
+    0px 40px 80px 0px rgba(15, 21, 56, 0.07);
+}
