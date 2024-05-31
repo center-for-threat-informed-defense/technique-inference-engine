@@ -116,20 +116,17 @@ class WalsRecommender(Recommender):
 
         def V_T_C_I_V(V, c_array):
             _, k = V.shape
-            # print("v shape", V.shape)
 
             c_minus_i = c_array - 1
             nonzero_c = tuple(np.nonzero(c_minus_i)[0].tolist())
 
-            product = np.ndarray((k, k))
+            product = np.zeros((k, k))
 
             for i in nonzero_c:
 
                 v_i = np.expand_dims(V[i, :], axis=1)
-                # print("v_i shape", v_i.shape)
 
                 square_addition = v_i @ v_i.T
-                # print("square addition shape", square_addition.shape)
                 assert square_addition.shape == (k, k)
 
                 product += square_addition
@@ -262,62 +259,14 @@ class WalsRecommender(Recommender):
         entity = tf.sparse.to_dense(tf.sparse.reorder(entity)).numpy()
         assert entity.shape == (self.n,)
 
-        def V_T_C_I_V(V, c_array):
-            _, k = V.shape
-            # print("v shape", V.shape)
-
-            c_minus_i = c_array - 1
-            nonzero_c = tuple(np.nonzero(c_minus_i)[0].tolist())
-
-            product = np.ndarray((k, k))
-
-            for i in nonzero_c:
-
-                v_i = np.expand_dims(V[i, :], axis=1)
-                # print("v_i shape", v_i.shape)
-
-                square_addition = v_i @ v_i.T
-                # print("square addition shape", square_addition.shape)
-                assert square_addition.shape == (k, k)
-
-                product += square_addition
-
-            return product
-
-        # in line with the paper,
-        # we will use variable names as if we are updating user factors based
-        # on V, the item factors.  Since the process is the same for both,
-        # the variable names are interchangeable.  This just makes following
-        # along with the paper easier.
-        V = self._V
-
         alpha = (1 / c) - 1
 
-        # new_U = np.ndarray((q, k))
-        # for each item embedding
-
-        V_T_V = V.T @ V
-        # update each of the q user factors
-
-        P_u = entity
-        # C is c if unobserved, one otherwise
-        C_u = np.where(P_u > 0, alpha + 1, 1)
-        assert C_u.shape == (self.n,)
-
-        confidence_scaled_v_transpose_v = V_T_C_I_V(V, C_u)
-
-        # X = (V^T CV + \lambda I)^{-1} V^T CP
-        inv = np.linalg.inv(
-            V_T_V
-            + confidence_scaled_v_transpose_v
-            + regularization_coefficient * np.identity(self.k)
+        new_entity_factor = self._update_factor(
+            opposing_factors=self._V,
+            data=np.expand_dims(entity, axis=1),
+            alpha=alpha,
+            regularization_coefficient=regularization_coefficient,
         )
+        new_entity_predictions = np.squeeze(self.V @ new_entity_factor.T)
 
-        # removed C_u here since unneccessary in binary case
-        # P_u is already binary
-        new_embedding = inv @ V.T @ P_u
-
-        # (UV^T)^T = VU^T where U is 1xk
-        predictions = self._V @ new_embedding
-
-        return predictions
+        return new_entity_predictions
