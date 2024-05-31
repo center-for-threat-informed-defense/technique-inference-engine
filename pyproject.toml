@@ -16,6 +16,8 @@ tensorflow = "~2.15"
 mitreattack-python = "^3.0.2"
 scikit-learn = "^1.4.1.post1"
 matplotlib = "^3.8.3"
+ipykernel = "^6.29.4"
+implicit = "^0.7.2"
 
 [tool.poetry.group.dev.dependencies]
 bandit = "1.7.0"
