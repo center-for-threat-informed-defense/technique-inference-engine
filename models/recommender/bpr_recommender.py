@@ -3,6 +3,7 @@ import math
 import numpy as np
 import keras
 from .recommender import Recommender
+import time
 
 
 class BPRRecommender(Recommender):
@@ -67,7 +68,9 @@ class BPRRecommender(Recommender):
         return np.copy(self._V)
 
     def _sample_dataset(
-        self, data: np.ndarray, sample_user_probability: np.ndarray
+        self,
+        data: np.ndarray,
+        num_samples: int,
     ) -> tuple[int, int, int]:
         """Samples the dataset according to the bootstrapped sampling for BPR.
 
@@ -76,33 +79,80 @@ class BPRRecommender(Recommender):
         and j is an item for which there is no observation for that user.
 
         Args:
-            data: an mxn matrix observations.
+            data: An mxn matrix of observations.
+            num_samples: Number of samples to draw. Requires num_samples > 0.
 
         Returns:
-            A tuple of the form (u, i, j) where u is the index for the user,
-            i is the index of an item with an observation for that user,
-            and j is the index of an item with no observation for that user.
+            A tuple of the form (u, i, j) where u is an array of user indices,
+            i is an array of item indices with an observation for that user,
+            and j is an array of item indices with no observation for that user.
         """
+        assert num_samples > 0
+
         m, n = data.shape
 
-        u = np.random.choice(np.arange(m), p=sample_user_probability)
+        sample_user_probability = self._calculate_sample_user_probability(data)
 
-        user_observations = data[u, :]
-        user_non_observations = 1 - user_observations
-        num_user_observations = np.sum(user_observations)
-
-        # each observation is filled with prob 1, so sample with that prob
-        i = np.random.choice(
-            len(user_observations), p=user_observations / num_user_observations
-        )
-        j = np.random.choice(
-            len(user_observations),
-            p=user_non_observations / (n - num_user_observations),
+        # repeat for each of n items
+        num_items_per_user = np.sum(data, axis=1)
+        assert num_items_per_user.shape == (m,)  # m users
+        sample_item_probability = np.nan_to_num(
+            data / np.expand_dims(num_items_per_user, axis=1)
         )
 
-        return u, i, j
+        joint_user_item_probability = (
+            np.expand_dims(sample_user_probability, axis=1) * sample_item_probability
+        )
+        assert joint_user_item_probability.shape == (m, n)
 
-    def _calculate_sample_user_probability(self, data: np.ndarray):
+        flattened_probability = joint_user_item_probability.flatten("C")
+        u_i = np.random.choice(
+            np.arange(m * n), size=(num_samples,), p=flattened_probability
+        )
+
+        all_u = u_i // n
+        all_i = u_i % n
+        assert (all_i < 611).all()
+
+        non_observations = 1 - data
+
+        unique_users, counts = np.unique(all_u, return_counts=True)
+        value_to_count = dict(zip(unique_users, counts))
+
+        u_to_j = {}
+
+        # for each u
+        for u, count in value_to_count.items():
+
+            # get
+            potential_j = non_observations[u, :]
+
+            all_j_for_user = np.random.choice(
+                n, size=count, replace=True, p=potential_j / np.sum(potential_j)
+            )
+
+            u_to_j[u] = all_j_for_user.tolist()
+
+        all_j = []
+
+        for u in all_u:
+
+            j = u_to_j[u].pop()
+            all_j.append(j)
+
+        assert len(all_u) == len(all_j) == len(all_i)
+
+        return all_u, all_i, all_j
+
+    def _calculate_sample_user_probability(self, data: np.ndarray) -> np.array:
+        """Gets the sample probability for each user.
+
+        Args:
+            data: An mxn matrix of observations.
+
+        Returns:
+            A length m array containing the probability of sampling each entity.
+        """
         m, n = data.shape
         data = np.nan_to_num(data)
 
@@ -128,20 +178,22 @@ class BPRRecommender(Recommender):
     ):
         data = tf.sparse.reorder(data)
         data = tf.sparse.to_dense(data)
+        data = data.numpy()
 
         w_regularization = regularization
         v_i_regularization = regularization
         v_j_regularization = regularization
 
-        sample_user_probability = self._calculate_sample_user_probability(data)
+        all_u, all_i, all_j = self._sample_dataset(data, num_samples=num_iterations)
 
         # initialize theta - done - init
         # repeat
-        for i in range(num_iterations):
+        for iteration_count in range(num_iterations):
 
             # draw u, i, j from D_s
-            u, i, j = self._sample_dataset(data, sample_user_probability)
-            # print("u", u, "i", i, "j", j)
+            u = all_u[iteration_count]
+            i = all_i[iteration_count]
+            j = all_j[iteration_count]
 
             # theta = theta + alpha * (e^(-x) sigma(x) d/dtheta x + lambda theta)
             x_ui = self._predict_for_single_entry(u, i)
