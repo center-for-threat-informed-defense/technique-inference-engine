@@ -190,7 +190,7 @@ class FactorizationRecommender(Recommender):
             The recommender to the new trained state.
         """
         # preliminaries
-        optimizer = keras.optimizers.legacy.SGD(learning_rate=learning_rate)
+        optimizer = keras.optimizers.SGD(learning_rate=learning_rate)
 
         for i in range(num_iterations + 1):
             with tf.GradientTape() as tape:
