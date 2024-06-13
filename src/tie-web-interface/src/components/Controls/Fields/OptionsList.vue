@@ -211,7 +211,8 @@ type Option = {
 }
 
 .options-scrollbox {
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 /** === Options List === */
