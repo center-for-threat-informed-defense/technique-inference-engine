@@ -4,7 +4,7 @@
       <div class="info-banner-contents">
         <div class="abstract">
           <h2 class="project-cta">
-            Gain a <span class="highlight">Full</span> Picture of the Adversary
+            Gain a <mark>Full</mark> Picture of the Adversary
           </h2>
           <p class="project-description">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
@@ -28,14 +28,18 @@
       <div class="tool-set-contents">
         <div class="tool-tabs">
           <template v-for="(tool, i) of tools" :key="tool.component">
-            <h5 :class="['tool-tab', { 'theme-light': activeTool === i }]" @click="activeTool = i">
+            <h6 :class="['tool-tab', { 'theme-light': activeTool === i }]" @click="activeTool = i">
               {{ tool.name }}
-            </h5>
+            </h6>
           </template>
         </div>
       </div>
     </div>
-    <component class="active-tool" :is="tools[activeTool].component" />
+    <div class="active-tool">
+      <div class="active-tool-contents">
+        <component class="active-tool-component" :is="tools[activeTool].component" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -90,6 +94,7 @@ export default defineComponent({
   width: 100%;
   max-width: scale.$max-width;
   padding: scale.size("xxl") scale.size("xxh") scale.size("xxh");
+  overflow: hidden;
 }
 
 .partners {
@@ -117,33 +122,44 @@ export default defineComponent({
   max-width: 300px;
 }
 
-
 @media only screen and (max-width: scale.$tablet-width) {
   .partners {
     display: none;
   }
 }
 
-.tool-set {
+.tool-set,
+.active-tool {
   display: flex;
   justify-content: center;
   width: 100%;
 }
 
+.tool-set-contents,
+.active-tool-contents {
+  display: flex;
+  width: 100%;
+  max-width: scale.$max-width;
+}
+
 .tool-set-contents {
-  display: flex;
-  width: 100%;
-  max-width: scale.$max-width;
-  padding: 0em scale.size("xxh");
+  padding: 0em scale.size("h");
+  overflow: hidden;
 }
 
-.tool-tabs {
+.active-tool-contents {
+  padding: 0em scale.size("h");
+  overflow: hidden;
+}
+
+.tool-tabs,
+.active-tool-component {
   display: flex;
 }
 
-.active-tool {
+.active-tool-component {
   width: 100%;
-  max-width: scale.$max-width;
+  flex-direction: column;
 }
 
 .tool-tab {

@@ -3,65 +3,71 @@
     <div class="navigation-buffer"></div>
     <div class="navigation-footer-main theme-dark">
       <div class="navigation-footer-contents">
-        <div class="site-info">
-          <div class="site-logo">
-            <div class="logo-container"></div>
-            <RouterLink class="navigation-link logo" to="/">
-              Technique Inference Engine
-            </RouterLink>
-          </div>
-          <p class="site-description">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat.
-          </p>
-          <div class="social-links">
-            <img src="@/assets/images/engenuity_ctid_logo.png">
+        <div class="ctid-section">
+          <div class="ctid-info">
+            <img class="ctid-logo" src="@/assets/images/engenuity_ctid_logo.png">
+            <p class="site-description">
+              The <a href="">Center for Threat-Informed Defense</a> is a non-profit, privately funded research and
+              development
+              organization. Our mission is to advance the state of the art and the state of the practice in
+              threat-informed defense globally.
+            </p>
             <div class="social-icons">
-              <a class="box-link" href="/about">
+              <a href="/about">
                 <IconEmail />
               </a>
-              <a class="box-link" href="/about">
+              <a href="/about">
                 <IconLinkedIn />
               </a>
-              <a class="box-link" href="/about">
+              <a href="/about">
                 <IconYoutube />
               </a>
-              <a class="box-link" href="/about">
+              <a href="/about">
                 <IconGitHub />
               </a>
             </div>
           </div>
-        </div>
-        <div class="site-links">
-          <div class="link-list">
-            <h4>Online</h4>
-            <ul>
-              <li><a href="/">E-mail</a></li>
-              <li><a href="/about">LinkedIn</a></li>
-              <li><a href="/about">YouTube</a></li>
-              <li><a href="/about">GitHub</a></li>
-            </ul>
+          <div class="ctid-links">
+            <div class="link-list">
+              <h5>CTID</h5>
+              <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">Our Work</a></li>
+                <li><a href="/about">Our Members</a></li>
+                <li><a href="/about">Join Us</a></li>
+              </ul>
+            </div>
+            <div class="link-list">
+              <h5>Related Projects</h5>
+              <ul>
+                <li><a href="/">Attack Flow</a></li>
+                <li><a href="/about">Mappings Explorer</a></li>
+                <li><a href="/about">Summiting the Pyramid</a></li>
+                <li><a href="/about">D3FEND</a></li>
+              </ul>
+            </div>
+            <div class="link-list">
+              <h5>Social</h5>
+              <ul>
+                <li><a href="/">E-mail</a></li>
+                <li><a href="/about">LinkedIn</a></li>
+                <li><a href="/about">YouTube</a></li>
+                <li><a href="/about">GitHub</a></li>
+              </ul>
+            </div>
           </div>
-          <div class="link-list">
-            <h4>Overview</h4>
-            <ul>
-              <li>
-                <RouterLink class="body" to="/">Home</RouterLink>
-              </li>
-              <li>
-                <RouterLink class="body" to="/about">About</RouterLink>
-              </li>
-              <li>
-                <RouterLink class="body" to="/about">Methodology</RouterLink>
-              </li>
-              <li>
-                <RouterLink class="body" to="/about">Help</RouterLink>
-              </li>
-            </ul>
-          </div>
         </div>
+
+        <div class="disclosures-section">
+          <small>
+            Visit the <a href="">Center for Threat-Informed Defense's</a> non-profit parent, <a href="">MITRE
+              Engenuity</a>.
+          </small>
+          <small>
+            Copyright © 2024 MITRE Engenuity. Approved for public release. Document number(s) PUT_PRS_NUMBER_HERE.
+          </small>
+        </div>
+
       </div>
     </div>
   </div>
@@ -71,81 +77,65 @@
 // Dependencies
 import { defineComponent } from "vue";
 // Components
-import { RouterLink } from 'vue-router'
 import IconEmail from "@/components/Icons/IconEmail.vue"
 import IconGitHub from "../Icons/IconGitHub.vue";
 import IconYoutube from "../Icons/IconYoutube.vue";
 import IconLinkedIn from "../Icons/IconLinkedIn.vue";
 
 export default defineComponent({
-  name: "NavigationHeader",
-  components: { RouterLink, IconEmail, IconGitHub, IconYoutube, IconLinkedIn }
+  name: "NavigationFooter",
+  components: { IconEmail, IconGitHub, IconYoutube, IconLinkedIn }
 });
 </script>
 
 <style lang="scss" scoped>
 @use "@/assets/styles/engenuity_scaling_system" as scale;
+@use "@/assets/styles/engenuity_color_system" as color;
 
 /** === Main Control === */
-
-.navigation-link.logo {
-  @include scale.h3;
-  text-decoration: none;
-}
 
 .navigation-buffer {
   width: 100%;
   height: scale.size("xxh");
-  margin-top: scale.size("xxh");
   background: url("@/assets/images/ctid_stripe_pattern.png");
+  background-size: 14px 14px;
 }
 
 .navigation-footer-main {
   display: flex;
-  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   padding: scale.size("xxh");
+  overflow: hidden;
 }
 
 .navigation-footer-contents {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   max-width: scale.$max-width;
 }
 
-/** === Site Info === */
+/** === CTID Footer === */
 
-.site-info {
-  width: 50%;
+.ctid-section {
+  display: grid;
 }
 
-.site-logo {
+.ctid-info {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: start;
 }
 
-.logo-container {
-  @include scale.box("h");
-  border: solid 1px;
-  margin-right: scale.size("m");
+.ctid-logo {
+  max-height: 26px;
+  max-width: 100%;
 }
 
 .site-description {
-  margin-top: scale.size("xxl");
-  margin-bottom: scale.size("h");
-}
-
-.social-links {
-  display: flex;
-  align-items: center;
-}
-
-.social-links img {
-  height: 26px;
-  margin-right: 25px;
+  margin: scale.size("xl") 0px;
 }
 
 .social-icons {
@@ -153,38 +143,84 @@ export default defineComponent({
 }
 
 .social-icons a {
+  @include scale.box("xxl");
+  @include color.box-link;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.box-link {
-  @include scale.box("xxl");
-}
-
-/** === Site Links === */
-
-.site-links {
+.ctid-links {
   display: flex;
-  justify-content: right;
-  width: 50%;
-}
-
-.link-list {
-  text-align: right;
-  margin-right: 70px;
-}
-
-.link-list:last-child {
-  margin-right: 0px;
 }
 
 .link-list ul {
   padding: 0px;
+  list-style: none;
 }
 
 .link-list li {
-  list-style: none;
-  margin-top: 12px;
+  margin-top: scale.size("m");
+}
+
+.link-list a {
+  text-decoration: none;
+}
+
+/** === Disclosures Footer === */
+
+.disclosures-section {
+  padding-top: scale.size("s");
+  border-top: solid 1px;
+  margin-top: scale.size("xxl");
+}
+
+
+/** === Footer (Desktop) === */
+
+@include scale.above-desktop-width() {
+
+  .ctid-section {
+    grid-template-columns: 1fr 1fr;
+    column-gap: scale.size("xxl");
+  }
+
+  .ctid-links {
+    justify-content: space-evenly;
+  }
+
+}
+
+/** === Footer (Mobile) === */
+
+@include scale.at-and-below-desktop-width() {
+
+  .ctid-section {
+    grid-template-rows: auto auto;
+    row-gap: scale.size("xxl");
+  }
+
+  .ctid-links {
+    justify-content: space-between;
+  }
+
+}
+
+/** === Footer (Sub-Mobile) === */
+
+@include scale.below-mobile-width() {
+
+  .ctid-links {
+    flex-direction: column;
+  }
+
+  .link-list {
+    margin-bottom: scale.size("xxl");
+  }
+
+  .link-list:last-child {
+    margin-bottom: 0px;
+  }
+
 }
 </style>

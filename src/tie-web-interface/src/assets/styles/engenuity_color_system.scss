@@ -8,6 +8,7 @@
  * MITRE Engenuity color pallette.
  */
 :root {
+  --engenuity-black: #000000;
   --engenuity-white: #ffffff;
   --engenuity-light-default-text: #0b2338;
   --engenuity-light-h2-highlight: #6241c5;
@@ -18,6 +19,11 @@
   --engenuity-blue: #0096d1;
   --engenuity-navy: #212c5e;
   --engenuity-dark-navy: #0f1538;
+  --engenuity-dark-purple: #2b1972;
+  --engenuity-core-color-8: #b2b2b2;
+  --engenuity-core-color-9: #f0f1f2;
+  --engenuity-field-border: #7e7f83;
+  --engenuity-topic-tag-background: #e0e0e0;
 }
 
 
@@ -32,24 +38,33 @@ $themes: (
     primary-background: var(--engenuity-white),
     highlight: var(--engenuity-light-h2-highlight),
     hyperlink: var(--engenuity-mitre-blue),
+    cta-hyperlink: var(--engenuity-blue),
     hyperlink-hover: var(--engenuity-navy),
-    box-link-font: var(--engenuity-white),
-    box-link-hover: var(--engenuity-navy),
-    box-link-background: var(--engenuity-mitre-blue),
-    learn-more-arrow: url("../images/link_arrow_005b94.svg"),
-    learn-more-arrow-hover: url("../images/link_arrow_212c5e.svg")
+    learn-more-arrow: url("../images/link_arrow_0096d1.svg"),
+    learn-more-arrow-hover: url("../images/link_arrow_212c5e.svg"),
+    accent-1-border: var(--engenuity-core-color-8),
+    accent-2-border: var(--engenuity-core-color-9),
+    field-border: var(--engenuity-field-border),
+    icon: var(--engenuity-dark-purple),
+    tag-font: var(--engenuity-black),
+    tag-background: var(--engenuity-topic-tag-background)
   ),
   dark: (
     primary-font: var(--engenuity-white),
     primary-background: var(--engenuity-dark-navy),
+    secondary-font: var(--engenuity-blue),
     highlight: var(--engenuity-dark-h2-highlight),
     hyperlink: var(--engenuity-white),
+    cta-hyperlink: var(--engenuity-white),
     hyperlink-hover: var(--engenuity-dark-hyperlink),
-    box-link-font: var(--engenuity-dark-navy),
-    box-link-hover: var(--engenuity-dark-hyperlink),
-    box-link-background: var(--engenuity-white),
     learn-more-arrow: url("../images/link_arrow_ffffff.svg"),
-    learn-more-arrow-hover: url("../images/link_arrow_88deff.svg")
+    learn-more-arrow-hover: url("../images/link_arrow_88deff.svg"),
+    accent-1-border: var(--engenuity-navy),
+    accent-2-border: var(--engenuity-navy),
+    field-border: var(--engenuity-navy),
+    icon: var(--engenuity-dark-purple),
+    tag-font: var(--engenuity-black),
+    tag-background: var(--engenuity-topic-tag-background)
   )
 );
 
@@ -138,7 +153,7 @@ $themes: (
     $next-theme: list.nth($dynamic-themes, 1);
     $next-size: list.nth($next-theme, 1);
     @media only screen and (
-      min-width: #{ $next-size }
+      min-width: #{ $next-size + 1 }
     ) {
       & {
         @include static-theme($default-theme...);
@@ -151,7 +166,7 @@ $themes: (
       $active-theme: list.nth($active-theme-size, 2);
       @if $index == length($dynamic-themes) {
         @media only screen and (
-          max-width: #{ $active-size - 1 }
+          max-width: #{ $active-size }
         ) {
           & {
             @include static-theme($active-theme...);
@@ -162,9 +177,9 @@ $themes: (
         $next-theme-size: list.nth($dynamic-themes, $index + 1);
         $next-size: list.nth($next-theme-size, 1);
         @media only screen and (
-            max-width: #{ $active-size - 1 }
+            max-width: #{ $active-size }
         ) and (
-            min-width: #{ $next-size }
+            min-width: #{ $next-size + 1 }
         )  {
           & {
             @include static-theme($active-theme...);
@@ -191,6 +206,11 @@ body.invert, .theme-dark, .invert .theme-light {
 /** === Typography ==== */
 
 
+mark {
+  color: var(--highlight);
+  background: none;
+}
+
 a {
   color: var(--hyperlink);
   transition: .2s color;
@@ -204,19 +224,35 @@ a:hover {
   color: var(--hyperlink-hover);
 }
 
-.box-link {
-  color: var(--box-link-font);
-  background: var(--box-link-background);
-  transition: .2s background;
+var {
+  color: var(tag-font);
+  background: var(--tag-background);
 }
 
-.box-link:hover {
-  color: var(--box-link-font);
-  background: var(--box-link-hover);
+@mixin placeholder {
+  color: var(--field-border)
 }
 
-.highlight {
-  color: var(--highlight);
+@mixin learn-more {
+  & {
+    color: var(--cta-hyperlink)
+  }
+}
+.learn-more { @include learn-more }
+
+@mixin box-link {
+
+  & {
+    color: var(--primary-background);
+    background: var(--hyperlink);
+    transition: .2s background;
+  }
+
+  &:hover {
+    color: var(--primary-background);
+    background: var(--hyperlink-hover);
+  }
+
 }
 
 
@@ -229,4 +265,34 @@ a:hover {
     0px 5px 10px 0px rgba(15, 21, 56, 0.04),
     0px 12px 24px 0px rgba(15, 21, 56, 0.05),
     0px 40px 80px 0px rgba(15, 21, 56, 0.07);
+}
+
+
+/** === Borders ==== */
+
+
+@mixin accent-border {
+  border-color: var(--accent-2-border);
+}
+
+@mixin field-border {
+  border-color: var(--field-border);
+}
+
+
+/** === Interface Elements ==== */
+
+
+@mixin icon {
+  color: var(--icon);
+}
+
+@mixin dormant-list-item {
+  color: var(--cta-hyperlink);
+}
+
+@mixin active-list-item {
+  color: var(--hyperlink-hover);
+  border-color: var(--highlight);
+  background: var(--accent-2-border);
 }

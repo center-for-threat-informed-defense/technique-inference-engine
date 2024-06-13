@@ -9,10 +9,14 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "build-model": "cd ../.. && poetry run python ./src/tie-web-interface/build_tools/compile_model.py"
   },
   "dependencies": {
+    "@tensorflow/tfjs": "^4.20.0",
+    "@zip.js/zip.js": "^2.7.45",
     "pinia": "^2.1.7",
+    "vectorious": "^6.1.14",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
@@ -20,6 +24,7 @@
     "@rushstack/eslint-patch": "^1.8.0",
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^20.12.5",
+    "@types/zip.js": "^2.0.33",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/tsconfig": "^0.5.1",

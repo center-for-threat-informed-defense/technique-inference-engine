@@ -11,6 +11,11 @@
 $max-width: 1000px;
 
 /**
+ * Desktop-mode width.
+ */
+$desktop-width: 850px;
+
+/**
  * Tablet-mode width.
  */
 $tablet-width: 700px;
@@ -19,6 +24,25 @@ $tablet-width: 700px;
  * Mobile-mode width.
  */
 $mobile-width: 600px;
+
+/**
+ * The min width.
+ */
+$min-width: 450px;
+
+
+/** === Font Sizes === */
+
+
+/**
+ * Default Desktop font size (in px).
+ */
+$desktop-em-size: 14;
+
+/**
+ * Default tablet/mobile font size (in px).
+ */
+$mobile-em-size: 13;
 
 
 /** === Sizing Scale Computations === */
@@ -53,19 +77,19 @@ $units: 1em;
  */
  @function make-scale($i) {
   @return (
-    xxt : $i - 6,
-    xt  : $i - 5,
-    t   : $i - 4,
-    xxs : $i - 3,
-    xs  : $i - 2,
-    s   : $i - 1,
-    m   : $i,
-    l   : $i + 1,
-    xl  : $i + 2,
-    xxl : $i + 3,
-    h   : $i + 4,
-    xh  : $i + 5,
-    xxh : $i + 6
+    xxt : $i - 6,  // Extra Extra Tiny
+    xt  : $i - 5,  // Extra Tiny
+    t   : $i - 4,  // Tiny
+    xxs : $i - 3,  // Extra Extra Small
+    xs  : $i - 2,  // Extra Small
+    s   : $i - 1,  // Small
+    m   : $i,      // Medium
+    l   : $i + 1,  // Large
+    xl  : $i + 2,  // Extra Large
+    xxl : $i + 3,  // Extra Extra Large
+    h   : $i + 4,  // Huge
+    xh  : $i + 5,  // Extra Huge
+    xxh : $i + 6   // Extra Extra Huge
   );
 }
 $sizes: make-scale(0);
@@ -84,6 +108,30 @@ $sizes: make-scale(0);
 }
 
 /**
+ * Returns a size from the sizing scale (without units).
+ * @param i
+ *  The size's index.
+ * @returns
+ *  The calculated size without $units.
+ */
+ @function size-of-unitless($i) {
+  @return round($f0 * math.pow($ratio, math.div($i, $n)), 3);
+}
+
+/**
+ * Returns a semitone from the sizing scale (without units).
+ * @param i
+ *  The first size's index.
+ * @param j
+ *  The second size's index.
+ * @returns
+ *  The calculated semitone, between i and j, without $units.
+ */
+@function semitone-of-unitless($i, $j) {
+  @return round((size-of-unitless($i) + size-of-unitless($j)) * 0.5, 3);
+}
+
+/**
  * Returns a size from the sizing scale.
  * @param i
  *  The size's index.
@@ -91,7 +139,20 @@ $sizes: make-scale(0);
  *  The calculated size expressed in $units.
  */
 @function size-of($i) {
-  @return $units * round($f0 * math.pow($ratio, math.div($i, $n)), 3);
+  @return $units * size-of-unitless($i);
+}
+
+/**
+ * Returns a semitone from the sizing scale.
+ * @param i
+ *  The first size's index.
+ * @param i
+ *  The second size's index.
+ * @returns
+ *  The calculated semitone, between i and j, expressed in $units.
+ */
+@function semitone-of($i, $j) {
+  @return $units * semitone-of-unitless($i, $j);
 }
 
 /**
@@ -158,25 +219,40 @@ $sizes: make-scale(0);
  * The size of each heading's line-height
  */
 $line-heights: (
-  h1 : size-of(0),
-  h2 : size-of(0),
-  h3 : size-of(1),
-  h4 : size-of(1),
-  h5 : size-of(1),
-  p  : size-of(2)
+  h1    : size-of(0),
+  h2    : size-of(0),
+  h3    : size-of(1),
+  h4    : size-of(1),
+  h5    : size-of(1),
+  h6    : size-of(1),
+  p     : size-of(2),
+  small : size-of(2),
 );
 
 /**
  * The size of each heading.
  */
 $font-sizes: (
-  h1 : size-of(5),
-  h2 : size-of(4),
-  h3 : size-of(3),
-  h4 : size-of(1),
-  h5 : (size-of(0) + size-of(1)) * 0.5,  /** Semitone **/
-  p  : size-of(0)
+  h1    : size-of(5),
+  h2    : size-of(4),
+  h3    : size-of(3),
+  h4    : semitone-of(1, 2),
+  h5    : size-of(1),
+  h6    : semitone-of(0, 1),
+  p     : size-of(0),
+  small : semitone-of(-1, 0),
 );
+
+/**
+ * Returns a size from the configured sizing scale (without units).
+ * @param i
+ *  The size's id.
+ * @returns
+ *  The calculated size expressed without $units..
+ */
+@function size-unitless($i) {
+  @return size-of-unitless(map.get($sizes, $i));
+}
 
 /**
  * Returns a size from the configured sizing scale.
@@ -187,6 +263,17 @@ $font-sizes: (
  */
 @function size($i) {
   @return size-of(map.get($sizes, $i));
+}
+
+/**
+ * Returns the size of a hypotenuse from the configured sizing scale.
+ * @param i
+ *  The size's id.
+ * @returns
+ *  The calculated hypotenuse expressed in $units.
+ */
+@function hypo($i) {
+  @return math.sqrt(2 * math.pow(size-unitless($i), 2)) * $units;
 }
 
 /**
@@ -211,6 +298,141 @@ $font-sizes: (
   @return map.get($line-heights, $i);
 }
 
+/** === Media Queries === */
+
+
+@mixin above-max-width {
+  @media only screen and (
+    min-width: #{ $max-width + 1 }
+  ) {
+    @content;
+  }
+}
+
+/** == Desktop == */
+
+@mixin above-desktop-width {
+  @media only screen and (
+    min-width: #{ $desktop-width + 1 }
+  ) {
+    @content;
+  }
+}
+
+@mixin at-and-above-desktop-width {
+  @media only screen and (
+    min-width: #{ $tablet-width + 1 }
+  ) {
+    @content;
+  }
+}
+
+@mixin at-desktop-width {
+  @media only screen and (
+    max-width: $desktop-width
+  ) and (
+    min-width: #{ $tablet-width + 1 }
+  ) {
+    @content;
+  }
+}
+
+@mixin at-and-below-desktop-width {
+  @media only screen and (
+    max-width: $desktop-width
+  ) {
+    @content;
+  }
+}
+
+@mixin below-desktop-width {
+  @media only screen and (
+    max-width: $tablet-width
+  ) {
+    @content;
+  }
+}
+
+/** == Tablet == */
+
+@mixin above-tablet-width {
+  @include at-and-above-desktop-width {
+    @content;
+  }
+}
+
+@mixin at-and-above-tablet-width {
+  @media only screen and (
+    min-width: #{ $mobile-width + 1 }
+  ) {
+    @content;
+  }
+}
+
+@mixin at-tablet-width {
+  @media only screen and (
+    max-width: $tablet-width
+  ) and (
+    min-width: #{ $mobile-width + 1 }
+  ) {
+    @content;
+  }
+}
+
+@mixin at-and-below-tablet-width {
+  @include below-desktop-width {
+    @content;
+  }
+}
+
+
+@mixin below-tablet-width {
+  @media only screen and (
+    max-width: $mobile-width
+  ) {
+    @content;
+  }
+}
+
+/** == Mobile == */
+
+@mixin above-mobile-width {
+  @include at-and-above-tablet-width {
+    @content;
+  }
+}
+
+@mixin at-and-above-mobile-width {
+  @media only screen and (
+    min-width: #{ $min-width + 1 }
+  ) {
+    @content;
+  }
+}
+
+@mixin at-mobile-width {
+  @media only screen and (
+    max-width: $mobile-width
+  ) and (
+    min-width: #{ $min-width + 1 }
+  ) {
+    @content;
+  }
+}
+
+@mixin at-and-below-mobile-width {
+  @include below-tablet-width {
+    @content;
+  }
+}
+
+@mixin below-mobile-width {
+  @media only screen and (
+    max-width: $min-width
+  ) {
+    @content;
+  }
+}
 
 /** === Typography === */
 
@@ -222,32 +444,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/** TODO: Create mixins for different device media queries */
-
-@media only screen and (
-  min-width: $max-width
-) {
+@include at-and-above-desktop-width() {
   body {
     /* font-size: 20px; */
-    font-size: 14px;
+    font-size: #{ $desktop-em-size }px;
   }
 }
 
-@media only screen and (
-  max-width: #{$max-width - 1}
-) and (
-  min-width: $mobile-width
-) {
+@include below-desktop-width() {
   body {
-    font-size: 13px;
-  }
-}
-
-@media only screen and (
-  max-width: #{$mobile-width - 1}
-) {
-  body {
-    font-size: 13px;
+    font-size: #{ $mobile-em-size }px;
   }
 }
 
@@ -296,6 +502,15 @@ h4 { @include h4; }
 }
 h5 { @include h5; }
 
+@mixin h6 {
+  font-family: "Trade Gothic Condensed";
+  font-weight: 500;
+  font-size: font-size("h6");
+  line-height: line-height("h6");
+  text-transform: uppercase;
+}
+h6 { @include h6; }
+
 @mixin p {
   font-family: "Trade Gothic";
   font-weight: 400;
@@ -304,10 +519,40 @@ h5 { @include h5; }
 }
 p { @include p; }
 
+@mixin small {
+  font-family: "Trade Gothic";
+  font-weight: 400;
+  font-size: font-size("small");
+  line-height: line-height("small");
+}
+small {
+  @include small;
+  display: block;
+}
+
+@mixin var {
+  font-family: "Roboto Mono";
+  font-weight: 400;
+  font-style: normal;
+  font-size: font-size("small");
+  line-height: line-height("small");
+  padding: size("xt") size("m");
+}
+var { @include var }
+
+@mixin placeholder {
+  font-family: "Trade Gothic Condensed";
+  font-weight: 400;
+  font-size: font-size("p");
+  line-height: line-height("p");
+  text-transform: uppercase;
+}
+.placeholder { @include placeholder }
+
 @mixin learn-more {
 
   & {
-    @include h5;
+    @include h6;
     display: inline-block;
     text-decoration: none;
     padding-bottom: size("xs");

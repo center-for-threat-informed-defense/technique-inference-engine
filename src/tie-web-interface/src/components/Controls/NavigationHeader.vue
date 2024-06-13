@@ -1,11 +1,9 @@
 <template>
-  <div class="navigation-control">
+  <div :class="['navigation-control', { 'mobile-menu-open': mobile }]">
     <div class="navigation-sticky theme-dark">
       <div class="navigation-contents">
         <div class="page-logo-container">
-          <div class="navigation-burger" @click="mobileNav = !mobileNav">
-            =
-          </div>
+          <HamburgerMenu :close="mobile" @click="openMobileMenu(!mobile)" />
           <div class="logo-icon"></div>
           <RouterLink class="logo-text" to="/">
             Technique Inference Engine
@@ -13,23 +11,25 @@
         </div>
         <div class="page-links-container">
           <ul class="page-links">
-            <li class="page-link link-hover-trigger" v-for="link of links" :key="link.name">
-              <RouterLink class="primary-link" :to="link.url">
-                {{ link.name }}<span class="dropdown" v-if="link.sections?.length"></span>
-              </RouterLink>
-              <div class="section-links-container">
-                <ul class="section-links theme-light" v-if="link.sections?.length">
-                  <template v-for="section of link.sections" :key="section.name">
-                    <li class="section-link section-name-hover-trigger">
-                      <RouterLink :to="section.url">
-                        <p class="section-name">{{ section.name }}</p>
-                        <p class="section-description">{{ section.description }}</p>
-                      </RouterLink>
-                    </li>
-                  </template>
-                </ul>
-              </div>
-            </li>
+            <template v-for="l of pageLinks" :key="l.name">
+              <li class="page-link link-hover-trigger">
+                <RouterLink class="primary-link" :to="l.url">
+                  {{ l.name }}<span class="dropdown" v-if="l.sections?.length"></span>
+                </RouterLink>
+                <div class="section-links-container" v-if="l.sections?.length">
+                  <ul class="section-links theme-light">
+                    <template v-for="s of l.sections" :key="s.name">
+                      <li class="section-link section-name-hover-trigger">
+                        <RouterLink :to="s.url">
+                          <p class="section-name">{{ s.name }}</p>
+                          <p class="section-description">{{ s.description }}</p>
+                        </RouterLink>
+                      </li>
+                    </template>
+                  </ul>
+                </div>
+              </li>
+            </template>
           </ul>
         </div>
       </div>
@@ -40,64 +40,48 @@
 
 <script lang="ts">
 // Dependencies
-import { defineComponent } from "vue";
+import { defineComponent, inject, type PropType } from "vue";
 // Components
 import { RouterLink } from 'vue-router'
+import HamburgerMenu from "@/components/Icons/HamburgerMenu.vue";
+import type { MainLink } from "./NavigationHeaderTypes";
 
 export default defineComponent({
   name: "NavigationHeader",
+  setup() {
+    const lockPageScroll = inject<(l: boolean) => void>("lockPageScroll");
+    return {
+      lockPageScroll: lockPageScroll ?? (() => { })
+    }
+  },
+  props: {
+    pageLinks: {
+      type: Array as PropType<MainLink[]>,
+      required: true
+    }
+  },
   data: () => ({
-    mobileNav: false,
-    links: [
-      {
-        name: "Home",
-        url: "/",
-        sections: []
-      },
-      {
-        name: "About",
-        url: "/about",
-        sections: [
-          {
-            name: "Learn More",
-            description: "Learn about the project.",
-            url: "/about"
-          },
-          {
-            name: "Methodology",
-            description: "Learn how we trained the model.",
-            url: "/about"
-          }
-        ]
-      },
-      {
-        name: "Methodology",
-        url: "/about"
-      },
-      {
-        name: "Help",
-        url: "/about",
-        sections: [
-          {
-            name: "Predicting Techniques",
-            description: "Learn how to predict Techniques.",
-            url: "/about"
-          },
-          {
-            name: "Tuning the Model",
-            description: "Learn how to tune the model.",
-            url: "/about"
-          },
-          {
-            name: "Contribute",
-            description: "Learn how to contribute.",
-            url: "/about"
-          }
-        ]
-      },
-    ]
+    mobile: false
   }),
-  components: { RouterLink }
+  methods: {
+
+    /**
+     * Open / Closes the mobile menu.
+     * @param open
+     *  True to open menu, false to close it.
+     */
+    openMobileMenu(open: boolean) {
+      this.mobile = open;
+      this.lockPageScroll(open);
+    }
+
+  },
+  watch: {
+    '$route'() {
+      this.openMobileMenu(false);
+    }
+  },
+  components: { RouterLink, HamburgerMenu }
 });
 </script>
 
@@ -106,14 +90,18 @@ export default defineComponent({
 @use "@/assets/styles/engenuity_color_system" as color;
 @use "@/assets/styles/engenuity_scaling_system" as scale;
 
-$_fs : scale.font-size("h5");
-$_lh : scale.line-height("h5");
-$_pad : scale.size("h");
+$_fs : scale.font-size("h6");
+$_lh : scale.line-height("h6");
+
+/**
+ * The header's padding.
+ */
+$header-padding: scale.size("h");
 
 /*
  * The header's calculated height.
  */
-$header-height: calc(($_pad * 2) + ($_fs * $_lh / scale.$units));
+$header-height: calc(($header-padding * 2) + ($_fs * $_lh / scale.$units));
 
 /** === Main Control === */
 
@@ -122,6 +110,7 @@ $header-height: calc(($_pad * 2) + ($_fs * $_lh / scale.$units));
   display: flex;
   justify-content: center;
   width: 100%;
+  z-index: 2;
 }
 
 .navigation-contents {
@@ -130,12 +119,10 @@ $header-height: calc(($_pad * 2) + ($_fs * $_lh / scale.$units));
   justify-content: space-between;
   text-wrap: nowrap;
   max-width: scale.$max-width;
-  padding: scale.size("h") scale.size("xxl");
+  padding: $header-padding scale.size("xxl");
 }
 
 .navigation-buffer {
-  $fs: scale.font-size("h5");
-  $lh: scale.line-height("h5");
   height: $header-height;
 }
 
@@ -146,18 +133,18 @@ $header-height: calc(($_pad * 2) + ($_fs * $_lh / scale.$units));
   align-items: center;
 }
 
-.navigation-burger {
-  margin-right: scale.size("s");
+.hamburger-menu-icon {
+  margin-right: scale.size("xxl");
 }
 
 .logo-icon {
   @include scale.box("l");
-  margin-right: scale.size("s");
   border: solid 1px;
+  margin-right: scale.size("s");
 }
 
 .logo-text {
-  @include scale.h5;
+  @include scale.h6;
   text-decoration: none;
 }
 
@@ -170,11 +157,13 @@ $header-height: calc(($_pad * 2) + ($_fs * $_lh / scale.$units));
 }
 
 .page-links {
-  @include color.dynamic-theme(("inherit", false), (scale.$mobile-width, "light"));
+  @include color.dynamic-theme(("inherit", false),
+    (scale.$mobile-width, "light"));
 }
 
 .invert .page-links {
-  @include color.dynamic-theme(("inherit", false), (scale.$mobile-width, "dark"));
+  @include color.dynamic-theme(("inherit", false),
+    (scale.$mobile-width, "dark"));
 }
 
 .primary-link {
@@ -200,9 +189,9 @@ $header-height: calc(($_pad * 2) + ($_fs * $_lh / scale.$units));
 
 /** === Navigation Links (Desktop) === */
 
-@media only screen and (min-width: scale.$mobile-width) {
+@include scale.above-mobile-width() {
 
-  .navigation-burger {
+  .hamburger-menu-icon {
     display: none;
   }
 
@@ -221,7 +210,7 @@ $header-height: calc(($_pad * 2) + ($_fs * $_lh / scale.$units));
   }
 
   .primary-link {
-    @include scale.h5;
+    @include scale.h6;
   }
 
   .section-links-container {
@@ -273,7 +262,7 @@ $header-height: calc(($_pad * 2) + ($_fs * $_lh / scale.$units));
 
 /** === Navigation Links (Mobile) === */
 
-@media only screen and (max-width: #{ scale.$mobile-width - 1 }) {
+@include scale.at-and-below-mobile-width() {
 
   .page-links-container {
     position: fixed;
@@ -282,22 +271,39 @@ $header-height: calc(($_pad * 2) + ($_fs * $_lh / scale.$units));
     right: 0em;
     bottom: 0em;
     background: rgb(0 0 0 / 50%);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.25s ease-in-out 0s,
+      visibility 0.25s ease-in-out 0s;
   }
 
   .page-links {
-    padding: scale.size("h") scale.size("h");
+    max-height: calc(100vh - $header-height);
+    padding: scale.size("h");
+    box-sizing: border-box;
+    overflow-y: scroll;
   }
 
   .page-link {
     margin-bottom: scale.size("xl");
+    transform: translateX(- scale.size("h"));
+    transition:
+      transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .page-link:last-child {
     margin-bottom: 0em;
   }
 
+  @for $index from 1 through 9 {
+    .page-link:nth-child(#{ $index }) {
+      transition-delay: $index * 0.025s;
+    }
+  }
+
   .primary-link {
-    @include scale.h4;
+    @include scale.h5;
   }
 
   .dropdown {
@@ -305,9 +311,11 @@ $header-height: calc(($_pad * 2) + ($_fs * $_lh / scale.$units));
   }
 
   .section-links-container {
-    margin-top: scale.size("xl");
-    border-left: solid 2px #f0f1f2;
+    @include color.accent-border;
     padding: 0em scale.size("xl");
+    border-left-style: solid;
+    border-left-width: 2px;
+    margin-top: scale.size("xl");
   }
 
   .section-link a {
@@ -324,8 +332,21 @@ $header-height: calc(($_pad * 2) + ($_fs * $_lh / scale.$units));
   }
 
   .section-name {
-    @include scale.h5;
+    @include scale.h6;
     margin-bottom: scale.size("xxt");
+  }
+
+  .mobile-menu-open {
+
+    .page-links-container {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .page-link {
+      transform: translateX(0px);
+    }
+
   }
 
 }
