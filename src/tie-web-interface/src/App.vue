@@ -95,8 +95,6 @@ export default defineComponent({
 #app {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
 }
 
 #page-header {
