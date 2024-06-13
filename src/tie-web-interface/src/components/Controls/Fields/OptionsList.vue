@@ -4,8 +4,8 @@
       <div class="options-scrollbox" ref="scrollbox" :style="style">
         <ul class="options" v-if="hasOptions">
           <li ref="items" v-for="option in options" :key="option.value ?? 'null'" :list-id="option.value"
-            :class="{ active: isActive(option) }" @pointerdown="$emit('select', option.value)"
-            @mouseenter="setActive(option)" exit-focus-box>
+            :class="{ active: isActive(option) }" @click="$emit('select', option.value)" @mouseenter="setActive(option)"
+            exit-focus-box>
             <span>{{ option.text }}</span>
           </li>
         </ul>

@@ -40,7 +40,7 @@ export default defineComponent({
       select: null as string | null,
       showMenu: false,
       searchTerm: "",
-      focusBox: markRaw(new RawFocusBox("pointerdown"))
+      focusBox: markRaw(new RawFocusBox("click"))
     }
   },
   computed: {
@@ -78,20 +78,22 @@ export default defineComponent({
      * Field focus in behavior.
      */
     onFocusIn() {
+      if (this.showMenu) {
+        return;
+      }
       // Open menu
       this.showMenu = true;
       // Reset select
       this.select = this.filteredOptions[0]?.value;
-      // Focus search
-      setTimeout(() => {
-        (this.$refs.search as any)?.focus();
-      }, 0);
     },
 
     /**
      * Field focus out behavior.
      */
     onFocusOut() {
+      if (!this.showMenu) {
+        return;
+      }
       // Close menu
       this.showMenu = false;
       // Clear search
