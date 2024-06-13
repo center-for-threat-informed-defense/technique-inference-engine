@@ -7,6 +7,7 @@
       <div class="techniques">
         <template v-for="observed of observedTechniquesList" :key="observed.id">
           <TechniqueSummary class="technique-summary" :technique="observed">
+            <div class="unknown" v-if="!trainedTechniques.has(observed.id)">(?)</div>
             <div class="delete-icon" @click="deleteObservedTechnique(observed.id)">
               <DeleteIcon />
             </div>
@@ -29,6 +30,7 @@
       <div class="techniques">
         <template v-for="prediction of predictedTechniquesList" :key="prediction.id">
           <TechniqueSummary class="technique-summary" :technique="prediction">
+            <div class="unknown" v-if="!trainedTechniques.has(prediction.id)">(?)</div>
             <div class="score-bar-container">
               <div class="score-bar">
                 <span :style="{ width: relativeScores.get(prediction.id) }"></span>
@@ -64,7 +66,8 @@ export default defineComponent({
     engine: useInferenceEngineStore(),
     enrichmentFile: {} as EnrichmentFile,
     observed: new Set<string>(),
-    predicted: null as null | PredictedTechniques
+    predicted: null as null | PredictedTechniques,
+    trainedTechniques: new Set<string>()
   }),
   computed: {
 
@@ -159,7 +162,9 @@ export default defineComponent({
      */
     async updatePredictions() {
       if (this.observed.size) {
-        const techniques = this.observed;
+        const a = [...this.observed.keys()];
+        const b = this.trainedTechniques;
+        const techniques = new Set(a.filter(t => b.has(t)));
         this.predicted = await this.engine.predictNewReport(techniques);
       } else {
         this.predicted = null;
@@ -168,8 +173,14 @@ export default defineComponent({
 
   },
   async created() {
-    this.enrichmentFile = await this.engine.getEnrichmentFile;
-    this.updatePredictions();
+    // Make simultaneous requests
+    const [enrichmentFile, trainedTechniques] = [
+      this.engine.getEnrichmentFile,
+      this.engine.getTrainedTechniques
+    ]
+    // Await results
+    this.enrichmentFile = await enrichmentFile;
+    this.trainedTechniques = await trainedTechniques;
   },
   components: { AddIcon, DeleteIcon, OptionSelector, TechniqueSummary }
 });
@@ -248,6 +259,15 @@ export default defineComponent({
   border-style: dotted;
   border-width: 1px;
   margin-top: scale.size("xl");
+}
+
+.unknown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  padding: 0em scale.size("xl");
+  @include scale.h6
 }
 
 @include scale.at-and-below-mobile-width {
