@@ -32,7 +32,7 @@ export class RemoteModelSource extends ModelSource {
      */
     constructor(url: string, enableCaching?: boolean) {
         super(enableCaching);
-        this._url = url;
+        this._url = `${import.meta.env.BASE_URL}${url}`;
     }
 
 
