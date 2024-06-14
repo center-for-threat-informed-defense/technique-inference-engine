@@ -29,15 +29,21 @@ class WalsRecommender(Recommender):
         assert n > 0
         assert k > 0
 
-        init_stddev = 0.5
-
-        U = np.random.normal(loc=0.0, scale=init_stddev, size=(m, k))
-        V = np.random.normal(loc=0.0, scale=init_stddev, size=(n, k))
-
-        self._U = U
-        self._V = V
+        self._U = np.zeros((m, k))
+        self._V = np.zeros((n, k))
+        self._reset_embeddings()
 
         self._checkrep()
+
+    def _reset_embeddings(self):
+        """Resets the embeddings to a standard normal."""
+        init_stddev = 1
+
+        new_U = np.random.normal(loc=0, scale=init_stddev, size=self._U.size)
+        new_V = np.random.normal(loc=0, scale=init_stddev, size=self._V.size)
+
+        self._U = new_U
+        self._V = new_V
 
     def _checkrep(self):
         """Asserts the rep invariant."""
@@ -187,6 +193,8 @@ class WalsRecommender(Recommender):
         Mutates:
             The recommender to the new trained state.
         """
+        self._reset_embeddings()
+
         # preconditions
         assert 0 < c < 1
 

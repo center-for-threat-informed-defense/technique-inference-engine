@@ -2,7 +2,6 @@ import tensorflow as tf
 import math
 import numpy as np
 import keras
-import matplotlib.pyplot as plt
 
 from .recommender import Recommender
 
@@ -34,15 +33,21 @@ class BPRRecommender(Recommender):
             n: number of item embeddings.
             k: embedding dimension.
         """
-        init_stddev = math.sqrt(1 / k)
-
-        U = np.random.normal(loc=0, scale=init_stddev, size=(m, k))
-        V = np.random.normal(loc=0, scale=init_stddev, size=(n, k))
-
-        self._U = U
-        self._V = V
+        self._U = np.zeros((m, k))
+        self._V = np.zeros((n, k))
+        self._reset_embeddings()
 
         self._checkrep()
+
+    def _reset_embeddings(self):
+        """Resets the embeddings to a standard normal."""
+        init_stddev = 1
+
+        new_U = np.random.normal(loc=0, scale=init_stddev, size=self._U.size)
+        new_V = np.random.normal(loc=0, scale=init_stddev, size=self._V.size)
+
+        self._U = new_U
+        self._V = new_V
 
     def _checkrep(self):
         """Asserts the rep invariant."""
@@ -177,6 +182,9 @@ class BPRRecommender(Recommender):
         num_iterations: int,
         regularization: float,
     ):
+        # start by resetting embeddings for proper fit
+        self._reset_embeddings()
+
         data = tf.sparse.reorder(data)
         data = tf.sparse.to_dense(data)
         data = data.numpy()

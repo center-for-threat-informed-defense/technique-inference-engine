@@ -106,17 +106,11 @@ class TechniqueInferenceEngine:
         Returns:
             The MSE of the prediction matrix, as determined by the test set.
         """
-        # recalls = []
-        # def epoch_callback():
-        #     recalls.append(self.recall(k=20))
-        #     print("recalls", recalls)
         # train
         self._model.fit(self._training_data.to_sparse_tensor(), **kwargs)
 
         mean_squared_error = self._model.evaluate(self._test_data.to_sparse_tensor())
 
-        # plt.plot(list(range(len(recalls))), recalls)
-        # plt.show()
         self._checkrep()
         return mean_squared_error
 
