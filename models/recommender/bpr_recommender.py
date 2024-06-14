@@ -2,8 +2,9 @@ import tensorflow as tf
 import math
 import numpy as np
 import keras
+import matplotlib.pyplot as plt
+
 from .recommender import Recommender
-import time
 
 
 class BPRRecommender(Recommender):
@@ -195,6 +196,9 @@ class BPRRecommender(Recommender):
             i = all_i[iteration_count]
             j = all_j[iteration_count]
 
+            assert data[u, i] == 1
+            assert data[u, j] == 0
+
             # theta = theta + alpha * (e^(-x) sigma(x) d/dtheta x + lambda theta)
             x_ui = self._predict_for_single_entry(u, i)
             x_uj = self._predict_for_single_entry(u, j)
@@ -209,13 +213,13 @@ class BPRRecommender(Recommender):
             d_hj = -self._U[u, :]
 
             self._U[u, :] += learning_rate * (
-                sigmoid_derivative * d_w - (w_regularization * np.sum(self._U[u, :]))
+                sigmoid_derivative * d_w - (w_regularization * self._U[u, :])
             )
             self._V[i, :] += learning_rate * (
-                sigmoid_derivative * d_hi - (v_i_regularization * np.sum(self._V[i, :]))
+                sigmoid_derivative * d_hi - (v_i_regularization * self._V[i, :])
             )
             self._V[j, :] += learning_rate * (sigmoid_derivative * d_hj) - (
-                v_j_regularization * np.sum(self._V[j, :])
+                v_j_regularization * self._V[j, :]
             )
 
         # return theta

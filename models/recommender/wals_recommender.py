@@ -112,7 +112,7 @@ class WalsRecommender(Recommender):
         assert p == data.shape[0]
         assert q > 0
         assert alpha > 0
-        assert regularization_coefficient > 0
+        assert regularization_coefficient >= 0
 
         def V_T_C_I_V(V, c_array):
             _, k = V.shape
