@@ -4,6 +4,7 @@ import numpy as np
 import keras
 
 from .recommender import Recommender
+import time
 
 
 class BPRRecommender(Recommender):
