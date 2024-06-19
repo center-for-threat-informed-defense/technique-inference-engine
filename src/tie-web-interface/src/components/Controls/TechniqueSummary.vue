@@ -13,9 +13,7 @@
       <slot></slot>
     </div>
     <div class="technique-body" v-if="!collapsed">
-      <p class="technique-description">
-        {{ technique.description }}
-      </p>
+      <MarkdownText class="technique-description" :source="technique.description" />
       <div class="technique-footer">
         <a class="learn-more" :href="learnMoreLink" target="_blank">Learn More</a>
         <var class="score" v-if="'score' in technique">
@@ -31,6 +29,7 @@
 import { defineComponent, type PropType } from "vue";
 import type { PredictedTechnique, Technique } from "@/assets/scripts/TechniqueInferenceEngine";
 // Components
+import MarkdownText from "@/components/Controls/MarkdownText.vue";
 import CollapseArrow from "@/components/Icons/CollapseArrow.vue";
 
 export default defineComponent({
@@ -61,7 +60,7 @@ export default defineComponent({
 
 
   },
-  components: { CollapseArrow }
+  components: { MarkdownText, CollapseArrow }
 });
 </script>
 

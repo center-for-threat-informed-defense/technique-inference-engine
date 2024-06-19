@@ -540,6 +540,17 @@ small {
 }
 var { @include var }
 
+@mixin code {
+  font-family: "Roboto Mono";
+  font-weight: 400;
+  font-style: normal;
+  font-size: font-size("small");
+  line-height: line-height("small");
+  word-break: break-all;
+  padding: size("xxt") size("t");
+}
+code { @include code }
+
 @mixin placeholder {
   font-family: "Trade Gothic Condensed";
   font-weight: 400;
@@ -548,6 +559,14 @@ var { @include var }
   text-transform: uppercase;
 }
 .placeholder { @include placeholder }
+
+ul {
+  padding-inline-start: size("h");
+}
+
+sup > a {
+  text-decoration: none;
+}
 
 @mixin learn-more {
 

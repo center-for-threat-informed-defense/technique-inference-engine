@@ -85,7 +85,8 @@ function parseStixToAttackObject(obj) {
         stixId: obj.id,
         name: obj.name,
         type: STIX_TO_ATTACK[obj.type],
-        description: obj.description
+        description: obj.description,
+        external_references: obj.external_references
     }
 
     // Parse MITRE reference information

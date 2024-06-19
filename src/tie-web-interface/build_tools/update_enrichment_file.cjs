@@ -1,7 +1,7 @@
 const { resolve } = require("path");
 const { writeFileSync } = require("fs");
-const { fetchAttackData } = require("./download_attack");
-const { STIX_SOURCES } = require("./download_sources");
+const { fetchAttackData } = require("./download_attack.cjs");
+const { STIX_SOURCES } = require("./download_sources.cjs");
 
 
 /**
@@ -24,10 +24,45 @@ function filterAttackObjects(objects) {
         filtered.push({
             id: object.id,
             name: object.name,
-            description: object.description
+            description: processMarkdownText(
+                object.description,
+                object.external_references
+            )
         });
     }
     return filtered;
+}
+
+/**
+ * Replaces:
+ *  * Common HTML tags found in `source` with their markdown equivalent.
+ *  * Citations with Markdown superscripts.
+ * @param {*} source
+ *  The markdown source.
+ * @param {*} references
+ *  The citation references.
+ */
+function processMarkdownText(source, references = []) {
+    // Replace common HTML tags
+    source = source
+        .replace(/<\/?code>/g, "`");
+    // Replace citations
+    const citationIndex = new Map();
+    source = source.replace(/\(Citation:(.*?)\)/g, (match, name) => {
+        name = name.trim();
+        if (!citationIndex.has(name)) {
+            const ref = references;
+            const url = ref[ref.findIndex(o => o.source_name === name)]?.url;
+            if (!url) {
+                // If no url, bail on replacement
+                return match;
+            }
+            citationIndex.set(name, [citationIndex.size + 1, url]);
+        }
+        const [index, url] = citationIndex.get(name);
+        return `^[[${index}]](${url})^`
+    })
+    return source;
 }
 
 /**

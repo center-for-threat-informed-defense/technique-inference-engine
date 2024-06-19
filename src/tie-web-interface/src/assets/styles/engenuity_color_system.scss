@@ -224,6 +224,10 @@ a:hover {
   color: var(--hyperlink-hover);
 }
 
+code {
+  background: var(--accent-2-border);
+}
+
 var {
   color: var(tag-font);
   background: var(--tag-background);
