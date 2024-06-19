@@ -92,9 +92,9 @@ export default defineComponent({
 .info-banner-contents {
   display: flex;
   width: 100%;
+  min-width: 0;
   max-width: scale.$max-width;
   padding: scale.size("xxl") scale.size("xxh") scale.size("xxh");
-  overflow: hidden;
 }
 
 .partners {
@@ -143,13 +143,13 @@ export default defineComponent({
 }
 
 .tool-set-contents {
+  min-width: 0;
   padding: 0em scale.size("h");
-  overflow: hidden;
 }
 
 .active-tool-contents {
+  min-width: 0;
   padding: 0em scale.size("h");
-  overflow: hidden;
 }
 
 .tool-tabs,

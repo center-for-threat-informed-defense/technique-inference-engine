@@ -105,8 +105,8 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 0;
   padding: scale.size("xxh");
-  overflow: hidden;
 }
 
 .navigation-footer-contents {
