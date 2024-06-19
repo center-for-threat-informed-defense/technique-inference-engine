@@ -6,23 +6,26 @@
 import { defineComponent, markRaw } from "vue";
 import MarkdownIt from "markdown-it";
 import MarkdownItSup from "@/assets/scripts/Utilities/MarkdownItSup";
+import type { RenderRule } from "markdown-it/lib/renderer.mjs";
 
-// Configure base renderer
+// Configure markdown renderer
 const markdown = markRaw(new MarkdownIt({
 
   /**
    * Warning:
    * Do NOT enable HTML tags in source without an external sanitizer package. Enabling
-   * tags without a sanitizer can open the door to XSS attacks. Consult all security
-   * {@link https://github.com/markdown-it/markdown-it/blob/master/docs/security.md guidelines }
-   * before altering this configuration.
+   * tags without a sanitizer can lead to XSS attacks. Consult all security guidelines
+   * (https://github.com/markdown-it/markdown-it/blob/master/docs/security.md) before
+   * altering this configuration.
    */
   html: false
 
 })).use(MarkdownItSup);
 
 // Remember old renderer if overridden, or proxy to the default renderer.
-const defaultRender = markdown.renderer.rules.link_open ?? function (tokens, idx, options, _, self) {
+let defaultRender: RenderRule | undefined;
+defaultRender ??= markdown.renderer.rules.link_open;
+defaultRender ??= function (tokens, idx, options, _, self) {
   return self.renderToken(tokens, idx, options);
 };
 // Configure renderer to open links in new tab

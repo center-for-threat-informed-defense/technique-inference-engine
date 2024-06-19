@@ -56,10 +56,6 @@ export default defineComponent({
     }
 
   },
-  methods: {
-
-
-  },
   components: { MarkdownText, CollapseArrow }
 });
 </script>
@@ -68,33 +64,18 @@ export default defineComponent({
 @use "@/assets/styles/engenuity_color_system" as color;
 @use "@/assets/styles/engenuity_scaling_system" as scale;
 
+/** === Main Control === */
+
 .technique-summary-control {
   @include color.field-border;
   display: flex;
   flex-direction: column;
   border-style: solid;
   border-width: 1px;
+  overflow: hidden;
 }
 
-.technique-header {
-  display: flex;
-  align-items: stretch;
-}
-
-.technique-name {
-  flex: 1;
-  padding: scale.size("l") 0em;
-}
-
-h4 {
-  font-size: scale.font-size("h3-5");
-}
-
-
-mark {
-  @include scale.h6;
-  font-weight: 400;
-}
+/** === Technique Header === */
 
 .collapse-region {
   flex: 1;
@@ -115,6 +96,23 @@ svg:not(.collapsed) {
   transform: rotate(90deg);
 }
 
+.technique-header {
+  display: flex;
+  align-items: stretch;
+}
+
+.technique-name {
+  flex: 1;
+  padding: scale.size("l") 0em;
+}
+
+mark {
+  @include scale.h6;
+  font-weight: 400;
+}
+
+/** === Technique Body === */
+
 .technique-body {
   padding: 0em scale.size("xl") scale.size("h") scale.size("xh");
 }
@@ -122,7 +120,7 @@ svg:not(.collapsed) {
 .technique-description {
   @include color.field-border;
   white-space: pre-wrap;
-  padding: scale.size("l") 0em scale.size("h");
+  padding: scale.size("l") 0em scale.size("xl");
   border-top-style: solid;
   border-top-width: 1px;
 }
@@ -136,8 +134,6 @@ svg:not(.collapsed) {
 .score {
   margin-right: scale.size("xl")
 }
-
-
 
 @include scale.at-and-below-mobile-width {
   .score {
