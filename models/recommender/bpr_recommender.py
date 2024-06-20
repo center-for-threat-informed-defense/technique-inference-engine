@@ -44,8 +44,8 @@ class BPRRecommender(Recommender):
         """Resets the embeddings to a standard normal."""
         init_stddev = 1
 
-        new_U = np.random.normal(loc=0, scale=init_stddev, size=self._U.size)
-        new_V = np.random.normal(loc=0, scale=init_stddev, size=self._V.size)
+        new_U = np.random.normal(loc=0, scale=init_stddev, size=self._U.shape)
+        new_V = np.random.normal(loc=0, scale=init_stddev, size=self._V.shape)
 
         self._U = new_U
         self._V = new_V
@@ -227,8 +227,8 @@ class BPRRecommender(Recommender):
             self._V[i, :] += learning_rate * (
                 sigmoid_derivative * d_hi - (v_i_regularization * self._V[i, :])
             )
-            self._V[j, :] += learning_rate * (sigmoid_derivative * d_hj) - (
-                v_j_regularization * self._V[j, :]
+            self._V[j, :] += learning_rate * (
+                sigmoid_derivative * d_hj - (v_j_regularization * self._V[j, :])
             )
 
         # return theta
