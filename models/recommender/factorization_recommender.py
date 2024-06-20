@@ -37,20 +37,23 @@ class FactorizationRecommender(Recommender):
             n: number of items
             k: embedding dimension
         """
-        init_stddev = 0.5
-
-        # TODO remove
-        self._k = k
-
-        U = tf.Variable(tf.random.normal([m, k], stddev=init_stddev))
-        V = tf.Variable(tf.random.normal([n, k], stddev=init_stddev))
-
-        self._U = U
-        self._V = V
+        self._U = np.zeros((m, k))
+        self._V = np.zeros((n, k))
+        self._reset_embeddings()
 
         self._loss = keras.losses.MeanSquaredError()
 
         self._checkrep()
+
+    def _reset_embeddings(self):
+        """Resets the embeddings to a standard normal."""
+        init_stddev = 1
+
+        new_U = np.random.normal(loc=0, scale=init_stddev, size=self._U.shape)
+        new_V = np.random.normal(loc=0, scale=init_stddev, size=self._V.shape)
+
+        self._U = new_U
+        self._V = new_V
 
     def _checkrep(self):
         """Asserts the rep invariant."""
@@ -189,6 +192,8 @@ class FactorizationRecommender(Recommender):
         Mutates:
             The recommender to the new trained state.
         """
+        self._reset_embeddings()
+
         # preliminaries
         optimizer = keras.optimizers.SGD(learning_rate=learning_rate)
 
@@ -253,7 +258,7 @@ class FactorizationRecommender(Recommender):
 
         embedding = tf.Variable(
             tf.random.normal(
-                [self._k, 1],
+                [self._U.shape[1], 1],
                 stddev=init_stddev,
             )
         )

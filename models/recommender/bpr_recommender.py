@@ -2,6 +2,7 @@ import tensorflow as tf
 import math
 import numpy as np
 import keras
+
 from .recommender import Recommender
 import time
 
@@ -33,15 +34,21 @@ class BPRRecommender(Recommender):
             n: number of item embeddings.
             k: embedding dimension.
         """
-        init_stddev = math.sqrt(1 / k)
-
-        U = np.random.normal(loc=0, scale=init_stddev, size=(m, k))
-        V = np.random.normal(loc=0, scale=init_stddev, size=(n, k))
-
-        self._U = U
-        self._V = V
+        self._U = np.zeros((m, k))
+        self._V = np.zeros((n, k))
+        self._reset_embeddings()
 
         self._checkrep()
+
+    def _reset_embeddings(self):
+        """Resets the embeddings to a standard normal."""
+        init_stddev = 1
+
+        new_U = np.random.normal(loc=0, scale=init_stddev, size=self._U.shape)
+        new_V = np.random.normal(loc=0, scale=init_stddev, size=self._V.shape)
+
+        self._U = new_U
+        self._V = new_V
 
     def _checkrep(self):
         """Asserts the rep invariant."""
@@ -94,7 +101,9 @@ class BPRRecommender(Recommender):
         sample_user_probability = self._calculate_sample_user_probability(data)
 
         # repeat for each of n items
-        num_items_per_user = np.sum(data, axis=1)
+        num_items_per_user = np.sum(data, axis=1).astype(float)
+        assert not np.any(np.isnan(num_items_per_user))
+        num_items_per_user[num_items_per_user == 0.] = np.nan
         assert num_items_per_user.shape == (m,)  # m users
         sample_item_probability = np.nan_to_num(
             data / np.expand_dims(num_items_per_user, axis=1)
@@ -176,6 +185,9 @@ class BPRRecommender(Recommender):
         num_iterations: int,
         regularization: float,
     ):
+        # start by resetting embeddings for proper fit
+        self._reset_embeddings()
+
         data = tf.sparse.reorder(data)
         data = tf.sparse.to_dense(data)
         data = data.numpy()
@@ -195,6 +207,9 @@ class BPRRecommender(Recommender):
             i = all_i[iteration_count]
             j = all_j[iteration_count]
 
+            assert data[u, i] == 1
+            assert data[u, j] == 0
+
             # theta = theta + alpha * (e^(-x) sigma(x) d/dtheta x + lambda theta)
             x_ui = self._predict_for_single_entry(u, i)
             x_uj = self._predict_for_single_entry(u, j)
@@ -209,13 +224,13 @@ class BPRRecommender(Recommender):
             d_hj = -self._U[u, :]
 
             self._U[u, :] += learning_rate * (
-                sigmoid_derivative * d_w - (w_regularization * np.sum(self._U[u, :]))
+                sigmoid_derivative * d_w - (w_regularization * self._U[u, :])
             )
             self._V[i, :] += learning_rate * (
-                sigmoid_derivative * d_hi - (v_i_regularization * np.sum(self._V[i, :]))
+                sigmoid_derivative * d_hi - (v_i_regularization * self._V[i, :])
             )
-            self._V[j, :] += learning_rate * (sigmoid_derivative * d_hj) - (
-                v_j_regularization * np.sum(self._V[j, :])
+            self._V[j, :] += learning_rate * (
+                sigmoid_derivative * d_hj - (v_j_regularization * self._V[j, :])
             )
 
         # return theta

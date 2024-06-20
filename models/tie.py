@@ -2,7 +2,6 @@ import copy
 import tensorflow as tf
 from recommender import Recommender
 from matrix import ReportTechniqueMatrix
-import math
 import pandas as pd
 import numpy as np
 from utils import (
@@ -115,7 +114,7 @@ class TechniqueInferenceEngine:
         self._checkrep()
         return mean_squared_error
 
-    def fit_with_cross_validation(self, **kwargs):
+    def fit_with_cross_validation(self, **kwargs) -> dict[str, float]:
         """Fits the model by validating hyperparameters on the cross validation data.
 
         Selects the hyperparameters which maximize normalized discounted cumulative gain
@@ -123,6 +122,9 @@ class TechniqueInferenceEngine:
 
         Args:
             kwargs: mapping of hyperparameter to values over which to cross-validate.
+
+        Returns:
+            A mapping of each kwarg to the value from the best hyperparameter combination.
         """
 
         def parameter_cartesian_product(
@@ -165,15 +167,16 @@ class TechniqueInferenceEngine:
         ):
 
             self.fit(**hyperparameters)
-            score = normalized_discounted_cumulative_gain(
-                self.predict(), self._validation_data.to_pandas(), k=20
-            )
+            score = recall_at_k(self.predict(), self._validation_data.to_pandas(), k=20)
+
             if score > best_score:
 
                 best_score = score
                 best_hyperparameters = hyperparameters
 
         self.fit(**best_hyperparameters)
+
+        return best_hyperparameters
 
     def precision(self, k: int = 10) -> float:
         """Calculates the precision of the top k model predictions.
