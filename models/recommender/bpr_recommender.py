@@ -101,7 +101,9 @@ class BPRRecommender(Recommender):
         sample_user_probability = self._calculate_sample_user_probability(data)
 
         # repeat for each of n items
-        num_items_per_user = np.sum(data, axis=1)
+        num_items_per_user = np.sum(data, axis=1).astype(float)
+        assert not np.any(np.isnan(num_items_per_user))
+        num_items_per_user[num_items_per_user == 0.] = np.nan
         assert num_items_per_user.shape == (m,)  # m users
         sample_item_probability = np.nan_to_num(
             data / np.expand_dims(num_items_per_user, axis=1)
