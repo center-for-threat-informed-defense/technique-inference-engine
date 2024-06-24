@@ -219,19 +219,6 @@ class WalsRecommender(Recommender):
         self._checkrep()
 
     def evaluate(self, test_data: tf.SparseTensor, method: PredictionMethod=PredictionMethod.DOT) -> float:
-        """Evaluates the solution.
-
-        Requires that the model has been trained.
-
-        Args:
-            test_data: mxn tensor on which to evaluate the model.
-                Requires that mxn match the dimensions of the training tensor and
-                each row i and column j correspond to the same entity and item
-                in the training tensor, respectively.
-
-        Returns:
-            The mean squared error of the test data.
-        """
         predictions_matrix = self.predict(method)
 
         row_indices = tuple(index[0] for index in test_data.indices)
@@ -242,14 +229,6 @@ class WalsRecommender(Recommender):
         return mean_squared_error(test_data.values, prediction_values)
 
     def predict(self, method: PredictionMethod=PredictionMethod.DOT) -> np.ndarray:
-        """Gets the model predictions.
-
-        The predictions consist of the estimated matrix A_hat of the truth
-        matrix A, of which the training data contains a sparse subset of the entries.
-
-        Returns:
-            An mxn array of values.
-        """
         self._checkrep()
 
         return calculate_predicted_matrix(self._U, self._V, method)
@@ -260,9 +239,11 @@ class WalsRecommender(Recommender):
         """Recommends items to an unseen entity.
 
         Args:
-            entity: a length-n sparse tensor of consisting of the new entity's
+            entity: A length-n sparse tensor of consisting of the new entity's
                 ratings for each item, indexed exactly as the items used to
                 train this model.
+            regularization_coefficient: Coefficient on the L2 regularization term.
+            method: The prediction method to use.
 
         Returns:
             An array of predicted values for the new entity.
@@ -282,4 +263,5 @@ class WalsRecommender(Recommender):
         assert new_entity_factor.shape == (1,self._U.shape[1])
 
         return np.squeeze(calculate_predicted_matrix(new_entity_factor, self._V, method))
-    
+
+Recommender.register(WalsRecommender)
