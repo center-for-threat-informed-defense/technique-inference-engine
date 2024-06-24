@@ -1,24 +1,24 @@
 <template>
-  <div class="technique-summary-control">
+  <div class="technique-item-summary-control">
     <div class="technique-header">
       <div class="collapse-region" @click="collapsed = !collapsed">
         <div class="collapse-button">
           <CollapseArrow :class="{ collapsed }" />
         </div>
         <div class="technique-name">
-          <mark>{{ technique.id }}:</mark>
-          <h4>{{ technique.name }}</h4>
+          <mark>{{ item.id }}:</mark>
+          <h4>{{ item.name }}</h4>
         </div>
       </div>
-      <slot></slot>
+      <div class="score" v-if="'rank' in item">
+        <var>#{{ item.rank }}</var>
+      </div>
+      <slot :technique="item"></slot>
     </div>
     <div class="technique-body" v-if="!collapsed">
-      <MarkdownText class="technique-description" :source="technique.description" />
+      <MarkdownText class="technique-description" :source="item.description" />
       <div class="technique-footer">
         <a class="learn-more" :href="learnMoreLink" target="_blank">Learn More</a>
-        <var class="score" v-if="'score' in technique">
-          Score: {{ Math.round(technique.score * 10000) / 100 }}
-        </var>
       </div>
     </div>
   </div>
@@ -33,9 +33,9 @@ import MarkdownText from "@/components/Controls/MarkdownText.vue";
 import CollapseArrow from "@/components/Icons/CollapseArrow.vue";
 
 export default defineComponent({
-  name: "TechniqueSummary",
+  name: "TechniqueItemSummary",
   props: {
-    technique: {
+    item: {
       type: Object as PropType<Technique | PredictedTechnique>,
       required: true
     }
@@ -51,7 +51,7 @@ export default defineComponent({
      *  The technique's "Learn More" link.
      */
     learnMoreLink(): string {
-      const id = this.technique.id.replace(/\./g, "/");
+      const id = this.item.id.replace(/\./g, "/");
       return `https://attack.mitre.org/techniques/${id}/`
     }
 
@@ -66,7 +66,7 @@ export default defineComponent({
 
 /** === Main Control === */
 
-.technique-summary-control {
+.technique-item-summary-control {
   @include color.field-border;
   display: flex;
   flex-direction: column;
@@ -111,6 +111,13 @@ mark {
   font-weight: 400;
 }
 
+.score {
+  display: flex;
+  align-items: center;
+  user-select: none;
+  margin-left: scale.size("xl");
+}
+
 /** === Technique Body === */
 
 .technique-body {
@@ -129,15 +136,5 @@ mark {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.score {
-  margin-right: scale.size("xl")
-}
-
-@include scale.at-and-below-mobile-width {
-  .score {
-    display: none;
-  }
 }
 </style>

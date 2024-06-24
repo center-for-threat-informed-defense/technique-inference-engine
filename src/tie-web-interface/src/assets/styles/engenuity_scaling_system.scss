@@ -225,6 +225,7 @@ $line-heights: (
   h4    : size-of(1),
   h5    : size-of(1),
   h6    : size-of(1),
+  h7    : size-of(1),
   p     : size-of(2),
   small : size-of(2),
 );
@@ -239,6 +240,7 @@ $font-sizes: (
   h4    : semitone-of(1, 2),
   h5    : size-of(1),
   h6    : semitone-of(0, 1),
+  h7    : size-of(0),
   p     : size-of(0),
   small : semitone-of(-1, 0),
 );
@@ -511,6 +513,14 @@ h5 { @include h5; }
 }
 h6 { @include h6; }
 
+@mixin h7 {
+  font-family: "Trade Gothic Condensed";
+  font-weight: 500;
+  font-size: font-size("h7");
+  line-height: line-height("h7");
+  text-transform: uppercase;
+}
+
 @mixin p {
   font-family: "Trade Gothic";
   font-weight: 400;
@@ -627,4 +637,37 @@ sup > a {
   grid-template-columns: repeat($cols, auto);
   row-gap: size($row-gap);
   column-gap: size($col-gap);
+}
+
+
+/** === Interface === **/
+
+
+button {
+  @include h7;
+  display: flex;
+  align-items: center;
+  padding: size("xs") size("m");
+  border-style: solid;
+  border-width: 1px;
+  user-select: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+button svg {
+  height: 10px;
+}
+
+button {
+  svg ~ span {
+    margin-left: size("xs");
+  }
+}
+
+input {
+  @include p;
+  padding: size("xt") size("xs");
+  border-style: solid;
+  border-width: 1px;
 }

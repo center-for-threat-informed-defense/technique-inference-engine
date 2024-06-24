@@ -229,7 +229,7 @@ code {
 }
 
 var {
-  color: var(tag-font);
+  color: var(--tag-font);
   background: var(--tag-background);
 }
 
@@ -284,8 +284,23 @@ var {
 }
 
 
-/** === Interface Elements ==== */
+/** === Interface ==== */
 
+
+button {
+  color: var(--icon);
+  background: var(--primary-background);
+  border-color: currentColor;
+}
+
+button:hover {
+  background: var(--accent-2-border);
+}
+
+input {
+  @include field-border;
+  outline: none;
+}
 
 @mixin icon {
   color: var(--icon);

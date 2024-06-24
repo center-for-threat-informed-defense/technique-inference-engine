@@ -195,7 +195,6 @@ type Option = {
   border-width: 1px;
   box-sizing: border-box;
   background: inherit;
-  z-index: 1;
 }
 
 .options-list-field:not(.flip) .options-container {

@@ -215,6 +215,10 @@ export default defineComponent({
   @include color.field-border;
 }
 
+.options-list {
+  z-index: 1;
+}
+
 .options-list:not(.flip)+.value-container.menu-open {
   border-style: solid;
   border-bottom: none;

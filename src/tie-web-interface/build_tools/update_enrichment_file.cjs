@@ -27,7 +27,9 @@ function filterAttackObjects(objects) {
             description: processMarkdownText(
                 object.description,
                 object.external_references
-            )
+            ),
+            platforms: object.platforms,
+            tactics: object.tactics
         });
     }
     return filtered;
@@ -90,8 +92,12 @@ async function updateEnrichmentFile(path, domain, version) {
     console.log("→ Generating Enrichment File...");
 
     const techniques = filterAttackObjects(listing.get("technique"));
-    const enrichmentFile = Object.fromEntries(techniques.map(o => [o.id, o]));
-    writeFileSync(path, JSON.stringify(enrichmentFile, null, 4));
+    const enrichmentFile = {
+        domain,
+        version,
+        techniques: Object.fromEntries(techniques.map(o => [o.id, o]))
+    };
+    writeFileSync(path, JSON.stringify(enrichmentFile));
 
     // Done
     console.log("\nEnrichment file updated successfully.\n");

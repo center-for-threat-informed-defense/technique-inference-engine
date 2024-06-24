@@ -86,7 +86,8 @@ function parseStixToAttackObject(obj) {
         name: obj.name,
         type: STIX_TO_ATTACK[obj.type],
         description: obj.description,
-        external_references: obj.external_references
+        external_references: obj.external_references,
+        platforms: obj.x_mitre_platforms
     }
 
     // Parse MITRE reference information
@@ -98,6 +99,16 @@ function parseStixToAttackObject(obj) {
     }
     parse.id = mitreRef.external_id;
     parse.url = mitreRef.url;
+
+    // Parse MITRE shortname
+    if (obj.x_mitre_shortname) {
+        parse.shortname = obj.x_mitre_shortname;
+    }
+
+    // Parse kill-chain phases
+    if (obj.kill_chain_phases) {
+        parse.tactics = obj.kill_chain_phases.map(o => o.phase_name);
+    }
 
     // Parse deprecation status
     parse.deprecated = (obj.x_mitre_deprecated || obj.revoked) ?? false;
@@ -153,7 +164,11 @@ async function fetchAttackData(...urls) {
         types.get(obj.type).push(obj);
     }
 
-    // Assign Version
+    // Assign tactics to techniques
+    const tactics = new Map(types.get("tactic").map(o => [o.shortname, o]));
+    for (let technique of types.get("technique")) {
+        technique.tactics = technique.tactics.map(t => tactics.get(t).name)
+    }
 
     // Return
     return types;

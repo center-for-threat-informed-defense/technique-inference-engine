@@ -1,45 +1,45 @@
 <template>
   <div class="predict-techniques-tool-element">
     <div class="observed-section">
-      <h3>Observed Techniques</h3>
-      <OptionSelector class="options-selector" placeholder="Add Technique" :options="allTechniqueOptions"
-        @select="addObservedTechnique" />
+      <div class="section-header">
+        <h3>Observed Techniques</h3>
+      </div>
+      <div class="options-selector">
+        <OptionSelector class="options-field" placeholder="Add Technique" :options="allTechniqueOptions"
+          @select="addObservedTechnique" />
+        <button @click="addObservedTechniqueFromCsv()">
+          <UploadArrow class="icon" /><span>.CSV</span>
+        </button>
+      </div>
       <div class="techniques">
         <template v-for="observed of observedTechniquesList" :key="observed.id">
-          <TechniqueSummary class="technique-summary" :technique="observed">
+          <TechniqueItemSummary class="summary" :item="observed">
             <div class="unknown" v-if="!trainedTechniques.has(observed.id)">(?)</div>
             <div class="delete-icon" @click="deleteObservedTechnique(observed.id)">
               <DeleteIcon />
             </div>
-          </TechniqueSummary>
+          </TechniqueItemSummary>
         </template>
       </div>
     </div>
     <div class="predicted-section">
       <div class="section-header">
         <h3>Predicted Techniques</h3>
-        <small v-if="predicted">
-          Generated {{ predicted.size }} predictions in {{ predicted.metadata.humanReadableTime }}
-          (on {{ predicted.metadata.humanReadableBackend }}).
-        </small>
+        <small>{{ predictionMetadata }}</small>
       </div>
+      <TechniquesViewController class="view-controller" :view="viewer" @execute="execute" />
       <div v-if="engine.isWarmingUp">Warming Up...</div>
       <div class="instructions" v-if="!predicted">
-        No Observed Techniques
+        No Observed Techniques.
       </div>
       <div class="techniques">
-        <template v-for="prediction of predictedTechniquesList" :key="prediction.id">
-          <TechniqueSummary class="technique-summary" :technique="prediction">
-            <div class="unknown" v-if="!trainedTechniques.has(prediction.id)">(?)</div>
-            <div class="score-bar-container">
-              <div class="score-bar">
-                <span :style="{ width: relativeScores.get(prediction.id) }"></span>
-              </div>
-            </div>
-            <div class="delete-icon" @click="addObservedTechnique(prediction.id)">
+        <template v-for="[key, item] of view.items" :key="key">
+          <component class="summary" :is="getSummaryType(item)" :item="item" v-slot="{ technique }">
+            <div class="unknown" v-if="!trainedTechniques.has(technique.id)">(?)</div>
+            <div class="delete-icon" @click="addObservedTechnique(technique.id)">
               <AddIcon />
             </div>
-          </TechniqueSummary>
+          </component>
         </template>
       </div>
     </div>
@@ -48,26 +48,39 @@
 
 <script lang="ts">
 // Dependencies
+import Papa from "papaparse";
+import { Browser } from "@/assets/scripts/Utilities";
 import { defineComponent } from "vue";
 import { useInferenceEngineStore } from "@/stores/InferenceEngineStore";
-import type {
-  EnrichmentFile, PredictedTechnique,
-  PredictedTechniques, Technique
+import {
+  PredictedTechniques,
+  createEmptyEnrichmentFile,
+  type Technique
 } from "@/assets/scripts/TechniqueInferenceEngine";
+import {
+  PredictionGroup,
+  PredictionsView,
+  type PredictionItem,
+  type ControlCommand
+} from "@/assets/scripts/PredictionsView";
 // Components
 import AddIcon from "../Icons/AddIcon.vue";
 import DeleteIcon from "@/components/Icons/DeleteIcon.vue"
+import UploadArrow from "@/components/Icons/UploadArrow.vue";
 import OptionSelector from "../Controls/Fields/OptionSelector.vue";
-import TechniqueSummary from "../Controls/TechniqueSummary.vue"
+import TechniqueItemSummary from "../Controls/TechniqueItemSummary.vue";
+import TechniqueGroupSummary from "../Controls/TechniqueGroupSummary.vue";
+import TechniquesViewController from "../Controls/TechniquesViewController.vue";
 
 export default defineComponent({
   name: "PredictTechniquesTool",
   data: () => ({
     engine: useInferenceEngineStore(),
-    enrichmentFile: {} as EnrichmentFile,
+    enrichmentFile: createEmptyEnrichmentFile(),
+    trainedTechniques: new Set<string>(),
     observed: new Set<string>(),
-    predicted: null as null | PredictedTechniques,
-    trainedTechniques: new Set<string>()
+    predicted: null as PredictedTechniques | null,
+    view: new PredictionsView()
   }),
   computed: {
 
@@ -77,9 +90,10 @@ export default defineComponent({
      *  All technique options.
      */
     allTechniqueOptions(): Map<string, string> {
+      const techniques = this.enrichmentFile.techniques;
       let entries: [string, string][] = [];
-      for (let id in this.enrichmentFile) {
-        entries.push([id, `${id}: ${this.enrichmentFile[id].name}`]);
+      for (let id in techniques) {
+        entries.push([id, `${id}: ${techniques[id].name}`]);
       }
       return new Map(entries.sort((a, b) => a[0].localeCompare(b[0])))
     },
@@ -90,48 +104,55 @@ export default defineComponent({
      *  The observed techniques.
      */
     observedTechniquesList(): Technique[] {
+      const techniques = this.enrichmentFile.techniques;
       const observed = [];
       for (let id of this.observed) {
-        if (this.enrichmentFile[id]) {
-          observed.push(this.enrichmentFile[id]);
+        if (techniques[id]) {
+          observed.push(techniques[id]);
         }
       }
       return observed;
     },
 
     /**
-     * Returns a subset of the predicted techniques.
+     * Returns the human-readable prediction metadata.
      * @returns
-     *  A subset of the predicted techniques.
+     *  The human-readable prediction metadata.
      */
-    predictedTechniquesList(): PredictedTechnique[] {
+    predictionMetadata(): string {
       if (this.predicted) {
-        return [...this.predicted.values()].slice(0, 10);
-      } else {
-        return [];
+        const s = this.predicted.size;
+        const t = this.predicted.metadata.humanReadableTime;
+        const b = this.predicted.metadata.humanReadableBackend;
+        return `Generated ${s} predictions in ${t} (on ${b}).`;
       }
+      return "";
     },
 
     /**
-     * Returns the relative scores for the predictions.
-     * @returns
-     *  The relative scores for the predictions.
+     * Returns the {@link PredictionsView}.
+     * @remarks
+     *  Have to cast because Vue seems to struggle with type inference.
      */
-    relativeScores(): Map<string, number> {
-      const relativeScores = new Map();
-      if (this.predicted) {
-        const scores = [...this.predicted.values()].map(t => t.score);
-        const maxScore = Math.max(...scores);
-        for (const t of this.predicted.values()) {
-          const relativeScore = maxScore ? t.score / maxScore : 0;
-          relativeScores.set(t.id, `${Math.round(relativeScore * 10000) / 100}%`);
-        }
-      }
-      return relativeScores;
+    viewer(): PredictionsView {
+      return this.view as PredictionsView;
     }
 
   },
   methods: {
+
+    /**
+     * Returns the summary type for a view item.
+     * @param item
+     *  The summary type for a view item.
+     */
+    getSummaryType(item: PredictionItem | PredictionGroup) {
+      if (item instanceof PredictionGroup) {
+        return "TechniqueGroupSummary";
+      } else {
+        return "TechniqueItemSummary";
+      }
+    },
 
     /**
      * Adds an observed technique to the set.
@@ -141,6 +162,25 @@ export default defineComponent({
     async addObservedTechnique(id: string) {
       // Add techniques
       this.observed.add(id);
+      // Update predictions
+      await this.updatePredictions();
+    },
+
+    /**
+     * Adds observed techniques to the set from a CSV file.
+     */
+    async addObservedTechniqueFromCsv() {
+      // Open CSV File
+      const { contents } = (await Browser.openTextFileDialog([], false));
+      // Parse CSV File
+      const objects = Papa.parse<PredictionItem>(`${contents}`, {
+        header: true,
+        transformHeader: header => header.toLocaleLowerCase()
+      }).data;
+      // Add Techniques
+      for (let obj of objects) {
+        this.observed.add(obj.id.toLocaleUpperCase());
+      }
       // Update predictions
       await this.updatePredictions();
     },
@@ -169,6 +209,16 @@ export default defineComponent({
       } else {
         this.predicted = null;
       }
+      this.view.setTechniques(this.predicted);
+    },
+
+    /**
+     * Executes a control command.
+     * @param cmd
+     *  The command to execute.
+     */
+    execute(cmd: ControlCommand) {
+      cmd.execute();
     }
 
   },
@@ -182,13 +232,18 @@ export default defineComponent({
     this.enrichmentFile = await enrichmentFile;
     this.trainedTechniques = await trainedTechniques;
   },
-  components: { AddIcon, DeleteIcon, OptionSelector, TechniqueSummary }
+  components: {
+    AddIcon, DeleteIcon, UploadArrow, OptionSelector, TechniqueItemSummary,
+    TechniqueGroupSummary, TechniquesViewController
+  }
 });
 </script>
 
 <style lang="scss" scoped>
 @use "@/assets/styles/engenuity_color_system.scss" as color;
 @use "@/assets/styles/engenuity_scaling_system.scss" as scale;
+
+/** === Main Element === */
 
 .observed-section {
   margin-top: scale.size("xxh");
@@ -199,57 +254,22 @@ export default defineComponent({
   margin-bottom: scale.size("xxh");
 }
 
-.options-selector {
-  margin-top: scale.size("xl");
-}
-
-.technique-summary {
-  margin-bottom: scale.size("s");
-}
-
-.technique-summary:first-child {
-  margin-top: scale.size("xl");
-}
-
-.technique-summary:last-child {
-  margin-bottom: 0em;
-}
-
-.delete-icon {
-  @include color.icon;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  padding: 0em scale.size("xl");
-  cursor: pointer;
-}
-
-.score-bar-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.score-bar {
-  width: 2 * scale.size("h");
-  height: scale.size("l");
-  border-style: solid;
-  border-width: 1px;
-  border-color: #f56600;
-  box-sizing: border-box;
-}
-
-.score-bar span {
-  display: block;
-  height: 100%;
-  background: #f56600;
-}
-
 .section-header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+}
+
+.techniques {
+  margin-top: scale.size("xl");
+}
+
+.summary {
+  margin-bottom: scale.size("s");
+}
+
+.summary:last-child {
+  margin-bottom: 0em;
 }
 
 .instructions {
@@ -274,9 +294,33 @@ export default defineComponent({
   .section-header {
     flex-direction: column;
   }
+}
 
-  .score-bar {
-    display: none;
-  }
+/** === Observed Techniques Section === */
+
+.options-selector {
+  display: flex;
+  margin-top: scale.size("xl");
+}
+
+.options-field {
+  flex: 1;
+  margin-right: scale.size("s");
+}
+
+.delete-icon {
+  @include color.icon;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  padding: 0em scale.size("xl");
+  cursor: pointer;
+}
+
+/** === Predicted Techniques Section === */
+
+.view-controller {
+  margin-top: scale.size("l");
 }
 </style>
