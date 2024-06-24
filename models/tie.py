@@ -1,5 +1,6 @@
 import copy
 import tensorflow as tf
+from constants import PredictionMethod
 from recommender import Recommender
 from matrix import ReportTechniqueMatrix
 import pandas as pd
@@ -30,8 +31,9 @@ class TechniqueInferenceEngine:
     #       training_data and evaluated on test_data
     #       according to the MITRE ATT&CK framework specified in enterprise_attack_filepath.
     # Rep invariant:
-    # - training_data.shape == test_data.shape
+    # - training_data.shape == test_data.shape == validation_data.shape
     # - model is not None
+    # - prediction_method is not None
     # - len(enterprise_attack_filepath) >= 0
     # Safety from rep exposure:
     # - all attributes are private
@@ -44,6 +46,7 @@ class TechniqueInferenceEngine:
         validation_data: ReportTechniqueMatrix,
         test_data: ReportTechniqueMatrix,
         model: Recommender,
+        prediction_method: PredictionMethod,
         enterprise_attack_filepath: str,
     ):
         """Initializes a TechniqueInferenceEngine object.
@@ -52,6 +55,7 @@ class TechniqueInferenceEngine:
             training_data: the data on which to train the model.
             test_data: the data on which to evaluate the model's performance.
             model: the model to train.
+            prediction_method: the method to use for predictions.
             enterprise_attack_filepath: filepath for the MITRE enterprise ATT&CK json information.
         """
         self._enterprise_attack_filepath = enterprise_attack_filepath
@@ -60,15 +64,18 @@ class TechniqueInferenceEngine:
         self._validation_data = validation_data
         self._test_data = test_data
         self._model = copy.deepcopy(model)
+        self._prediction_method = prediction_method
 
         self._checkrep()
 
     def _checkrep(self):
         """Asserts the rep invariant."""
-        # - training_data.shape == test_data.shape
-        assert self._training_data.shape == self._test_data.shape
+        # - training_data.shape == test_data.shape == validation_data.shape
+        assert self._training_data.shape == self._test_data.shape == self._validation_data.shape
         # - model is not None
         assert self._model is not None
+        # - prediction_method is not None
+        assert self._prediction_method is not None
         # - len(enterprise_attack_filepath) >= 0
         assert len(self._enterprise_attack_filepath) >= 0
 
@@ -109,12 +116,12 @@ class TechniqueInferenceEngine:
         # train
         self._model.fit(self._training_data.to_sparse_tensor(), **kwargs)
 
-        mean_squared_error = self._model.evaluate(self._test_data.to_sparse_tensor())
+        mean_squared_error = self._model.evaluate(self._test_data.to_sparse_tensor(), self._prediction_method)
 
         self._checkrep()
         return mean_squared_error
 
-    def fit_with_cross_validation(self, **kwargs) -> dict[str, float]:
+    def fit_with_cross_validation(self, method: PredictionMethod=PredictionMethod.DOT, **kwargs) -> dict[str, float]:
         """Fits the model by validating hyperparameters on the cross validation data.
 
         Selects the hyperparameters which maximize normalized discounted cumulative gain
@@ -128,7 +135,7 @@ class TechniqueInferenceEngine:
         """
 
         def parameter_cartesian_product(
-            variables_names: tuple[str], values: tuple[tuple[float]]
+            variables_names: tuple[str], values: tuple[tuple[float]],
         ):
             """Yield cartesian product of all variables.
 
@@ -178,7 +185,7 @@ class TechniqueInferenceEngine:
 
         return best_hyperparameters
 
-    def precision(self, k: int = 10) -> float:
+    def precision(self, k: int=10) -> float:
         """Calculates the precision of the top k model predictions.
 
         Precision is defined as the average fraction of items in the top k predictions
@@ -251,7 +258,7 @@ class TechniqueInferenceEngine:
             A dataframe with the same shape, index, and columns as training_data and test_data
                 containing the predictions values for each report and technique combination.
         """
-        predictions = self._model.predict()
+        predictions = self._model.predict(self._prediction_method)
 
         predictions_dataframe = pd.DataFrame(
             predictions,
@@ -263,7 +270,7 @@ class TechniqueInferenceEngine:
         return predictions_dataframe
 
     def view_prediction_performance_table_for_report(
-        self, report_id: int
+        self, report_id: int,
     ) -> pd.DataFrame:
         """Gets the training data, test data, and predictions for a particular report.
 
@@ -328,7 +335,7 @@ class TechniqueInferenceEngine:
             indices=technique_indices_2d, values=values, dense_shape=(n,)
         )
 
-        predictions = self._model.predict_new_entity(technique_tensor, **kwargs)
+        predictions = self._model.predict_new_entity(technique_tensor, method=self._prediction_method, **kwargs)
 
         training_indices_dense = np.zeros(len(predictions))
         training_indices_dense[technique_indices] = 1
