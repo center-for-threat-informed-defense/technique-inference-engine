@@ -1,5 +1,22 @@
 export type EnrichmentFile = {
-    [key: string]: Technique
+
+    /**
+     * The file's ATT&CK domain.
+     */
+    domain: string,
+
+    /**
+     * The file's ATT&CK version.
+     */
+    version: string,
+
+    /**
+     * The file's technique's.
+     */
+    techniques: {
+        [key: string]: Technique
+    }
+
 }
 
 export type Technique = {
@@ -17,6 +34,29 @@ export type Technique = {
     /**
      * The Technique's description.
      */
-    description: string
+    description: string,
 
+    /**
+     * The Technique's platforms.
+     */
+    platforms: string[];
+
+    /**
+     * The Technique's tactics.
+     */
+    tactics: string[];
+
+}
+
+/**
+ * Creates an empty {@link EnrichmentFile}.
+ * @returns
+ *  An empty {@link EnrichmentFile}.
+ */
+export function createEmptyEnrichmentFile(): EnrichmentFile {
+    return {
+        domain: "",
+        version: "",
+        techniques: {}
+    }
 }

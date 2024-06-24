@@ -1,7 +1,7 @@
 import "./RawFocusBox.css";
 
 export class RawFocusBox {
-    
+
     /**
      * The focus box's class name.
      */
@@ -60,9 +60,9 @@ export class RawFocusBox {
         this._pointerEvent = pointerEvent;
         this._eventHandlers = {
             focusIn: this.onFocusIn.bind(this),
-            emitFocusIn: () => {},
+            emitFocusIn: () => { },
             focusOut: this.onFocusOut.bind(this),
-            emitFocusOut: () => {},
+            emitFocusOut: () => { },
             pointerdown: this.onPointerEvent.bind(this)
         }
     }
@@ -98,15 +98,15 @@ export class RawFocusBox {
     ): void;
     public mount(
         el: HTMLElement,
-        focusIn: () => void = () => {},
-        focusOut: () => void = () => {}
+        focusIn: () => void = () => { },
+        focusOut: () => void = () => { }
     ) {
         this._el = el;
         this._el.classList.add(RawFocusBox.focusBoxClassName);
-        this._el.setAttribute("tabindex", `${ this._tabIndex }`);
+        this._el.setAttribute("tabindex", `${this._tabIndex}`);
         this._el.addEventListener("focusin", this._eventHandlers.focusIn);
         this._el.addEventListener("focusout", this._eventHandlers.focusOut);
-        if(this._pointerEvent) {
+        if (this._pointerEvent) {
             this._el.addEventListener(this._pointerEvent, this._eventHandlers.pointerdown);
         }
         this._eventHandlers.emitFocusIn = focusIn;
@@ -118,7 +118,7 @@ export class RawFocusBox {
         this._el?.removeAttribute("tabindex");
         this._el?.removeEventListener("focusin", this._eventHandlers.focusIn);
         this._el?.removeEventListener("focusout", this._eventHandlers.focusOut);
-        if(this._pointerEvent) {
+        if (this._pointerEvent) {
             this._el?.removeEventListener(this._pointerEvent, this.onPointerEvent);
         }
     }
@@ -145,7 +145,7 @@ export class RawFocusBox {
     public onFocusOut(event: FocusEvent) {
         // If target is not a child of this container, unfocus.
         const target = event.relatedTarget as Node | null;
-        if(this._focused && !this._el!.contains(target)) {
+        if (this._focused && !this._el!.contains(target)) {
             this._focused = false;
             this._eventHandlers.emitFocusOut();
         }
@@ -159,9 +159,9 @@ export class RawFocusBox {
     public onPointerEvent(event: PointerEvent | MouseEvent) {
         // If target is a child of this container...
         let target = event.target as HTMLElement;
-        while(this._el !== target) {
+        while (this._el !== target) {
             // ...but has the exit flag, emit unfocus.
-            if(target.hasAttribute("exit-focus-box")) {
+            if (target.hasAttribute("exit-focus-box")) {
                 this._focused = false;
                 this._eventHandlers.emitFocusOut();
                 // Force the container out of focus

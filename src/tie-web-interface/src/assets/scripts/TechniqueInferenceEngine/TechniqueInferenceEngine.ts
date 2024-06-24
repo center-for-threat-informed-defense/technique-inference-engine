@@ -1,8 +1,6 @@
 import { getBackend, tensor, tidy } from "@tensorflow/tfjs";
-import { PredictedTechniques } from "./PredictedTechniques";
-import { PredictedTechniquesMetadata } from "./PredictedTechniquesMetadata";
+import { PredictedTechniques, PredictedTechniquesMetadata, type PredictedTechnique } from "./Results";
 import type { Recommender } from "./Recommenders";
-import type { PredictedTechnique } from "./PredictedTechnique";
 import type { DataSource, EnrichmentFile, Model } from "./DataSource";
 
 export class TechniqueInferenceEngine {
@@ -106,19 +104,21 @@ export class TechniqueInferenceEngine {
         );
 
         // Enrich predictions
+        let results: [string, PredictedTechnique][] = [];
         const enrichmentFile = await enrichmentFileRequest;
-        const results = new Map<string, PredictedTechnique>();
         for (const [id, index] of model.techniques) {
-            let technique = enrichmentFile[id];
+            let technique = enrichmentFile.techniques[id];
             if (!technique) {
                 technique = {
                     id: id,
                     name: "Unknown Technique",
                     description: "Unknown Technique.",
+                    tactics: [],
+                    platforms: [],
                 }
             }
             const score = (await predictionsTensor.buffer()).get(index);
-            results.set(id, { ...technique, score });
+            results.push([id, { rank: 0, score, ...technique }]);
         }
 
         // Free tensors from memory
@@ -129,10 +129,22 @@ export class TechniqueInferenceEngine {
         // Calculate prediction time
         const end = performance.now();
 
+        // Sort and Rank results
+        results = results.sort((a, b) => b[1].score - a[1].score);
+        let i = 1;
+        for (const result of results) {
+            result[1].rank = i++;
+        }
+
         // Return results
         return new PredictedTechniques(
-            results,
-            new PredictedTechniquesMetadata(end - start, getBackend())
+            new Map(results),
+            new PredictedTechniquesMetadata(
+                end - start,
+                getBackend(),
+                enrichmentFile.domain,
+                enrichmentFile.version
+            )
         );
 
     }

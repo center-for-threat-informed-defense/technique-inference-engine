@@ -20,7 +20,7 @@ export class PredictedTechniques extends Map<string, PredictedTechnique> {
         techniques: Map<string, PredictedTechnique>,
         metadata: PredictedTechniquesMetadata
     ) {
-        super([...techniques].sort((a, b) => b[1].score - a[1].score));
+        super([...techniques].sort((a, b) => a[1].rank - b[1].rank));
         this.metadata = metadata;
     }
 

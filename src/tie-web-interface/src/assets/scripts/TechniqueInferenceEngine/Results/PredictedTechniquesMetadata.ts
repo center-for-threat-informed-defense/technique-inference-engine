@@ -20,6 +20,16 @@ export class PredictedTechniquesMetadata {
      */
     public readonly humanReadableBackend: string;
 
+    /**
+     * The ATT&CK Domain.
+     */
+    public readonly attackDomain: string;
+
+    /**
+     * The ATT&CK Version.
+     */
+    public readonly attackVersion: string;
+
 
     /**
      * Creates a new {@link PredictedTechniquesMetadata}.
@@ -27,10 +37,16 @@ export class PredictedTechniquesMetadata {
      *  The amount of time taken to generate the predictions (in ms).
      * @param backend
      *  The backend used to generate the predictions.
+     * @param domain
+     *  The ATT&CK Domain.
+     * @param version
+     *  The ATT&CK Version.
      */
-    constructor(time: number, backend: string) {
+    constructor(time: number, backend: string, domain: string, version: string) {
         this.time = time;
         this.humanReadableTime = `${Math.round(time / 10) / 100} seconds`;
+        this.attackDomain = domain;
+        this.attackVersion = version;
         switch (backend) {
             case "webgl":
                 this.backend = PredictionBackend.GPU;
