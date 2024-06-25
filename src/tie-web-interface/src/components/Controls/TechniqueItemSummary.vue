@@ -81,6 +81,7 @@ export default defineComponent({
   flex: 1;
   display: flex;
   align-items: stretch;
+  user-select: none;
   cursor: pointer;
 }
 
