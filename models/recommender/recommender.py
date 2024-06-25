@@ -20,16 +20,12 @@ class Recommender(ABC):
     def fit(
         self,
         data: tf.SparseTensor,
-        learning_rate: float = 10.0,
-        num_iterations: int = 1000,
         **kwargs,
     ):
         """Fits the model to data.
 
         Args:
             data: an mxn tensor of training data
-            num_iterations: number of training iterations to execute
-            learning_rate: the learning rate
 
         Mutates:
             The recommender to the new trained state.

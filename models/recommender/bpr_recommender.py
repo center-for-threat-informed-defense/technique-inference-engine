@@ -103,7 +103,7 @@ class BPRRecommender(Recommender):
         # repeat for each of n items
         num_items_per_user = np.sum(data, axis=1).astype(float)
         assert not np.any(np.isnan(num_items_per_user))
-        num_items_per_user[num_items_per_user == 0.] = np.nan
+        num_items_per_user[num_items_per_user == 0.0] = np.nan
         assert num_items_per_user.shape == (m,)  # m users
         sample_item_probability = np.nan_to_num(
             data / np.expand_dims(num_items_per_user, axis=1)
@@ -183,18 +183,25 @@ class BPRRecommender(Recommender):
         data: tf.SparseTensor,
         learning_rate: float,
         num_iterations: int,
-        regularization: float,
+        regularization_coefficient: float,
     ):
+        """Fits the model to data.
+
+        Args:
+            data: An mxn tensor of training data.
+            learning_rate: The learning rate.
+            num_iterations: Number of training iterations to execute.
+            regularization_coefficient: Coefficient on the L2 regularization term.
+
+        Mutates:
+            The recommender to the new trained state.
+        """
         # start by resetting embeddings for proper fit
         self._reset_embeddings()
 
         data = tf.sparse.reorder(data)
         data = tf.sparse.to_dense(data)
         data = data.numpy()
-
-        w_regularization = regularization
-        v_i_regularization = regularization
-        v_j_regularization = regularization
 
         all_u, all_i, all_j = self._sample_dataset(data, num_samples=num_iterations)
 
@@ -224,13 +231,13 @@ class BPRRecommender(Recommender):
             d_hj = -self._U[u, :]
 
             self._U[u, :] += learning_rate * (
-                sigmoid_derivative * d_w - (w_regularization * self._U[u, :])
+                sigmoid_derivative * d_w - (regularization_coefficient * self._U[u, :])
             )
             self._V[i, :] += learning_rate * (
-                sigmoid_derivative * d_hi - (v_i_regularization * self._V[i, :])
+                sigmoid_derivative * d_hi - (regularization_coefficient * self._V[i, :])
             )
             self._V[j, :] += learning_rate * (
-                sigmoid_derivative * d_hj - (v_j_regularization * self._V[j, :])
+                sigmoid_derivative * d_hj - (regularization_coefficient * self._V[j, :])
             )
 
         # return theta
