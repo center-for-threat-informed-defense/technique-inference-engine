@@ -89,7 +89,7 @@ export class TechniqueInferenceEngine {
         const techniques = new Array(model.V.shape[0]).fill(0);
         for (const id of ids) {
             const index = model.techniques.get(id);
-            if (!index) {
+            if (index === undefined) {
                 throw new Error(`Unknown Technique ID: '${id}'.`)
             }
             techniques[index] = 1;
