@@ -25,9 +25,6 @@ export class PredictionsView {
         const length = Math.min(this.filters.itemLimit.value, techniques.length);
         for (let i = 0; i < length; i++) {
             const [key, item] = techniques[i];
-            if (item.score <= 0) {
-                break;
-            }
             if (!this.filters.platformFilter.isShown(item.platforms)) {
                 break;
             }
