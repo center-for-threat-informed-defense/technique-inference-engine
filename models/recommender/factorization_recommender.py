@@ -4,7 +4,11 @@ import tensorflow as tf
 import numpy as np
 import keras
 import copy
+from sklearn.metrics import mean_squared_error
+
 from .recommender import Recommender
+from constants import PredictionMethod
+from utils import calculate_predicted_matrix
 
 tf.config.run_functions_eagerly(True)
 tf.compat.v1.enable_eager_execution()
@@ -37,8 +41,9 @@ class FactorizationRecommender(Recommender):
             n: number of items
             k: embedding dimension
         """
-        self._U = np.zeros((m, k))
-        self._V = np.zeros((n, k))
+        self._U = tf.Variable(tf.zeros((m,k)))
+        self._V = tf.Variable(tf.zeros((n,k)))
+
         self._reset_embeddings()
 
         self._loss = keras.losses.MeanSquaredError()
@@ -49,8 +54,8 @@ class FactorizationRecommender(Recommender):
         """Resets the embeddings to a standard normal."""
         init_stddev = 1
 
-        new_U = np.random.normal(loc=0, scale=init_stddev, size=self._U.shape)
-        new_V = np.random.normal(loc=0, scale=init_stddev, size=self._V.shape)
+        new_U = tf.Variable(tf.random.normal(self._U.shape, stddev=init_stddev))
+        new_V = tf.Variable(tf.random.normal(self._V.shape, stddev=init_stddev))
 
         self._U = new_U
         self._V = new_V
@@ -211,22 +216,20 @@ class FactorizationRecommender(Recommender):
             gradients = tape.gradient(loss, [self._U, self._V])
             optimizer.apply_gradients(zip(gradients, [self._U, self._V]))
 
-    def evaluate(self, test_data: tf.SparseTensor) -> float:
-        error = self._calculate_mean_square_error(test_data)
-        return error.numpy()
+    def evaluate(self, test_data: tf.SparseTensor, method: PredictionMethod=PredictionMethod.DOT) -> float:
+        predictions_matrix = self.predict(method)
 
-    def predict(self) -> np.ndarray:
-        return self._get_estimated_matrix().numpy()
+        row_indices = tuple(index[0] for index in test_data.indices)
+        column_indices = tuple(index[1] for index in test_data.indices)
+        prediction_values = predictions_matrix[row_indices, column_indices]
 
-    def predict_with_cosine(self):
-        """Gets the model predictions using cosine similarity."""
-        U_norms = tf.linalg.norm(self._U, axis=1, keepdims=True)
-        assert U_norms.shape[0] == self._U.shape[0]
-        V_norms = tf.linalg.norm(self._V, axis=1, keepdims=True)
+        self._checkrep()
+        return mean_squared_error(test_data.values, prediction_values)
 
-        U_normalized = self._U / U_norms
-        V_normalized = self._V / V_norms
-        return tf.matmul(U_normalized, V_normalized, transpose_b=True).numpy()
+    def predict(self, method: PredictionMethod=PredictionMethod.DOT) -> np.ndarray:
+        self._checkrep()
+
+        return calculate_predicted_matrix(np.nan_to_num(self._U.numpy()), np.nan_to_num(self._V.numpy()), method)
 
     def predict_new_entity(
         self,
@@ -235,6 +238,7 @@ class FactorizationRecommender(Recommender):
         num_iterations: int,
         regularization_coefficient: float,
         gravity_coefficient: float,
+        method: PredictionMethod=PredictionMethod.DOT,
     ) -> np.array:
         """Recommends items to an unseen entity
 
@@ -287,7 +291,7 @@ class FactorizationRecommender(Recommender):
             optimizer.apply_gradients(zip(gradients, [embedding]))
 
         self._checkrep()
-        return np.squeeze(tf.matmul(self._V, embedding).numpy())
+        return np.squeeze(calculate_predicted_matrix(embedding.numpy, self._V.numpy, method))
 
 
 Recommender.register(FactorizationRecommender)
