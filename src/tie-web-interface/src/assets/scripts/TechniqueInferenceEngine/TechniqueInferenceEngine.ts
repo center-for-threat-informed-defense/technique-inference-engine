@@ -131,9 +131,15 @@ export class TechniqueInferenceEngine {
 
         // Sort and Rank results
         results = results.sort((a, b) => b[1].score - a[1].score);
-        let i = 1;
-        for (const result of results) {
-            result[1].rank = i++;
+        let rank = 1;
+        for (let i = 0; i < results.length; i++) {
+            const nextResult = results[i][1];
+            const lastResult = i > 0 ? results[i - 1][1] : null;
+            if (lastResult?.score === nextResult.score) {
+                nextResult.rank = lastResult.rank;
+            } else {
+                nextResult.rank = rank++;
+            }
         }
 
         // Return results
