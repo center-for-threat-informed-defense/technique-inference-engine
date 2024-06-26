@@ -107,6 +107,11 @@ export class TechniqueInferenceEngine {
         let results: [string, PredictedTechnique][] = [];
         const enrichmentFile = await enrichmentFileRequest;
         for (const [id, index] of model.techniques) {
+            // Exclude observed techniques from results
+            if (ids.has(id)) {
+                continue;
+            }
+            // Resolve enriched technique information
             let technique = enrichmentFile.techniques[id];
             if (!technique) {
                 technique = {
@@ -117,6 +122,7 @@ export class TechniqueInferenceEngine {
                     platforms: [],
                 }
             }
+            // Apply enrichment to prediction
             const score = (await predictionsTensor.buffer()).get(index);
             results.push([id, { rank: 0, score, ...technique }]);
         }
