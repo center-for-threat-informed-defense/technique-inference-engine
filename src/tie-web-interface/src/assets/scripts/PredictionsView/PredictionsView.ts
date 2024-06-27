@@ -55,10 +55,10 @@ export class PredictionsView {
             default:
                 throw new Error(`Unknown sort: '${sortBy}'`)
         }
-        // Apply sort
-        techniques = techniques.sort((a, b) => sort(a[1], b[1]));
         // Apply limit
-        return techniques.slice(0, this.filters.itemLimit.value);
+        techniques = techniques.slice(0, this.filters.itemLimit.value);
+        // Apply sort
+        return techniques.sort((a, b) => sort(a[1], b[1]));
     }
 
 
