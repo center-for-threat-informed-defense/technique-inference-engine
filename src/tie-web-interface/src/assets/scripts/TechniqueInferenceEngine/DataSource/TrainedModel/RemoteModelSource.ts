@@ -68,31 +68,18 @@ export class RemoteModelSource extends ModelSource {
             const data = v.dataSync() as any as string[];
             const f32 = new Float32Array(v.shape[0] * (v.shape[1] - 1));
             const T = new Map<string, number>();
-            const TR = new Set<string>();
             const V = tensor(f32, [v.shape[0], v.shape[1] - 1], "float32");
-            let currentId = undefined;
-            let currentIdIsTrained = false;
             for (let i = 0, j = 0; i < data.length; i++) {
                 if (i % v.shape[1] === 0) {
-                    if (currentId && !currentIdIsTrained) {
-                        TR.delete(currentId);
-                    }
-                    currentId = data[i];
-                    currentIdIsTrained = false;
-                    T.set(currentId, j++);
-                    TR.add(currentId);
+                    T.set(data[i], j++);
                 } else {
                     f32[i - j] = parseFloat(data[i]);
-                    currentIdIsTrained ||= f32[i - j] !== 0;
                 }
-            }
-            if (currentId && !currentIdIsTrained) {
-                TR.delete(currentId);
             }
             // Free intermediate tensors from memory
             v.dispose();
             // Create trained model
-            return this.newModel(T, TR, U, V);
+            return this.newModel(T, U, V);
         } else {
             throw new Error(`Failed to fetch '${this._url}'. [Status: ${file.status}]`);
         }

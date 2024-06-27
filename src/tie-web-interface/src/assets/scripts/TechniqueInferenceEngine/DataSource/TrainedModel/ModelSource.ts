@@ -15,8 +15,8 @@ export abstract class ModelSource extends DataSource<ManagedModel> {
      * @returns
      *  The configured {@link ManagedModel}.
      */
-    protected newModel(T: Map<string, number>, TR: Set<string>, U: Tensor, V: Tensor): ManagedModel {
-        return new ManagedModel(T, TR, U, V).lockDisposal(this.cachingEnabled);
+    protected newModel(T: Map<string, number>, U: Tensor, V: Tensor): ManagedModel {
+        return new ManagedModel(T, U, V).lockDisposal(this.cachingEnabled);
     }
 
     /**

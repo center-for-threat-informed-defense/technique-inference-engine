@@ -8,11 +8,6 @@ export class Model {
     public readonly techniques: Map<string, number>;
 
     /**
-     * The Set of trained techniques.
-     */
-    public readonly trained: Set<string>;
-
-    /**
      * The 'U' component of the trained model.
      */
     public U: Tensor;
@@ -32,8 +27,6 @@ export class Model {
      * Creates a new {@link Model}.
      * @param techniques
      *  A map that maps technique IDs to columns in `V`.
-     * @param trained
-     *  A Set of trained techniques.
      * @param U
      *  An {@link NpyArray} containing the 'U' component of the trained model.
      * @param V
@@ -41,12 +34,10 @@ export class Model {
      */
     constructor(
         techniques: Map<string, number>,
-        trained: Set<string>,
         U: Tensor,
         V: Tensor
     ) {
         this.techniques = techniques;
-        this.trained = trained;
         this.U = U;
         this.V = V;
         this.disposalLocked = false;
