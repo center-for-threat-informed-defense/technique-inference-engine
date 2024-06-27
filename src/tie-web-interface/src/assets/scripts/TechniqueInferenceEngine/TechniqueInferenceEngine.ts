@@ -88,10 +88,10 @@ export class TechniqueInferenceEngine {
         // Create technique tensor
         const techniques = new Array(model.V.shape[0]).fill(0);
         for (const id of ids) {
-            const index = model.techniques.get(id);
-            if (index === undefined) {
+            if (!model.trained.has(id)) {
                 throw new Error(`Unknown Technique ID: '${id}'.`)
             }
+            const index = model.techniques.get(id)!;
             techniques[index] = 1;
         }
         const techniquesTensor = tidy(

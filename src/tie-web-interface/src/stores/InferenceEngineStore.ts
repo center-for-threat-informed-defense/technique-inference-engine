@@ -38,7 +38,7 @@ export const useInferenceEngineStore = defineStore('inferenceEngineStore', {
      *  A Promise that resolves with the set of techniques the engine was trained on.
      */
     async getTrainedTechniques(): Promise<Set<string>> {
-      const techniques = (await this.inferenceEngine.modelSource.getData()).techniques;
+      const techniques = (await this.inferenceEngine.modelSource.getData()).trained;
       return new Set([...techniques.keys()])
     }
 
