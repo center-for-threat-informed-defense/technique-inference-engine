@@ -237,24 +237,28 @@ export class PredictionsView {
             description: description,
             domain: `${metadata.attackDomain}-attack`,
             techniques: [],
-            gradient: {
-                colors: ["#ffe766", "#ffaf66"],
-                minValue: 0,
-                maxValue: 100
-            },
         }
+        // Calculate gradient
+        const scores = techniques.map(o => o.score);
+        const minValue = Math.min(...scores);
+        const maxValue = Math.max(...scores);
+        // Add techniques
+        const colors = [
+            "#ffffcc", "#ffeda0", "#fed976",
+            "#feb24c", "#fd8d3c", "#fc4e2a",
+            "#e31a1c", "#bd0026", "#800026"
+        ];
         for (const technique of techniques) {
+            // Calculate gradient
+            const pct = (technique.score - minValue) / (maxValue - minValue);
+            const color = colors[Math.round(pct * (colors.length - 1))];
+            // Add technique to layer
             layer.techniques.push({
                 techniqueID: technique.id,
                 score: technique.score,
+                color: color,
                 metadata: []
             });
-        }
-        // Calculate gradient
-        const scores = layer.techniques.map(o => o.score);
-        if (scores.length) {
-            layer.gradient.minValue = Math.min(...scores);
-            layer.gradient.maxValue = Math.max(...scores);
         }
         // Return Navigator Layer
         return JSON.stringify(layer, null, 4);

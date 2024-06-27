@@ -12,7 +12,7 @@ export type AttackNavigatorLayer = {
     description: string,
     domain: string,
     techniques: AttackTechnique[],
-    gradient: {
+    gradient?: {
         colors: [string, string],
         minValue: number,
         maxValue: number
@@ -24,7 +24,8 @@ export type AttackNavigatorLayer = {
  */
 export type AttackTechnique = {
     techniqueID: string,
-    score: number,
+    score?: number,
+    color?: string,
     metadata: AttackTechniqueMetadata[]
 }
 
