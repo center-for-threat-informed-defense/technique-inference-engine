@@ -166,10 +166,13 @@ export default defineComponent({
      *  The id of the technique to add.
      */
     async addObservedTechnique(id: string) {
-      // Add techniques
-      this.observed.add(id);
-      // Update predictions
-      await this.updatePredictions();
+      id = id.toLocaleUpperCase();
+      if (this.allTechniqueOptions.has(id)) {
+        // Add techniques
+        this.observed.add(id);
+        // Update predictions
+        await this.updatePredictions();
+      }
     },
 
     /**
@@ -185,7 +188,7 @@ export default defineComponent({
       }).data;
       // Add Techniques
       for (let obj of objects) {
-        this.observed.add(obj.id.toLocaleUpperCase());
+        this.addObservedTechnique(obj.id);
       }
       // Update predictions
       await this.updatePredictions();
