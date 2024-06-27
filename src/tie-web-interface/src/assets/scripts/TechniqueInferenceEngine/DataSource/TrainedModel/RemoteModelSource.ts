@@ -69,12 +69,23 @@ export class RemoteModelSource extends ModelSource {
             const f32 = new Float32Array(v.shape[0] * (v.shape[1] - 1));
             const T = new Map<string, number>();
             const V = tensor(f32, [v.shape[0], v.shape[1] - 1], "float32");
+            let currentId = undefined;
+            let currentIdIsTrained = false;
             for (let i = 0, j = 0; i < data.length; i++) {
                 if (i % v.shape[1] === 0) {
-                    T.set(data[i], j++)
+                    if (currentId && !currentIdIsTrained) {
+                        T.delete(currentId);
+                    }
+                    currentId = data[i];
+                    currentIdIsTrained = false;
+                    T.set(currentId, j++);
                 } else {
-                    f32[i - j] = parseFloat(data[i])
+                    f32[i - j] = parseFloat(data[i]);
+                    currentIdIsTrained ||= f32[i - j] !== 0;
                 }
+            }
+            if (currentId && !currentIdIsTrained) {
+                T.delete(currentId);
             }
             // Free intermediate tensors from memory
             v.dispose();

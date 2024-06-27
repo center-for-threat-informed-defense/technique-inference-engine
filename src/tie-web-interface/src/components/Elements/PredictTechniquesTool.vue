@@ -14,10 +14,15 @@
       <div class="techniques">
         <template v-for="observed of observedTechniquesList" :key="observed.id">
           <TechniqueItemSummary class="summary" :item="observed">
-            <div class="unknown" v-if="!trainedTechniques.has(observed.id)">(?)</div>
-            <div class="delete-icon" @click="deleteObservedTechnique(observed.id)">
-              <DeleteIcon />
-            </div>
+            <template v-if="!trainedTechniques.has(observed.id)" #notice>
+              Due to current limitations in the dataset, {{ observed.id }} was not
+              included in the training. Its inclusion here will not affect the predictions.
+            </template>
+            <template #default>
+              <div class="delete-icon" @click="deleteObservedTechnique(observed.id)">
+                <DeleteIcon />
+              </div>
+            </template>
           </TechniqueItemSummary>
         </template>
       </div>
@@ -34,11 +39,12 @@
       </div>
       <div class="techniques">
         <template v-for="[key, item] of view.items" :key="key">
-          <component class="summary" :is="getSummaryType(item)" :item="item" v-slot="{ technique }">
-            <div class="unknown" v-if="!trainedTechniques.has(technique.id)">(?)</div>
-            <div class="delete-icon" @click="addObservedTechnique(technique.id)">
-              <AddIcon />
-            </div>
+          <component class="summary" :is="getSummaryType(item)" :item="item">
+            <template v-slot="{ technique }">
+              <div class="delete-icon" @click="addObservedTechnique(technique.id)">
+                <AddIcon />
+              </div>
+            </template>
           </component>
         </template>
       </div>
@@ -65,7 +71,7 @@ import {
 } from "@/assets/scripts/PredictionsView";
 // Components
 import AddIcon from "../Icons/AddIcon.vue";
-import DeleteIcon from "@/components/Icons/DeleteIcon.vue"
+import DeleteIcon from "@/components/Icons/DeleteIcon.vue";
 import UploadArrow from "@/components/Icons/UploadArrow.vue";
 import OptionSelector from "../Controls/Fields/OptionSelector.vue";
 import TechniqueItemSummary from "../Controls/TechniqueItemSummary.vue";
@@ -233,8 +239,8 @@ export default defineComponent({
     this.trainedTechniques = await trainedTechniques;
   },
   components: {
-    AddIcon, DeleteIcon, UploadArrow, OptionSelector, TechniqueItemSummary,
-    TechniqueGroupSummary, TechniquesViewController
+    AddIcon, DeleteIcon, UploadArrow, OptionSelector,
+    TechniqueItemSummary, TechniqueGroupSummary, TechniquesViewController
   }
 });
 </script>
@@ -279,15 +285,6 @@ export default defineComponent({
   border-style: dotted;
   border-width: 1px;
   margin-top: scale.size("xl");
-}
-
-.unknown {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  padding: 0em scale.size("xl");
-  @include scale.h6
 }
 
 @include scale.at-and-below-mobile-width {

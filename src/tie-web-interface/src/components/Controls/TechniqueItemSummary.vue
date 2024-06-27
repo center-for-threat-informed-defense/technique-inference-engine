@@ -9,13 +9,25 @@
           <mark>{{ item.id }}:</mark>
           <h4>{{ item.name }}</h4>
         </div>
+        <div class="technique-notice" v-if="$slots.notice !== undefined">
+          <div class="notice-icon theme-dark">!</div>
+        </div>
+        <div class="technique-score" v-if="'rank' in item">
+          <var>#{{ item.rank }}</var>
+        </div>
       </div>
-      <div class="score" v-if="'rank' in item">
-        <var>#{{ item.rank }}</var>
+      <div class="technique-controls">
+        <slot :technique="item"></slot>
       </div>
-      <slot :technique="item"></slot>
     </div>
     <div class="technique-body" v-if="!collapsed">
+      <hr />
+      <div v-if="$slots.notice !== undefined" class="notice">
+        <h6>Notice:</h6>
+        <p>
+          <slot :technique="item" name="notice"></slot>
+        </p>
+      </div>
       <MarkdownText class="technique-description" :source="item.description" />
       <div class="technique-footer">
         <a class="learn-more" :href="learnMoreLink" target="_blank">Learn More</a>
@@ -112,11 +124,31 @@ mark {
   font-weight: 400;
 }
 
-.score {
+.technique-score {
   display: flex;
   align-items: center;
   user-select: none;
   margin-left: scale.size("xl");
+}
+
+.technique-notice {
+  display: flex;
+  align-items: center;
+}
+
+.notice-icon {
+  @include scale.small;
+  @include scale.box("xxl");
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  background: var(--engenuity-navy);
+}
+
+.technique-controls {
+  display: flex;
+  align-items: center;
 }
 
 /** === Technique Body === */
@@ -125,12 +157,30 @@ mark {
   padding: 0em scale.size("xl") scale.size("h") scale.size("xh");
 }
 
-.technique-description {
+hr {
   @include color.field-border;
+  border-style: solid none none none;
+  border-width: 1px;
+}
+
+.notice {
+  display: block;
+  padding: scale.size("l") scale.size("xl");
+  margin-top: scale.size("xl");
+  background: #f0f1f2;
+}
+
+.notice h6 {
+  margin: scale.size("xxt") 0em;
+}
+
+.technique-description {
   white-space: pre-wrap;
   padding: scale.size("l") 0em scale.size("xl");
-  border-top-style: solid;
-  border-top-width: 1px;
+}
+
+.notice~.technique-description {
+  padding-top: scale.size("xl");
 }
 
 .technique-footer {

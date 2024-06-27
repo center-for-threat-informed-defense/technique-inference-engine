@@ -4,6 +4,8 @@ export class Model {
 
     /**
      * A map that maps technique IDs to columns in `V`.
+     * @remarks
+     *  Map only includes techniques the model has been trained on.
      */
     public readonly techniques: Map<string, number>;
 
@@ -26,7 +28,8 @@ export class Model {
     /**
      * Creates a new {@link Model}.
      * @param techniques
-     *  A map that maps technique IDs to columns in `V`.
+     *  A map that maps technique IDs to columns in `V`. Map should only include
+     *  techniques the model has been trained on.
      * @param U
      *  An {@link NpyArray} containing the 'U' component of the trained model.
      * @param V
