@@ -74,7 +74,7 @@ export class RemoteModelSource extends ModelSource {
             for (let i = 0, j = 0; i < data.length; i++) {
                 if (i % v.shape[1] === 0) {
                     if (currentId && !currentIdIsTrained) {
-                        T.delete(currentId);
+                        // T.delete(currentId);
                     }
                     currentId = data[i];
                     currentIdIsTrained = false;
@@ -85,7 +85,7 @@ export class RemoteModelSource extends ModelSource {
                 }
             }
             if (currentId && !currentIdIsTrained) {
-                T.delete(currentId);
+                // T.delete(currentId);
             }
             // Free intermediate tensors from memory
             v.dispose();
