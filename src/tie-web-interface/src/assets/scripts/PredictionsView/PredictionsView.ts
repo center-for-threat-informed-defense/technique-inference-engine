@@ -19,17 +19,11 @@ export class PredictionsView {
         if (!this._techniques) {
             return [];
         }
-        const filteredTechniques: [string, PredictionItem][] = [];
+        let techniques = [...this._techniques];
         // Apply filters
-        const techniques = [...this._techniques];
-        const length = Math.min(this.filters.itemLimit.value, techniques.length);
-        for (let i = 0; i < length; i++) {
-            const [key, item] = techniques[i];
-            if (!this.filters.platformFilter.isShown(item.platforms)) {
-                break;
-            }
-            filteredTechniques.push([key, item]);
-        }
+        techniques = techniques.filter(([, item]) => {
+            return this.filters.platformFilter.isShown(item.platforms)
+        });
         // Resolve order
         type Order<T> = (s: (a: T, b: T) => number) => (a: T, b: T) => number;
         let order: Order<PredictionItem>;
@@ -62,7 +56,9 @@ export class PredictionsView {
                 throw new Error(`Unknown sort: '${sortBy}'`)
         }
         // Apply sort
-        return filteredTechniques.sort((a, b) => sort(a[1], b[1]));
+        techniques = techniques.sort((a, b) => sort(a[1], b[1]));
+        // Apply limit
+        return techniques.slice(0, this.filters.itemLimit.value);
     }
 
 
