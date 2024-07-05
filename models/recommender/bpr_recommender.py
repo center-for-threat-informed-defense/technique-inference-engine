@@ -206,10 +206,6 @@ class BPRRecommender(Recommender):
         data = tf.sparse.to_dense(data)
         data = data.numpy()
 
-        w_regularization = regularization_coefficient
-        v_i_regularization = regularization_coefficient
-        v_j_regularization = regularization_coefficient
-
         all_u, all_i, all_j = self._sample_dataset(data, num_samples=num_iterations)
 
         # initialize theta - done - init
@@ -238,13 +234,13 @@ class BPRRecommender(Recommender):
             d_hj = -self._U[u, :]
 
             self._U[u, :] += learning_rate * (
-                sigmoid_derivative * d_w - (w_regularization * self._U[u, :])
+                sigmoid_derivative * d_w - (regularization_coefficient * self._U[u, :])
             )
             self._V[i, :] += learning_rate * (
-                sigmoid_derivative * d_hi - (v_i_regularization * self._V[i, :])
+                sigmoid_derivative * d_hi - (regularization_coefficient * self._V[i, :])
             )
             self._V[j, :] += learning_rate * (
-                sigmoid_derivative * d_hj - (v_j_regularization * self._V[j, :])
+                sigmoid_derivative * d_hj - (regularization_coefficient * self._V[j, :])
             )
 
         # return theta
