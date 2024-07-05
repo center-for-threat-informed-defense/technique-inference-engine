@@ -251,6 +251,20 @@ class BPRRecommender(Recommender):
         test_data: tf.SparseTensor,
         method: PredictionMethod = PredictionMethod.DOT,
     ) -> float:
+        """Evaluates the solution.
+
+        Requires that the model has been trained.
+
+        Args:
+            test_data: mxn tensor on which to evaluate the model.
+                Requires that mxn match the dimensions of the training tensor and
+                each row i and column j correspond to the same entity and item
+                in the training tensor, respectively.
+            method: The prediction method to use.
+
+        Returns:
+            The mean squared error of the test data.
+        """
         pred = self.predict(method)
         predictions = tf.gather_nd(pred, test_data.indices)
 
@@ -259,6 +273,17 @@ class BPRRecommender(Recommender):
         return loss(test_data.values, predictions).numpy()
 
     def predict(self, method: PredictionMethod = PredictionMethod.DOT) -> np.ndarray:
+        """Gets the model predictions.
+
+        The predictions consist of the estimated matrix A_hat of the truth
+        matrix A, of which the training data contains a sparse subset of the entries.
+
+        Args:
+            method: The prediction method to use.
+
+        Returns:
+            An mxn array of values.
+        """
         self._checkrep()
 
         return calculate_predicted_matrix(self._U, self._V, method)

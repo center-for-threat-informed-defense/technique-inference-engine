@@ -76,10 +76,7 @@ class TopItemsRecommender(Recommender):
         self._checkrep()
         return scaled_ranks
 
-    def fit(
-        self,
-        data: tf.SparseTensor,
-    ):
+    def fit(self, data: tf.SparseTensor, **kwargs):
         technique_matrix: np.ndarray = tf.sparse.to_dense(
             tf.sparse.reorder(data)
         ).numpy()
@@ -90,7 +87,7 @@ class TopItemsRecommender(Recommender):
         self._item_frequencies = technique_frequency
         self._checkrep()
 
-    def evaluate(self, test_data: tf.SparseTensor) -> float:
+    def evaluate(self, test_data: tf.SparseTensor, **kwargs) -> float:
         predictions_matrix = self.predict()
 
         row_indices = tuple(index[0] for index in test_data.indices)
@@ -100,7 +97,7 @@ class TopItemsRecommender(Recommender):
         self._checkrep()
         return mean_squared_error(test_data.values, prediction_values)
 
-    def predict(self) -> np.ndarray:
+    def predict(self, **kwargs) -> np.ndarray:
         scaled_ranks = self._scale_item_frequency(self._item_frequencies)
         matrix = np.repeat(np.expand_dims(scaled_ranks, axis=1), self._m, axis=1).T
 

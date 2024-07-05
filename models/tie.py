@@ -121,7 +121,7 @@ class TechniqueInferenceEngine:
         self._model.fit(self._training_data.to_sparse_tensor(), **kwargs)
 
         mean_squared_error = self._model.evaluate(
-            self._test_data.to_sparse_tensor(), self._prediction_method
+            self._test_data.to_sparse_tensor(), method=self._prediction_method
         )
 
         self._checkrep()
@@ -267,7 +267,7 @@ class TechniqueInferenceEngine:
             A dataframe with the same shape, index, and columns as training_data and test_data
                 containing the predictions values for each report and technique combination.
         """
-        predictions = self._model.predict(self._prediction_method)
+        predictions = self._model.predict(method=self._prediction_method)
 
         predictions_dataframe = pd.DataFrame(
             predictions,
