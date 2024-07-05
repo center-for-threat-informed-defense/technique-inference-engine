@@ -43,8 +43,8 @@ class FactorizationRecommender(Recommender):
             n: number of items
             k: embedding dimension
         """
-        self._U = tf.Variable(tf.zeros((m,k)))
-        self._V = tf.Variable(tf.zeros((n,k)))
+        self._U = tf.Variable(tf.zeros((m, k)))
+        self._V = tf.Variable(tf.zeros((n, k)))
 
         self._reset_embeddings()
 
@@ -228,7 +228,11 @@ class FactorizationRecommender(Recommender):
 
         self._checkrep()
 
-    def evaluate(self, test_data: tf.SparseTensor, method: PredictionMethod=PredictionMethod.DOT) -> float:
+    def evaluate(
+        self,
+        test_data: tf.SparseTensor,
+        method: PredictionMethod = PredictionMethod.DOT,
+    ) -> float:
         predictions_matrix = self.predict(method)
 
         row_indices = tuple(index[0] for index in test_data.indices)
@@ -238,10 +242,12 @@ class FactorizationRecommender(Recommender):
         self._checkrep()
         return mean_squared_error(test_data.values, prediction_values)
 
-    def predict(self, method: PredictionMethod=PredictionMethod.DOT) -> np.ndarray:
+    def predict(self, method: PredictionMethod = PredictionMethod.DOT) -> np.ndarray:
         self._checkrep()
 
-        return calculate_predicted_matrix(np.nan_to_num(self._U.numpy()), np.nan_to_num(self._V.numpy()), method)
+        return calculate_predicted_matrix(
+            np.nan_to_num(self._U.numpy()), np.nan_to_num(self._V.numpy()), method
+        )
 
     def predict_new_entity(
         self,
@@ -250,7 +256,7 @@ class FactorizationRecommender(Recommender):
         num_iterations: int,
         regularization_coefficient: float,
         gravity_coefficient: float,
-        method: PredictionMethod=PredictionMethod.DOT,
+        method: PredictionMethod = PredictionMethod.DOT,
     ) -> np.array:
         """Recommends items to an unseen entity
 
@@ -285,10 +291,8 @@ class FactorizationRecommender(Recommender):
                 # V is nxk, embedding is kx1
                 predictions = tf.matmul(self._V, embedding)
 
-                loss = (self._loss(
-                        entity.values,
-                        tf.gather_nd(predictions, entity.indices)
-                    )
+                loss = (
+                    self._loss(entity.values, tf.gather_nd(predictions, entity.indices))
                     + (
                         regularization_coefficient
                         * tf.reduce_sum(tf.math.square(embedding))
@@ -305,7 +309,9 @@ class FactorizationRecommender(Recommender):
 
         assert not np.isnan(embedding.numpy()).any()
         self._checkrep()
-        return np.squeeze(calculate_predicted_matrix(embedding.numpy().T, self._V.numpy(), method))
+        return np.squeeze(
+            calculate_predicted_matrix(embedding.numpy().T, self._V.numpy(), method)
+        )
 
 
 Recommender.register(FactorizationRecommender)

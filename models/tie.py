@@ -71,7 +71,11 @@ class TechniqueInferenceEngine:
     def _checkrep(self):
         """Asserts the rep invariant."""
         # - training_data.shape == test_data.shape == validation_data.shape
-        assert self._training_data.shape == self._test_data.shape == self._validation_data.shape
+        assert (
+            self._training_data.shape
+            == self._test_data.shape
+            == self._validation_data.shape
+        )
         # - model is not None
         assert self._model is not None
         # - prediction_method is not None
@@ -116,12 +120,16 @@ class TechniqueInferenceEngine:
         # train
         self._model.fit(self._training_data.to_sparse_tensor(), **kwargs)
 
-        mean_squared_error = self._model.evaluate(self._test_data.to_sparse_tensor(), self._prediction_method)
+        mean_squared_error = self._model.evaluate(
+            self._test_data.to_sparse_tensor(), self._prediction_method
+        )
 
         self._checkrep()
         return mean_squared_error
 
-    def fit_with_cross_validation(self, method: PredictionMethod=PredictionMethod.DOT, **kwargs) -> dict[str, float]:
+    def fit_with_cross_validation(
+        self, method: PredictionMethod = PredictionMethod.DOT, **kwargs
+    ) -> dict[str, float]:
         """Fits the model by validating hyperparameters on the cross validation data.
 
         Selects the hyperparameters which maximize normalized discounted cumulative gain
@@ -135,7 +143,8 @@ class TechniqueInferenceEngine:
         """
 
         def parameter_cartesian_product(
-            variables_names: tuple[str], values: tuple[tuple[float]],
+            variables_names: tuple[str],
+            values: tuple[tuple[float]],
         ):
             """Yield cartesian product of all variables.
 
@@ -185,7 +194,7 @@ class TechniqueInferenceEngine:
 
         return best_hyperparameters
 
-    def precision(self, k: int=10) -> float:
+    def precision(self, k: int = 10) -> float:
         """Calculates the precision of the top k model predictions.
 
         Precision is defined as the average fraction of items in the top k predictions
@@ -270,7 +279,8 @@ class TechniqueInferenceEngine:
         return predictions_dataframe
 
     def view_prediction_performance_table_for_report(
-        self, report_id: int,
+        self,
+        report_id: int,
     ) -> pd.DataFrame:
         """Gets the training data, test data, and predictions for a particular report.
 
@@ -335,7 +345,9 @@ class TechniqueInferenceEngine:
             indices=technique_indices_2d, values=values, dense_shape=(n,)
         )
 
-        predictions = self._model.predict_new_entity(technique_tensor, method=self._prediction_method, **kwargs)
+        predictions = self._model.predict_new_entity(
+            technique_tensor, method=self._prediction_method, **kwargs
+        )
 
         training_indices_dense = np.zeros(len(predictions))
         training_indices_dense[technique_indices] = 1

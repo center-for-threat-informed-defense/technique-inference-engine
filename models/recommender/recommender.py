@@ -36,7 +36,11 @@ class Recommender(ABC):
         """
 
     @abstractmethod
-    def evaluate(self, test_data: tf.SparseTensor, method: PredictionMethod=PredictionMethod.DOT) -> float:
+    def evaluate(
+        self,
+        test_data: tf.SparseTensor,
+        method: PredictionMethod = PredictionMethod.DOT,
+    ) -> float:
         """Evaluates the solution.
 
         Requires that the model has been trained.
@@ -53,7 +57,7 @@ class Recommender(ABC):
         """
 
     @abstractmethod
-    def predict(self, method: PredictionMethod=PredictionMethod.DOT) -> np.ndarray:
+    def predict(self, method: PredictionMethod = PredictionMethod.DOT) -> np.ndarray:
         """Gets the model predictions.
 
         The predictions consist of the estimated matrix A_hat of the truth
@@ -61,13 +65,18 @@ class Recommender(ABC):
 
         Args:
             method: The prediction method to use.
-        
+
         Returns:
             An mxn array of values.
         """
 
     @abstractmethod
-    def predict_new_entity(self, entity: tf.SparseTensor, method: PredictionMethod=PredictionMethod.DOT, **kwargs) -> np.array:
+    def predict_new_entity(
+        self,
+        entity: tf.SparseTensor,
+        method: PredictionMethod = PredictionMethod.DOT,
+        **kwargs,
+    ) -> np.array:
         """Recommends items to an unseen entity.
 
         Args:

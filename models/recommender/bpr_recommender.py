@@ -104,7 +104,7 @@ class BPRRecommender(Recommender):
         # repeat for each of n items
         num_items_per_user = np.sum(data, axis=1).astype(float)
         assert not np.any(np.isnan(num_items_per_user))
-        num_items_per_user[num_items_per_user == 0.] = np.nan
+        num_items_per_user[num_items_per_user == 0.0] = np.nan
         assert num_items_per_user.shape == (m,)  # m users
         sample_item_probability = np.nan_to_num(
             data / np.expand_dims(num_items_per_user, axis=1)
@@ -191,7 +191,7 @@ class BPRRecommender(Recommender):
         Args:
             data: An mxn tensor of training data
             learning_rate: Learning rate for each gradient step performed on a single entity-item sample.
-            num_iterations: Number of training iterations, where each iteration corresponds to a single 
+            num_iterations: Number of training iterations, where each iteration corresponds to a single
                 entity-item sample from the dataset.
             regularization_coefficient: Coefficient on the L2 regularization term.
             method: The prediction method to use.
@@ -250,7 +250,11 @@ class BPRRecommender(Recommender):
         # return theta
         # set in rep
 
-    def evaluate(self, test_data: tf.SparseTensor, method: PredictionMethod=PredictionMethod.DOT) -> float:
+    def evaluate(
+        self,
+        test_data: tf.SparseTensor,
+        method: PredictionMethod = PredictionMethod.DOT,
+    ) -> float:
         pred = self.predict(method)
         predictions = tf.gather_nd(pred, test_data.indices)
 
@@ -258,7 +262,7 @@ class BPRRecommender(Recommender):
 
         return loss(test_data.values, predictions).numpy()
 
-    def predict(self, method: PredictionMethod=PredictionMethod.DOT) -> np.ndarray:
+    def predict(self, method: PredictionMethod = PredictionMethod.DOT) -> np.ndarray:
         self._checkrep()
 
         return calculate_predicted_matrix(self._U, self._V, method)
@@ -269,7 +273,7 @@ class BPRRecommender(Recommender):
         learning_rate: float,
         num_iterations: int,
         regularization_coefficient: float,
-        method: PredictionMethod=PredictionMethod.DOT,
+        method: PredictionMethod = PredictionMethod.DOT,
         **kwargs,
     ) -> np.array:
         """Recommends items to an unseen entity.
@@ -279,7 +283,7 @@ class BPRRecommender(Recommender):
                 ratings for each item, indexed exactly as the items used to
                 train this model.
             learning_rate: Learning rate for each gradient step performed on a single entity-item sample.
-            num_iterations: Number of training iterations, where each iteration corresponds to a single 
+            num_iterations: Number of training iterations, where each iteration corresponds to a single
                 entity-item sample from the dataset.
             regularization_coefficient: Coefficient on the L2 regularization term.
             method: The prediction method to use.
@@ -294,7 +298,9 @@ class BPRRecommender(Recommender):
             loc=0, scale=math.sqrt(1 / self._U.shape[1]), size=(1, self._U.shape[1])
         )
 
-        all_u, all_i, all_j = self._sample_dataset(tf.expand_dims(new_entity, axis=0), num_samples=num_iterations)
+        all_u, all_i, all_j = self._sample_dataset(
+            tf.expand_dims(new_entity, axis=0), num_samples=num_iterations
+        )
 
         # initialize theta - done - init
         # repeat
@@ -323,7 +329,9 @@ class BPRRecommender(Recommender):
         # return theta
         # set in rep
 
-        return np.squeeze(calculate_predicted_matrix(new_entity_embedding, self._V, method))
+        return np.squeeze(
+            calculate_predicted_matrix(new_entity_embedding, self._V, method)
+        )
 
 
 Recommender.register(BPRRecommender)

@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from constants import PredictionMethod
 
+
 def get_mitre_technique_ids_to_names(stix_filepath: str) -> dict[str, str]:
     """Gets all MITRE technique ids mapped to their description."""
     mitre_attack_data = MitreAttackData(stix_filepath)
@@ -191,14 +192,16 @@ def normalized_discounted_cumulative_gain(
     return dcg / idcg
 
 
-def calculate_predicted_matrix(U: np.ndarray, V: np.ndarray, method: PredictionMethod=PredictionMethod.DOT) -> np.ndarray:
+def calculate_predicted_matrix(
+    U: np.ndarray, V: np.ndarray, method: PredictionMethod = PredictionMethod.DOT
+) -> np.ndarray:
     """Calculates the prediction matrix UV^T according to the dot or cosine product.
-    
+
     Args:
         U: mxk array of entity embeddings
         V: nxk array of item embeddings
         method: Matrix product method to use.
-        
+
     Returns:
         The matrix product UV^T, according to method.
     """
@@ -211,8 +214,8 @@ def calculate_predicted_matrix(U: np.ndarray, V: np.ndarray, method: PredictionM
 
         # if norm is 0, ie if the embedding is 0
         # then do not scale by norm at all
-        U_norm[U_norm == 0.] = 1.
-        V_norm[V_norm == 0.] = 1.
+        U_norm[U_norm == 0.0] = 1.0
+        V_norm[V_norm == 0.0] = 1.0
 
         assert U_norm.shape == (U.shape[0], 1)
         assert V_norm.shape == (V.shape[0], 1)

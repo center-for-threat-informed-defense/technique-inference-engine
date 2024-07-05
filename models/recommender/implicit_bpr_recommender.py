@@ -115,7 +115,11 @@ class ImplicitBPRRecommender:
 
         self._checkrep()
 
-    def evaluate(self, test_data: tf.SparseTensor, method: PredictionMethod=PredictionMethod.DOT) -> float:
+    def evaluate(
+        self,
+        test_data: tf.SparseTensor,
+        method: PredictionMethod = PredictionMethod.DOT,
+    ) -> float:
 
         predictions_matrix = self.predict(method)
 
@@ -126,10 +130,17 @@ class ImplicitBPRRecommender:
         self._checkrep()
         return mean_squared_error(test_data.values, prediction_values)
 
-    def predict(self, method: PredictionMethod=PredictionMethod.DOT) -> np.ndarray:
+    def predict(self, method: PredictionMethod = PredictionMethod.DOT) -> np.ndarray:
         self._checkrep()
 
-        return calculate_predicted_matrix(self._model.user_factors, self._model.item_factors, method)
+        return calculate_predicted_matrix(
+            self._model.user_factors, self._model.item_factors, method
+        )
 
-    def predict_new_entity(self, entity: tf.SparseTensor, method: PredictionMethod=PredictionMethod.DOT, **kwargs) -> np.array:
+    def predict_new_entity(
+        self,
+        entity: tf.SparseTensor,
+        method: PredictionMethod = PredictionMethod.DOT,
+        **kwargs,
+    ) -> np.array:
         raise NotImplementedError

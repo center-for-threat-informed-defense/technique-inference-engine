@@ -218,7 +218,11 @@ class WalsRecommender(Recommender):
 
         self._checkrep()
 
-    def evaluate(self, test_data: tf.SparseTensor, method: PredictionMethod=PredictionMethod.DOT) -> float:
+    def evaluate(
+        self,
+        test_data: tf.SparseTensor,
+        method: PredictionMethod = PredictionMethod.DOT,
+    ) -> float:
         predictions_matrix = self.predict(method)
 
         row_indices = tuple(index[0] for index in test_data.indices)
@@ -228,13 +232,18 @@ class WalsRecommender(Recommender):
         self._checkrep()
         return mean_squared_error(test_data.values, prediction_values)
 
-    def predict(self, method: PredictionMethod=PredictionMethod.DOT) -> np.ndarray:
+    def predict(self, method: PredictionMethod = PredictionMethod.DOT) -> np.ndarray:
         self._checkrep()
 
         return calculate_predicted_matrix(self._U, self._V, method)
-        
+
     def predict_new_entity(
-        self, entity: tf.SparseTensor, c: float, regularization_coefficient: float, method: PredictionMethod=PredictionMethod.DOT, **kwargs
+        self,
+        entity: tf.SparseTensor,
+        c: float,
+        regularization_coefficient: float,
+        method: PredictionMethod = PredictionMethod.DOT,
+        **kwargs,
     ) -> np.array:
         """Recommends items to an unseen entity.
 
@@ -260,8 +269,11 @@ class WalsRecommender(Recommender):
             regularization_coefficient=regularization_coefficient,
         )
 
-        assert new_entity_factor.shape == (1,self._U.shape[1])
+        assert new_entity_factor.shape == (1, self._U.shape[1])
 
-        return np.squeeze(calculate_predicted_matrix(new_entity_factor, self._V, method))
+        return np.squeeze(
+            calculate_predicted_matrix(new_entity_factor, self._V, method)
+        )
+
 
 Recommender.register(WalsRecommender)
