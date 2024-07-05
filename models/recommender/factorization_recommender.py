@@ -28,6 +28,8 @@ class FactorizationRecommender(Recommender):
     #   - U.shape[1] > 0
     #   - V.shape[0] > 0
     #   - V.shape[1] > 0
+    #   - all elements of U are non-null
+    #   - all elements of V are non-null
     #   - loss is not None
     # Safety from rep exposure:
     #   - U and V are private and not reassigned
@@ -75,6 +77,10 @@ class FactorizationRecommender(Recommender):
         assert self._V.shape[0] > 0
         #   - V.shape[1] > 0
         assert self._V.shape[1] > 0
+        #   - all elements of U are non-null
+        assert not tf.math.reduce_any(tf.math.is_nan(self._U))
+        #   - all elements of V are non-null
+        assert not tf.math.reduce_any(tf.math.is_nan(self._V))
         #   - loss is not None
         assert self._loss is not None
 
@@ -92,6 +98,7 @@ class FactorizationRecommender(Recommender):
 
     def _get_estimated_matrix(self) -> tf.Tensor:
         """Gets the estimated matrix UV^T."""
+        self._checkrep()
         return tf.matmul(self._U, self._V, transpose_b=True)
 
     def _predict(self, data: tf.SparseTensor) -> tf.Tensor:
@@ -114,6 +121,7 @@ class FactorizationRecommender(Recommender):
         # of data
         # gather_nd will get those entries in order and
         # add to an array
+        self._checkrep()
         return tf.gather_nd(self._get_estimated_matrix(), data.indices)
 
     def _calculate_regularized_loss(
@@ -157,6 +165,7 @@ class FactorizationRecommender(Recommender):
 
         gravity_loss = gravity_coefficient * gravity
 
+        self._checkrep()
         return self._loss(data, predictions) + regularization_loss + gravity_loss
 
     def _calculate_mean_square_error(self, data: tf.SparseTensor) -> tf.Tensor:
@@ -175,6 +184,7 @@ class FactorizationRecommender(Recommender):
         """
         predictions = self._predict(data)
         loss = self._loss(data.values, predictions)
+        self._checkrep()
         return loss
 
     def fit(
@@ -216,6 +226,8 @@ class FactorizationRecommender(Recommender):
             gradients = tape.gradient(loss, [self._U, self._V])
             optimizer.apply_gradients(zip(gradients, [self._U, self._V]))
 
+        self._checkrep()
+
     def evaluate(self, test_data: tf.SparseTensor, method: PredictionMethod=PredictionMethod.DOT) -> float:
         predictions_matrix = self.predict(method)
 
@@ -255,10 +267,10 @@ class FactorizationRecommender(Recommender):
             An array of predicted values for the new entity.
         """
         # TODO factor out
-        init_stddev = 0.5
+        init_stddev = 1
 
         # preliminaries
-        optimizer = keras.optimizers.legacy.SGD(learning_rate=learning_rate)
+        optimizer = keras.optimizers.SGD(learning_rate=learning_rate)
 
         embedding = tf.Variable(
             tf.random.normal(
@@ -273,9 +285,10 @@ class FactorizationRecommender(Recommender):
                 # V is nxk, embedding is kx1
                 predictions = tf.matmul(self._V, embedding)
 
-                loss = self._loss(
-                    entity.values,
-                    tf.gather_nd(predictions, entity.indices)
+                loss = (self._loss(
+                        entity.values,
+                        tf.gather_nd(predictions, entity.indices)
+                    )
                     + (
                         regularization_coefficient
                         * tf.reduce_sum(tf.math.square(embedding))
@@ -290,8 +303,9 @@ class FactorizationRecommender(Recommender):
             gradients = tape.gradient(loss, [embedding])
             optimizer.apply_gradients(zip(gradients, [embedding]))
 
+        assert not np.isnan(embedding.numpy()).any()
         self._checkrep()
-        return np.squeeze(calculate_predicted_matrix(embedding.numpy, self._V.numpy, method))
+        return np.squeeze(calculate_predicted_matrix(embedding.numpy().T, self._V.numpy(), method))
 
 
 Recommender.register(FactorizationRecommender)

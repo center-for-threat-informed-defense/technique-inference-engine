@@ -310,7 +310,7 @@ class BPRRecommender(Recommender):
         # return theta
         # set in rep
 
-        return np.squeeze(calculate_predicted_matrix(new_entity_embedding, self._V))
+        return np.squeeze(calculate_predicted_matrix(new_entity_embedding, self._V, method))
 
 
 Recommender.register(BPRRecommender)
