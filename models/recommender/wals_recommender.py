@@ -187,10 +187,10 @@ class WalsRecommender(Recommender):
         """Fits the model to data.
 
         Args:
-            data: an mxn tensor of training data.
-            num_iterations: number of training iterations to execute.
-            c: weight for negative training examples.  Requires 0 < c < 1.
-            regularization_coefficient: coefficient on the embedding regularization term.
+            data: An mxn tensor of training data.
+            num_iterations: Number of training iterations to execute.
+            c: Weight for negative training examples.  Requires 0 < c < 1.
+            regularization_coefficient: Coefficient on the embedding regularization term.
 
         Mutates:
             The recommender to the new trained state.
@@ -234,7 +234,7 @@ class WalsRecommender(Recommender):
         return calculate_predicted_matrix(self._U, self._V, method)
         
     def predict_new_entity(
-        self, entity: tf.SparseTensor, c: float, regularization_coefficient: float, method: PredictionMethod=PredictionMethod.DOT,
+        self, entity: tf.SparseTensor, c: float, regularization_coefficient: float, method: PredictionMethod=PredictionMethod.DOT, **kwargs
     ) -> np.array:
         """Recommends items to an unseen entity.
 
@@ -242,8 +242,8 @@ class WalsRecommender(Recommender):
             entity: A length-n sparse tensor of consisting of the new entity's
                 ratings for each item, indexed exactly as the items used to
                 train this model.
-            regularization_coefficient: Coefficient on the L2 regularization term.
-            method: The prediction method to use.
+            c: Weight for negative training examples.  Requires 0 < c < 1.
+            regularization_coefficient: Coefficient on the embedding regularization term.
 
         Returns:
             An array of predicted values for the new entity.

@@ -125,7 +125,7 @@ class ImplicitWalsRecommender(Recommender):
 
         return calculate_predicted_matrix(self._model.user_factors, self._model.item_factors, method)
 
-    def predict_new_entity(self, entity: tf.SparseTensor, method: PredictionMethod=PredictionMethod.DOT) -> np.array:
+    def predict_new_entity(self, entity: tf.SparseTensor, method: PredictionMethod=PredictionMethod.DOT, **kwargs) -> np.array:
         # just need an item 0 for all entity indices
         row_indices = np.zeros(len(entity.indices))
         column_indices = entity.indices[:, 0]
@@ -142,4 +142,4 @@ class ImplicitWalsRecommender(Recommender):
 
         self._checkrep()
     
-        return np.squeeze(calculate_predicted_matrix(self._model.user_factors[user_id], self._model.item_factors, method))
+        return np.squeeze(calculate_predicted_matrix(np.expand_dims(self._model.user_factors[user_id], axis=1).T, self._model.item_factors, method))

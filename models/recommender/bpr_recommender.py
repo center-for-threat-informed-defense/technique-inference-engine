@@ -184,8 +184,21 @@ class BPRRecommender(Recommender):
         data: tf.SparseTensor,
         learning_rate: float,
         num_iterations: int,
-        regularization: float,
+        regularization_coefficient: float,
     ):
+        """Fits the model to data.
+
+        Args:
+            data: An mxn tensor of training data
+            learning_rate: Learning rate for each gradient step performed on a single entity-item sample.
+            num_iterations: Number of training iterations, where each iteration corresponds to a single 
+                entity-item sample from the dataset.
+            regularization_coefficient: Coefficient on the L2 regularization term.
+            method: The prediction method to use.
+
+        Mutates:
+            The recommender to the new trained state.
+        """
         # start by resetting embeddings for proper fit
         self._reset_embeddings()
 
@@ -193,9 +206,9 @@ class BPRRecommender(Recommender):
         data = tf.sparse.to_dense(data)
         data = data.numpy()
 
-        w_regularization = regularization
-        v_i_regularization = regularization
-        v_j_regularization = regularization
+        w_regularization = regularization_coefficient
+        v_i_regularization = regularization_coefficient
+        v_j_regularization = regularization_coefficient
 
         all_u, all_i, all_j = self._sample_dataset(data, num_samples=num_iterations)
 

@@ -28,8 +28,8 @@ class Recommender(ABC):
         """Fits the model to data.
 
         Args:
-            data: an mxn tensor of training data
-            num_iterations: number of training iterations to execute
+            data: An mxn tensor of training data
+            num_iterations: Number of training iterations to execute
 
         Mutates:
             The recommender to the new trained state.
