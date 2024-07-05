@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class PredictionMethod:
+class PredictionMethod(Enum):
     """A method for predicting values in the data matrix."""
 
     DOT = "dot"

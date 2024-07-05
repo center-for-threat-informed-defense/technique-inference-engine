@@ -57,3 +57,8 @@ tag = true
 [tool.isort]
 profile = "black"
 skip_gitignore = true
+
+[tool.pytest.ini_options]
+pythonpath = [
+  ".", "models"
+]
