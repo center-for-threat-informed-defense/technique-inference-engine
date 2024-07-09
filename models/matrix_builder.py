@@ -1,4 +1,6 @@
 import json
+import random
+import math
 from matrix import ReportTechniqueMatrix
 from utils import get_mitre_technique_ids_to_names
 
@@ -66,13 +68,7 @@ class ReportTechniqueMatrixBuilder:
         return tuple(report_techniques)
 
     def build(self) -> ReportTechniqueMatrix:
-        """Builds a ReportTechniqueMatrix.
-
-        The rows of the matrix consist of the reports sourced from the combined dataset,
-        zero-indexed in their order of appearance in the json file.  The columns consist
-        of the set of all techniques in the MITRE ATT&CK 2.* series framework mentioned
-        in the json.  Value i,j of the matrix is 1.0 if technique j is mentioned in
-        report i, 0.0 otherwise.
+        """Builds a ReportTechniqueMatrix from the dataset.
 
         Returns:
             A matrix of report data.
@@ -123,3 +119,51 @@ class ReportTechniqueMatrixBuilder:
         self._checkrep()
 
         return data
+
+    def build_train_test_validation(
+        self, test_ratio: float, validation_ratio: float
+    ) -> tuple[ReportTechniqueMatrix, ReportTechniqueMatrix, ReportTechniqueMatrix]:
+        """Builds three ReportTechniqueMatrix for each of the training, test, and validation data.
+
+        The ReportTechniqueMatrices for each of the test and validation datasets contain
+        test_ratio and validation_ratio proportion of the positive interactions from the dataset,
+        respectively.  The training data contains the remiander of the interactions.
+
+        Args:
+            test_ratio: The ratio of positive interactions to include in the test dataset
+                compared to the total number of observed positive interactions.
+                Requires 0 <= test_ratio <= 1.
+            validation_ratio: The ratio of positive interactions to include in the test dataset
+                compared to the total number of observed positive interactions.
+                Requires 0 <= test_ratio <= 1 and test_ratio + validation_ratio <= 1.
+
+        Returns:
+            A tuple of the form training_data, test_data, validation_data containing
+            the training, test, and validation datasets, respectively.
+        """
+        assert 0 <= test_ratio <= 1
+        assert 0 <= validation_ratio <= 1
+        assert test_ratio + validation_ratio <= 1
+
+        data = self.build()
+
+        train_and_validation_indices = frozenset(
+            random.sample(
+                data.indices, k=math.floor((1 - test_ratio) * len(data.indices))
+            )
+        )
+        validation_indices = frozenset(
+            random.sample(
+                tuple(train_and_validation_indices),
+                k=math.floor((validation_ratio) * len(train_and_validation_indices)),
+            )
+        )
+        train_indices = frozenset(train_and_validation_indices).difference(
+            validation_indices
+        )
+        test_indices = frozenset(data.indices).difference(train_and_validation_indices)
+        training_data = data.mask(train_indices)
+        validation_data = data.mask(validation_indices)
+        test_data = data.mask(test_indices)
+
+        return (training_data, test_data, validation_data)
