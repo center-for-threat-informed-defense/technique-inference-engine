@@ -33,9 +33,8 @@
         <small>{{ predictionMetadata }}</small>
       </div>
       <TechniquesViewController class="view-controller" :view="viewer" @execute="execute" />
-      <div v-if="engine.isWarmingUp">Warming Up...</div>
       <div class="instructions" v-if="!predicted">
-        No Observed Techniques.
+        To generate a set of predictions, add one or more observed techniques.
       </div>
       <div class="techniques">
         <template v-for="[key, item] of view.items" :key="key">
