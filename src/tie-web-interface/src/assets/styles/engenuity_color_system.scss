@@ -40,7 +40,8 @@ $themes: (
     hyperlink: var(--engenuity-mitre-blue),
     cta-hyperlink: var(--engenuity-blue),
     hyperlink-hover: var(--engenuity-navy),
-    learn-more-arrow: url("../images/link_arrow_0096d1.svg"),
+    learn-more-arrow: url("../images/link_arrow_005b94.svg"),
+    learn-more-arrow-cta: url("../images/link_arrow_0096d1.svg"),
     learn-more-arrow-hover: url("../images/link_arrow_212c5e.svg"),
     accent-1-border: var(--engenuity-core-color-8),
     accent-2-border: var(--engenuity-core-color-9),
@@ -58,6 +59,7 @@ $themes: (
     cta-hyperlink: var(--engenuity-white),
     hyperlink-hover: var(--engenuity-dark-hyperlink),
     learn-more-arrow: url("../images/link_arrow_ffffff.svg"),
+    learn-more-arrow-cta: url("../images/link_arrow_ffffff.svg"),
     learn-more-arrow-hover: url("../images/link_arrow_88deff.svg"),
     accent-1-border: var(--engenuity-navy),
     accent-2-border: var(--engenuity-navy),
@@ -238,6 +240,7 @@ var {
 }
 
 @mixin learn-more {
+  --learn-more-arrow: var(--learn-more-arrow-cta);
   & {
     color: var(--cta-hyperlink)
   }
