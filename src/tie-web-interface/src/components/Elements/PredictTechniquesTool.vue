@@ -284,7 +284,7 @@ export default defineComponent({
 .instructions {
   @include color.field-border;
   @include color.placeholder;
-  padding: scale.size("m");
+  padding: scale.size("l");
   border-style: dotted;
   border-width: 1px;
   margin-top: scale.size("xl");

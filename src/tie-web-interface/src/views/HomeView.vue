@@ -111,7 +111,7 @@ export default defineComponent({
 }
 
 .project-cta {
-  margin-bottom: scale.size("xs");
+  margin-bottom: scale.size("s");
 }
 
 .project-description {
