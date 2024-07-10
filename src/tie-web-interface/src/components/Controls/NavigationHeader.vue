@@ -4,7 +4,6 @@
       <div class="navigation-contents">
         <div class="page-logo-container">
           <HamburgerMenu :close="mobile" @click="openMobileMenu(!mobile)" />
-          <div class="logo-icon"></div>
           <RouterLink class="logo-text" to="/">
             Technique Inference Engine
           </RouterLink>
