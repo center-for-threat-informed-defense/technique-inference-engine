@@ -99,7 +99,7 @@ export default defineComponent({
      * Downloads the current view as an Attack Navigator Layer.
      */
     downloadViewAsNavigatorLayer() {
-      const contents = this.view.exportViewToNavigatorLayer();
+      const contents = this.view.exportViewToNavigatorLayer(false);
       Browser.downloadFile("predictions_navigator_layer", contents, "json");
     }
 
