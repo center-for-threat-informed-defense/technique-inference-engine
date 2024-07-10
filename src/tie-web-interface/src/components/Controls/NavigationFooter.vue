@@ -13,16 +13,16 @@
               threat-informed defense globally.
             </p>
             <div class="social-icons">
-              <a href="/about">
+              <a href="mailto:ctid@mitre-engenuity.org?subject=Technique%20Inference%20Engine">
                 <IconEmail />
               </a>
-              <a href="/about">
+              <a href="https://www.linkedin.com/showcase/center-for-threat-informed-defense/">
                 <IconLinkedIn />
               </a>
-              <a href="/about">
+              <a href="https://www.youtube.com/@mitreengenuity">
                 <IconYoutube />
               </a>
-              <a href="/about">
+              <a href="https://github.com/center-for-threat-informed-defense/technique-inference-engine">
                 <IconGitHub />
               </a>
             </div>
@@ -31,10 +31,26 @@
             <div class="link-list">
               <h5>CTID</h5>
               <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/about">Our Work</a></li>
-                <li><a href="/about">Our Members</a></li>
-                <li><a href="/about">Join Us</a></li>
+                <li>
+                  <a href="https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/">
+                    Home
+                  </a>
+                </li>
+                <li>
+                  <a href="https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/our-work/">
+                    Our Work
+                  </a>
+                </li>
+                <li>
+                  <a href="https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/participants/">
+                    Our Members
+                  </a>
+                </li>
+                <li>
+                  <a href="https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/membership/">
+                    Join Us
+                  </a>
+                </li>
               </ul>
             </div>
             <div class="link-list">
@@ -49,10 +65,26 @@
             <div class="link-list">
               <h5>Social</h5>
               <ul>
-                <li><a href="/">E-mail</a></li>
-                <li><a href="/about">LinkedIn</a></li>
-                <li><a href="/about">YouTube</a></li>
-                <li><a href="/about">GitHub</a></li>
+                <li>
+                  <a href="mailto:ctid@mitre-engenuity.org?subject=Technique%20Inference%20Engine">
+                    E-mail
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.linkedin.com/showcase/center-for-threat-informed-defense/">
+                    LinkedIn
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.youtube.com/@mitreengenuity">
+                    YouTube
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/center-for-threat-informed-defense/technique-inference-engine">
+                    GitHub
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
