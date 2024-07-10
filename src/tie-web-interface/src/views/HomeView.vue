@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="tool-set theme-dark">
-      <div class="tool-set-contents">
+      <div class="tool-set-contents" v-if="1 < tools.length">
         <div class="tool-tabs">
           <template v-for="(tool, i) of tools" :key="tool.component">
             <h6 :class="['tool-tab', { 'theme-light': activeTool === i }]" @click="activeTool = i">
@@ -55,10 +55,6 @@ export default defineComponent({
     tools: [
       {
         name: "Predict Techniques",
-        component: "PredictTechniquesTool"
-      },
-      {
-        name: "Relate Techniques",
         component: "PredictTechniquesTool"
       }
     ],
