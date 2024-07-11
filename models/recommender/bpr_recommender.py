@@ -2,7 +2,8 @@ import tensorflow as tf
 import math
 import numpy as np
 import keras
-
+from constants import PredictionMethod
+from utils import calculate_predicted_matrix
 from .recommender import Recommender
 import time
 
@@ -188,10 +189,12 @@ class BPRRecommender(Recommender):
         """Fits the model to data.
 
         Args:
-            data: An mxn tensor of training data.
-            learning_rate: The learning rate.
-            num_iterations: Number of training iterations to execute.
+            data: An mxn tensor of training data
+            learning_rate: Learning rate for each gradient step performed on a single entity-item sample.
+            num_iterations: Number of training iterations, where each iteration corresponds to a single
+                entity-item sample from the dataset.
             regularization_coefficient: Coefficient on the L2 regularization term.
+            method: The prediction method to use.
 
         Mutates:
             The recommender to the new trained state.
@@ -243,28 +246,72 @@ class BPRRecommender(Recommender):
         # return theta
         # set in rep
 
-    def _get_estimated_matrix(self) -> np.ndarray:
-        return np.dot(self._U, self._V.T)
+    def evaluate(
+        self,
+        test_data: tf.SparseTensor,
+        method: PredictionMethod = PredictionMethod.DOT,
+    ) -> float:
+        """Evaluates the solution.
 
-    def evaluate(self, test_data: tf.SparseTensor) -> float:
-        pred = self._get_estimated_matrix()
+        Requires that the model has been trained.
+
+        Args:
+            test_data: mxn tensor on which to evaluate the model.
+                Requires that mxn match the dimensions of the training tensor and
+                each row i and column j correspond to the same entity and item
+                in the training tensor, respectively.
+            method: The prediction method to use.
+
+        Returns:
+            The mean squared error of the test data.
+        """
+        pred = self.predict(method)
         predictions = tf.gather_nd(pred, test_data.indices)
 
         loss = keras.losses.MeanSquaredError()
 
         return loss(test_data.values, predictions).numpy()
 
-    def predict(self) -> np.ndarray:
-        return self._get_estimated_matrix()
+    def predict(self, method: PredictionMethod = PredictionMethod.DOT) -> np.ndarray:
+        """Gets the model predictions.
+
+        The predictions consist of the estimated matrix A_hat of the truth
+        matrix A, of which the training data contains a sparse subset of the entries.
+
+        Args:
+            method: The prediction method to use.
+
+        Returns:
+            An mxn array of values.
+        """
+        self._checkrep()
+
+        return calculate_predicted_matrix(self._U, self._V, method)
 
     def predict_new_entity(
         self,
         entity: tf.SparseTensor,
         learning_rate: float,
         num_iterations: int,
-        w_regularization: float,
+        regularization_coefficient: float,
+        method: PredictionMethod = PredictionMethod.DOT,
         **kwargs,
     ) -> np.array:
+        """Recommends items to an unseen entity.
+
+        Args:
+            entity: A length-n sparse tensor of consisting of the new entity's
+                ratings for each item, indexed exactly as the items used to
+                train this model.
+            learning_rate: Learning rate for each gradient step performed on a single entity-item sample.
+            num_iterations: Number of training iterations, where each iteration corresponds to a single
+                entity-item sample from the dataset.
+            regularization_coefficient: Coefficient on the L2 regularization term.
+            method: The prediction method to use.
+
+        Returns:
+            An array of predicted values for the new entity.
+        """
         new_entity = tf.sparse.reorder(entity)
         new_entity = tf.sparse.to_dense(new_entity)
 
@@ -272,13 +319,18 @@ class BPRRecommender(Recommender):
             loc=0, scale=math.sqrt(1 / self._U.shape[1]), size=(1, self._U.shape[1])
         )
 
+        all_u, all_i, all_j = self._sample_dataset(
+            tf.expand_dims(new_entity, axis=0), num_samples=num_iterations
+        )
+
         # initialize theta - done - init
         # repeat
-        for i in range(num_iterations):
+        for iteration_count in range(num_iterations):
 
             # draw u, i, j from D_s
-            _, i, j = self._sample_dataset(tf.expand_dims(new_entity, axis=0))
-            # print("u", u, "i", i, "j", j)
+            u = all_u[iteration_count]
+            i = all_i[iteration_count]
+            j = all_j[iteration_count]
 
             # theta = theta + alpha * (e^(-x) sigma(x) d/dtheta x + lambda theta)
             # TODO factor out
@@ -292,13 +344,15 @@ class BPRRecommender(Recommender):
 
             new_entity_embedding += learning_rate * (
                 sigmoid_derivative * d_w
-                - (w_regularization * np.sum(new_entity_embedding))
+                - (regularization_coefficient * new_entity_embedding)
             )
 
         # return theta
         # set in rep
 
-        return np.squeeze(np.dot(new_entity_embedding, self._V.T).T)
+        return np.squeeze(
+            calculate_predicted_matrix(new_entity_embedding, self._V, method)
+        )
 
 
 Recommender.register(BPRRecommender)

@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 import numpy as np
 import tensorflow as tf
 
+from constants import PredictionMethod
+
 
 class Recommender(ABC):
     """A matrix factorization recommender model to suggest items for a particular entity."""
@@ -32,7 +34,7 @@ class Recommender(ABC):
         """
 
     @abstractmethod
-    def evaluate(self, test_data: tf.SparseTensor) -> float:
+    def evaluate(self, test_data: tf.SparseTensor, **kwargs) -> float:
         """Evaluates the solution.
 
         Requires that the model has been trained.
@@ -48,7 +50,7 @@ class Recommender(ABC):
         """
 
     @abstractmethod
-    def predict(self) -> np.ndarray:
+    def predict(self, **kwargs) -> np.ndarray:
         """Gets the model predictions.
 
         The predictions consist of the estimated matrix A_hat of the truth
@@ -59,11 +61,15 @@ class Recommender(ABC):
         """
 
     @abstractmethod
-    def predict_new_entity(self, entity: tf.SparseTensor, **kwargs) -> np.array:
+    def predict_new_entity(
+        self,
+        entity: tf.SparseTensor,
+        **kwargs,
+    ) -> np.array:
         """Recommends items to an unseen entity.
 
         Args:
-            entity: a length-n sparse tensor of consisting of the new entity's
+            entity: A length-n sparse tensor of consisting of the new entity's
                 ratings for each item, indexed exactly as the items used to
                 train this model.
 

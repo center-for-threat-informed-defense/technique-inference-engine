@@ -5,6 +5,8 @@ from implicit.als import AlternatingLeastSquares
 from sklearn.metrics import mean_squared_error
 from scipy import sparse
 import copy
+from constants import PredictionMethod
+from utils import calculate_predicted_matrix
 
 
 class ImplicitWalsRecommender(Recommender):
@@ -108,7 +110,11 @@ class ImplicitWalsRecommender(Recommender):
 
         self._checkrep()
 
-    def evaluate(self, test_data: tf.SparseTensor) -> float:
+    def evaluate(
+        self,
+        test_data: tf.SparseTensor,
+        method: PredictionMethod = PredictionMethod.DOT,
+    ) -> float:
         """Evaluates the solution.
 
         Requires that the model has been trained.
@@ -118,11 +124,12 @@ class ImplicitWalsRecommender(Recommender):
                 Requires that mxn match the dimensions of the training tensor and
                 each row i and column j correspond to the same entity and item
                 in the training tensor, respectively.
+            method: The prediction method to use.
 
         Returns:
             The mean squared error of the test data.
         """
-        predictions_matrix = self.predict()
+        predictions_matrix = self.predict(method)
 
         row_indices = tuple(index[0] for index in test_data.indices)
         column_indices = tuple(index[1] for index in test_data.indices)
@@ -131,25 +138,38 @@ class ImplicitWalsRecommender(Recommender):
         self._checkrep()
         return mean_squared_error(test_data.values, prediction_values)
 
-    def predict(self) -> np.ndarray:
+    def predict(self, method: PredictionMethod = PredictionMethod.DOT) -> np.ndarray:
         """Gets the model predictions.
 
         The predictions consist of the estimated matrix A_hat of the truth
         matrix A, of which the training data contains a sparse subset of the entries.
 
+        Args:
+            method: The prediction method to use.
+
         Returns:
             An mxn array of values.
         """
         self._checkrep()
-        return np.dot(self._model.user_factors, self._model.item_factors.T)
 
-    def predict_new_entity(self, entity: tf.SparseTensor) -> np.array:
+        return calculate_predicted_matrix(
+            self._model.user_factors, self._model.item_factors, method
+        )
+
+    def predict_new_entity(
+        self,
+        entity: tf.SparseTensor,
+        method: PredictionMethod = PredictionMethod.DOT,
+        **kwargs,
+    ) -> np.array:
         """Recommends items to an unseen entity.
 
         Args:
-            entity: a length-n sparse tensor of consisting of the new entity's
+            entity: A length-n sparse tensor of consisting of the new entity's
                 ratings for each item, indexed exactly as the items used to
                 train this model.
+            method: The prediction method to use.
+
 
         Returns:
             An array of predicted values for the new entity.
@@ -169,4 +189,11 @@ class ImplicitWalsRecommender(Recommender):
         self._num_new_users += 1
 
         self._checkrep()
-        return np.dot(self._model.user_factors[user_id], self._model.item_factors.T)
+
+        return np.squeeze(
+            calculate_predicted_matrix(
+                np.expand_dims(self._model.user_factors[user_id], axis=1).T,
+                self._model.item_factors,
+                method,
+            )
+        )

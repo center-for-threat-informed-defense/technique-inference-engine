@@ -2,6 +2,7 @@ from mitreattack.stix20 import MitreAttackData
 import math
 import numpy as np
 import pandas as pd
+from constants import PredictionMethod
 
 
 def get_mitre_technique_ids_to_names(stix_filepath: str) -> dict[str, str]:
@@ -189,3 +190,40 @@ def normalized_discounted_cumulative_gain(
     dcg = (1 / m) * np.sum(divide)
 
     return dcg / idcg
+
+
+def calculate_predicted_matrix(
+    U: np.ndarray, V: np.ndarray, method: PredictionMethod = PredictionMethod.DOT
+) -> np.ndarray:
+    """Calculates the prediction matrix UV^T according to the dot or cosine product.
+
+    Args:
+        U: mxk array of entity embeddings
+        V: nxk array of item embeddings
+        method: Matrix product method to use.
+
+    Returns:
+        The matrix product UV^T, according to method.
+    """
+    if method == PredictionMethod.DOT:
+        U_scaled = U
+        V_scaled = V
+    elif method == PredictionMethod.COSINE:
+        U_norm = np.expand_dims(np.linalg.norm(U, ord=2, axis=1), axis=1)
+        V_norm = np.expand_dims(np.linalg.norm(V, ord=2, axis=1), axis=1)
+
+        # if norm is 0, ie if the embedding is 0
+        # then do not scale by norm at all
+        U_norm[U_norm == 0.0] = 1.0
+        V_norm[V_norm == 0.0] = 1.0
+
+        assert U_norm.shape == (U.shape[0], 1)
+        assert V_norm.shape == (V.shape[0], 1)
+
+        assert not np.isnan(U_norm).any()
+        assert not np.isnan(V_norm).any()
+
+        U_scaled = np.divide(U, U_norm)
+        V_scaled = np.divide(V, V_norm)
+
+    return U_scaled @ V_scaled.T
