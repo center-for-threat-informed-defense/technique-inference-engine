@@ -1,3 +1,5 @@
+from constants import PredictionMethod
+from utils import calculate_predicted_matrix
 from .recommender import Recommender
 import numpy as np
 import tensorflow as tf
@@ -185,10 +187,10 @@ class WalsRecommender(Recommender):
         """Fits the model to data.
 
         Args:
-            data: an mxn tensor of training data.
-            num_iterations: number of training iterations to execute.
-            c: weight for negative training examples.  Requires 0 < c < 1.
-            regularization_coefficient: coefficient on the embedding regularization term.
+            data: An mxn tensor of training data.
+            num_iterations: Number of training iterations to execute.
+            c: Weight for negative training examples.  Requires 0 < c < 1.
+            regularization_coefficient: Coefficient on the embedding regularization term.
 
         Mutates:
             The recommender to the new trained state.
@@ -216,7 +218,11 @@ class WalsRecommender(Recommender):
 
         self._checkrep()
 
-    def evaluate(self, test_data: tf.SparseTensor) -> float:
+    def evaluate(
+        self,
+        test_data: tf.SparseTensor,
+        method: PredictionMethod = PredictionMethod.DOT,
+    ) -> float:
         """Evaluates the solution.
 
         Requires that the model has been trained.
@@ -226,11 +232,12 @@ class WalsRecommender(Recommender):
                 Requires that mxn match the dimensions of the training tensor and
                 each row i and column j correspond to the same entity and item
                 in the training tensor, respectively.
+            method: The prediction method to use.
 
         Returns:
             The mean squared error of the test data.
         """
-        predictions_matrix = self.predict()
+        predictions_matrix = self.predict(method)
 
         row_indices = tuple(index[0] for index in test_data.indices)
         column_indices = tuple(index[1] for index in test_data.indices)
@@ -239,27 +246,39 @@ class WalsRecommender(Recommender):
         self._checkrep()
         return mean_squared_error(test_data.values, prediction_values)
 
-    def predict(self) -> np.ndarray:
+    def predict(self, method: PredictionMethod = PredictionMethod.DOT) -> np.ndarray:
         """Gets the model predictions.
 
         The predictions consist of the estimated matrix A_hat of the truth
         matrix A, of which the training data contains a sparse subset of the entries.
 
+        Args:
+            method: The prediction method to use.
+
         Returns:
             An mxn array of values.
         """
         self._checkrep()
-        return np.dot(self._U, self._V.T)
+
+        return calculate_predicted_matrix(self._U, self._V, method)
 
     def predict_new_entity(
-        self, entity: tf.SparseTensor, c: float, regularization_coefficient: float
+        self,
+        entity: tf.SparseTensor,
+        c: float,
+        regularization_coefficient: float,
+        method: PredictionMethod = PredictionMethod.DOT,
+        **kwargs,
     ) -> np.array:
         """Recommends items to an unseen entity.
 
         Args:
-            entity: a length-n sparse tensor of consisting of the new entity's
+            entity: A length-n sparse tensor of consisting of the new entity's
                 ratings for each item, indexed exactly as the items used to
                 train this model.
+            c: Weight for negative training examples.  Requires 0 < c < 1.
+            regularization_coefficient: Coefficient on the embedding regularization term.
+            method: The prediction method to use.
 
         Returns:
             An array of predicted values for the new entity.
@@ -275,6 +294,12 @@ class WalsRecommender(Recommender):
             alpha=alpha,
             regularization_coefficient=regularization_coefficient,
         )
-        new_entity_predictions = np.squeeze(self.V @ new_entity_factor.T)
 
-        return new_entity_predictions
+        assert new_entity_factor.shape == (1, self._U.shape[1])
+
+        return np.squeeze(
+            calculate_predicted_matrix(new_entity_factor, self._V, method)
+        )
+
+
+Recommender.register(WalsRecommender)

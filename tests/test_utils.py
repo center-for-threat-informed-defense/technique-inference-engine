@@ -1,11 +1,7 @@
 import unittest
 import math
 import pandas as pd
-from models.utils import (
-    precision_at_k,
-    recall_at_k,
-    normalized_discounted_cumulative_gain,
-)
+from models import utils
 
 
 class TestPrecisionAtK(unittest.TestCase):
@@ -45,7 +41,7 @@ class TestPrecisionAtK(unittest.TestCase):
 
         expected_precision = 0.0
 
-        precision = precision_at_k(predictions, test_data, k=k)
+        precision = utils.precision_at_k(predictions, test_data, k=k)
 
         self.assertEqual(expected_precision, precision)
 
@@ -74,7 +70,7 @@ class TestPrecisionAtK(unittest.TestCase):
 
         expected_precision = 0.5
 
-        precision = precision_at_k(predictions, test_data, k=k)
+        precision = utils.precision_at_k(predictions, test_data, k=k)
 
         self.assertEqual(expected_precision, precision)
 
@@ -95,7 +91,7 @@ class TestPrecisionAtK(unittest.TestCase):
 
         expected_precision = 1.0
 
-        precision = precision_at_k(predictions, test_data, k=k)
+        precision = utils.precision_at_k(predictions, test_data, k=k)
 
         self.assertEqual(expected_precision, precision)
 
@@ -127,7 +123,7 @@ class TestRecallAtK(unittest.TestCase):
 
         expected_recall = 1.0
 
-        recall = recall_at_k(predictions, test_data, k=k)
+        recall = utils.recall_at_k(predictions, test_data, k=k)
 
         self.assertEqual(expected_recall, recall)
 
@@ -147,7 +143,7 @@ class TestRecallAtK(unittest.TestCase):
 
         expected_recall = 0.0
 
-        recall = recall_at_k(predictions, test_data, k=k)
+        recall = utils.recall_at_k(predictions, test_data, k=k)
 
         self.assertEqual(expected_recall, recall)
 
@@ -179,7 +175,7 @@ class TestRecallAtK(unittest.TestCase):
 
         expected_recall = 0.5
 
-        recall = recall_at_k(predictions, test_data, k=k)
+        recall = utils.recall_at_k(predictions, test_data, k=k)
 
         self.assertEqual(expected_recall, recall)
 
@@ -219,7 +215,9 @@ class TestNormalizedDiscountedCumulativeGain(unittest.TestCase):
 
         expected_recall = 1.0
 
-        recall = normalized_discounted_cumulative_gain(predictions, test_data, k=k)
+        recall = utils.normalized_discounted_cumulative_gain(
+            predictions, test_data, k=k
+        )
 
         self.assertEqual(expected_recall, recall)
 
@@ -249,7 +247,7 @@ class TestNormalizedDiscountedCumulativeGain(unittest.TestCase):
         expected_idcg = (1 / math.log2(2)) + (1 / math.log2(3))
         expected_ndcg = expected_dcg / expected_idcg
 
-        ndcg = normalized_discounted_cumulative_gain(predictions, test_data, k=k)
+        ndcg = utils.normalized_discounted_cumulative_gain(predictions, test_data, k=k)
 
         self.assertEqual(expected_ndcg, ndcg)
 
@@ -279,7 +277,7 @@ class TestNormalizedDiscountedCumulativeGain(unittest.TestCase):
 
         expected_ndcg = 1.0
 
-        ndcg = normalized_discounted_cumulative_gain(predictions, test_data, k=k)
+        ndcg = utils.normalized_discounted_cumulative_gain(predictions, test_data, k=k)
 
         self.assertEqual(expected_ndcg, ndcg)
 
@@ -311,6 +309,6 @@ class TestNormalizedDiscountedCumulativeGain(unittest.TestCase):
 
         expected_ndcg = 1.0
 
-        ndcg = normalized_discounted_cumulative_gain(predictions, test_data, k=k)
+        ndcg = utils.normalized_discounted_cumulative_gain(predictions, test_data, k=k)
 
         self.assertEqual(expected_ndcg, ndcg)
