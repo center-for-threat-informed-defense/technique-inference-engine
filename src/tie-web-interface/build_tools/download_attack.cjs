@@ -125,15 +125,51 @@ function parseStixToAttackObject(obj) {
  *  The parsed ATT&CK objects.
  */
 function parseAttackObjectsFromManifest(data) {
-    // Parse objects
-    let objs = []
+
+    // Parse objects and relationships
+    const relationships = new Map();
+    let objects = new Map();
     for (let obj of data.objects) {
+        if (obj.type === "relationship") {
+            if (!relationships.has(obj.source_ref)) {
+                relationships.set(obj.source_ref, new Set());
+            }
+            if (!relationships.has(obj.target_ref)) {
+                relationships.set(obj.target_ref, new Set());
+            }
+            relationships.get(obj.source_ref).add(obj.target_ref);
+            relationships.get(obj.target_ref).add(obj.source_ref);
+            continue;
+        }
         if (!(obj.type in STIX_TO_ATTACK)) {
             continue;
         }
-        objs.push(parseStixToAttackObject(obj));
+        const parse = parseStixToAttackObject(obj);
+        objects.set(parse.stixId, parse);
     }
-    return objs;
+
+    // Construct relationships
+    for (const [object, relations] of relationships) {
+        const source = objects.get(object);
+        if (!source) {
+            continue;
+        }
+        for (const relation of relations) {
+            const target = objects.get(relation);
+            if (!target) {
+                continue;
+            }
+            const type = target.type;
+            if (source[`${type}s`] === undefined) {
+                source[`${type}s`] = [];
+            }
+            source[`${type}s`].push(target);
+        }
+    }
+
+    // Link relationships
+    return [...objects.values()];
+
 }
 
 /**

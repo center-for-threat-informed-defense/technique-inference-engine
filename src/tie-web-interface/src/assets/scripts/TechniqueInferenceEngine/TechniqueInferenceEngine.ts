@@ -120,6 +120,8 @@ export class TechniqueInferenceEngine {
                     description: "Unknown Technique.",
                     tactics: [],
                     platforms: [],
+                    campaigns: [],
+                    groups: []
                 }
             }
             // Apply enrichment to prediction

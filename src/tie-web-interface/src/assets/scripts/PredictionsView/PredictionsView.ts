@@ -22,7 +22,10 @@ export class PredictionsView {
         let techniques = [...this._techniques];
         // Apply filters
         techniques = techniques.filter(([, item]) => {
-            return this.filters.platformFilter.isShown(item.platforms)
+            const platform = this.filters.platformFilter.isShown(item.platforms);
+            const campaign = this.filters.campaignFilter.isShown(item.campaigns);
+            const group = this.filters.groupFilter.isShown(item.groups);
+            return platform && campaign && group;
         });
         // Resolve order
         type Order<T> = (s: (a: T, b: T) => number) => (a: T, b: T) => number;
@@ -78,6 +81,16 @@ export class PredictionsView {
          * The view's permitted platforms.
          */
         platformFilter: ViewFilter<string>;
+
+        /**
+         * The view's campaign filters.
+         */
+        campaignFilter: ViewFilter<string>;
+
+        /**
+         * The view's group filters.
+         */
+        groupFilter: ViewFilter<string>;
 
     };
 
@@ -135,7 +148,9 @@ export class PredictionsView {
         this._techniques = null;
         this.filters = {
             itemLimit: new ViewLimit("# of Results", 1, 50),
-            platformFilter: new ViewFilter("Platform", new Set())
+            platformFilter: new ViewFilter("Platform", new Set()),
+            campaignFilter: new ViewFilter("Campaign", new Set()),
+            groupFilter: new ViewFilter("Group", new Set()),
         }
         this.organizations = {
             sortBy: new ViewOption("Sort By", new Set(["Rank", "ID", "Name"])),
@@ -155,14 +170,24 @@ export class PredictionsView {
         this._techniques = techniques;
         // Collect techniques
         const platforms = new Set<string>();
+        const campaigns = new Set<string>();
+        const groups = new Set<string>();
         for (const technique of this._techniques?.values() ?? []) {
             for (const platform of technique.platforms) {
                 platforms.add(platform);
             }
+            for (const campaign of technique.campaigns) {
+                campaigns.add(campaign);
+            }
+            for (const group of technique.groups) {
+                groups.add(group);
+            }
         }
         // Pivot filters
         const f = this.filters;
-        f.platformFilter = f.platformFilter.pivot(platforms);
+        f.platformFilter = f.platformFilter.pivot(new Set([...platforms].sort()));
+        f.campaignFilter = f.campaignFilter.pivot(new Set([...campaigns].sort()));
+        f.groupFilter = f.groupFilter.pivot(new Set([...groups].sort()));
     }
 
     /**

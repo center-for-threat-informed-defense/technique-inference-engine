@@ -29,7 +29,9 @@ function filterAttackObjects(objects) {
                 object.external_references
             ),
             platforms: object.platforms,
-            tactics: object.tactics
+            tactics: object.tactics,
+            campaigns: (object.campaigns ?? []).map(o => o.name),
+            groups: (object.groups ?? []).map(o => o.name),
         });
     }
     return filtered;

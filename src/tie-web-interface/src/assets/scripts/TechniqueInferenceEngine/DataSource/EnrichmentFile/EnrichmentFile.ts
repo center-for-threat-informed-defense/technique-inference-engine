@@ -46,6 +46,16 @@ export type Technique = {
      */
     tactics: string[];
 
+    /**
+     * The Technique's associated campaigns.
+     */
+    campaigns: string[];
+
+    /**
+     * The Technique's associated groups.
+     */
+    groups: string[];
+
 }
 
 /**
