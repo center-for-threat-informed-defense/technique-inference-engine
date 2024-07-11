@@ -16,10 +16,6 @@
             Learn More
           </a>
         </div>
-        <div class="partners">
-          <p>Research Conducted By:</p>
-          <img class="ctid-logo" src="@/assets/images/ctid_logo_horizontal.png" />
-        </div>
       </div>
     </div>
     <div class="tool-set theme-dark">
@@ -91,35 +87,12 @@ export default defineComponent({
   padding: scale.size("xxl") scale.size("xxh") scale.size("xxh");
 }
 
-.partners {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: end;
-  justify-content: end;
-  margin-left: scale.size("xxh");
-}
-
-.partners p {
-  margin-bottom: scale.size("s");
-}
-
 .project-cta {
   margin-bottom: scale.size("s");
 }
 
 .project-description {
   margin-bottom: scale.size("xh");
-}
-
-.ctid-logo {
-  max-width: 300px;
-}
-
-@media only screen and (max-width: scale.$tablet-width) {
-  .partners {
-    display: none;
-  }
 }
 
 .tool-set,
