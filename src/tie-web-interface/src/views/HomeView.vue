@@ -7,12 +7,10 @@
             Gain a <mark>Full</mark> Picture of the Adversary
           </h2>
           <p class="project-description">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-            non proident, sunt in culpa qui officia deserunt.
+            The Technique Inference Engine (TIE) suggests techniques an adversary is likely to have used based on a set
+            of observed techniques. Cyber defenders can use this data to prioritize specific techniques for threat
+            hunting, and incident responders can use this information to highlight important lateral movement and
+            persistence behaviors that are essential to threat eviction and recovery.
           </p>
           <a class="learn-more" href="/about">
             Learn More
