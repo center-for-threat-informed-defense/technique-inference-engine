@@ -92,10 +92,6 @@
 
         <div class="disclosures-section">
           <small>
-            Visit the <a href="">Center for Threat-Informed Defense's</a> non-profit parent, <a href="">MITRE
-              Engenuity</a>.
-          </small>
-          <small>
             Copyright © 2024 MITRE Engenuity. Approved for public release. Document number(s) PUT_PRS_NUMBER_HERE.
           </small>
         </div>
