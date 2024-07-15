@@ -333,7 +333,6 @@ class BPRRecommender(Recommender):
             j = all_j[iteration_count]
 
             # theta = theta + alpha * (e^(-x) sigma(x) d/dtheta x + lambda theta)
-            # TODO factor out
             x_ui = np.dot(new_entity_embedding, self._V[i, :])
             x_uj = np.dot(new_entity_embedding, self._V[j, :])
             x_uij = x_ui - x_uj

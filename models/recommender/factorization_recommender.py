@@ -50,12 +50,12 @@ class FactorizationRecommender(Recommender):
 
         self._loss = keras.losses.MeanSquaredError()
 
+        self._init_stddev = 1
+
         self._checkrep()
 
     def _reset_embeddings(self):
         """Resets the embeddings to a standard normal."""
-        init_stddev = 1
-
         new_U = tf.Variable(tf.random.normal(self._U.shape, stddev=init_stddev))
         new_V = tf.Variable(tf.random.normal(self._V.shape, stddev=init_stddev))
 
@@ -298,8 +298,6 @@ class FactorizationRecommender(Recommender):
         Returns:
             An array of predicted values for the new entity.
         """
-        # TODO factor out
-        init_stddev = 1
 
         # preliminaries
         optimizer = keras.optimizers.SGD(learning_rate=learning_rate)
@@ -307,7 +305,7 @@ class FactorizationRecommender(Recommender):
         embedding = tf.Variable(
             tf.random.normal(
                 [self._U.shape[1], 1],
-                stddev=init_stddev,
+                stddev=self._init_stddev,
             )
         )
 
