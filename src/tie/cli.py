@@ -1,12 +1,19 @@
 import argparse
+import os
+
 import numpy as np
-from matrix_builder import ReportTechniqueMatrixBuilder, ReportTechniqueMatrix
-from tie import TechniqueInferenceEngine
-from recommender import WalsRecommender
+
+from tie.constants import PredictionMethod
+from tie.engine import TechniqueInferenceEngine
+from tie.matrix_builder import ReportTechniqueMatrixBuilder
+from tie.recommender import WalsRecommender
 
 
 def export_model(dataset_filepath: str, outfile: str):
-    """Trains the TechniqueInferenceEngine based on dataset and exports the model to outfile.
+    """Trains the TechniqueInferenceEngine and exports the model.
+
+    Trains the TechniqueInferenceEngine based on dataset and exports the model to
+    outfile.
 
     Args:
         dataset_filepath: A JSON file formatted according the provided specification.
@@ -14,7 +21,7 @@ def export_model(dataset_filepath: str, outfile: str):
 
     Mutates:
         Saves the results to an npz outfile with the following keys:
-            - hyperparameters: Array where the first column is the hyeprparameter
+            - hyperparameters: Array where the first column is the hyperparameter
                 name and the second contains the value
             - u: mxk array of the m entity embeddings
             - v: nxk array of the n user embeddings
@@ -22,7 +29,7 @@ def export_model(dataset_filepath: str, outfile: str):
             - technique_ids: Length-n array of the n technique ids
     """
     # could be added to arguments later
-    enterprise_attack_filepath = "../enterprise-attack.json"
+    enterprise_attack_filepath = "./enterprise-attack.json"
     validation_ratio = 0.1
     test_ratio = 0.2
     k = 4
@@ -45,6 +52,7 @@ def export_model(dataset_filepath: str, outfile: str):
         validation_data=validation_data,
         test_data=test_data,
         model=model,
+        prediction_method=PredictionMethod.DOT,
         enterprise_attack_filepath=enterprise_attack_filepath,
     )
 
@@ -52,15 +60,29 @@ def export_model(dataset_filepath: str, outfile: str):
         "epochs": [25],  # default
         # parameters combinations from https://dl.acm.org/doi/10.1145/3522672
         # with the addition of c 0.0001 and regularization_coefficient 0.00001
-        # since experimentally, we saw these used at times in optimal hyperparameter combination
+        # since experimentally, we saw these used at times in optimal hyperparameter
+        # combination
         "c": [0.001, 0.005, 0.01, 0.05, 0.1, 0.3, 0.5, 0.7],
         "regularization_coefficient": [0.0, 0.0001, 0.001, 0.01],
     }
 
     best_hyperparameters = tie.fit_with_validation(**hyperparameters)
     hyperparameters_array = np.array(
-        [list(best_hyperparameters.keys()), list(best_hyperparameters.values())]
-    ).T
+        [
+            (
+                best_hyperparameters["c"],
+                best_hyperparameters["num_iterations"],
+                best_hyperparameters["regularization_coefficient"],
+            )
+        ],
+        dtype=np.dtype(
+            [
+                ("c", "<f4"),
+                ("num_iterations", "<f4"),
+                ("regularization_coefficient", "<f4"),
+            ]
+        ),
+    )
 
     U = tie.get_U().astype("float32")
     V = tie.get_V().astype("float32")
@@ -72,21 +94,24 @@ def export_model(dataset_filepath: str, outfile: str):
     assert report_ids.shape == (m,)
     assert technique_ids.shape == (n,)
 
-    np.savez(
+    np.savez_compressed(
         outfile,
-        hyperparameters=hyperparameters_array,
-        u=U,
-        v=V,
-        report_ids=report_ids,
+        U=U,
+        V=V,
         technique_ids=technique_ids,
+        hyperparameters=hyperparameters_array,
     )
+    if not outfile.endswith(".npz"):
+        os.rename(outfile + ".npz", outfile)
 
 
-if __name__ == "__main__":
-
+def main():
     parser = argparse.ArgumentParser(
         prog="TechniqueInferenceEngine",
-        description="Generates .npz files containing the embedding matrices from the TechniqueInferenceEngine recommender system.",
+        description=(
+            "Generates .npz files containing the embedding matrices from the "
+            "TechniqueInferenceEngine recommender system."
+        ),
         epilog="For further help and support, please reach out to CTID.",
     )
 
@@ -96,3 +121,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     export_model(args.filename, args.outfile)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,12 +1,11 @@
 from abc import ABC, abstractmethod
+
 import numpy as np
 import tensorflow as tf
 
-from constants import PredictionMethod
-
 
 class Recommender(ABC):
-    """A matrix factorization recommender model to suggest items for a particular entity."""
+    """A matrix factorization recommender model to suggest items for an entity."""
 
     @property
     @abstractmethod

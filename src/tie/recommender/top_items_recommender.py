@@ -1,11 +1,16 @@
 import numpy as np
 import tensorflow as tf
 from sklearn.metrics import mean_squared_error
+
 from .recommender import Recommender
 
 
 class TopItemsRecommender(Recommender):
-    """A recommender model which always recommends the most observed techniques in the dataset in frequency order."""
+    """A recommender model which always recommends the most observed techniques.
+
+    A recommender model which always recommends the most observed techniques in the
+    dataset in frequency order.
+    """
 
     # Abstraction function:
     #   AF(m, n, item_frequencies) = a recommender model which recommends the n
@@ -25,7 +30,8 @@ class TopItemsRecommender(Recommender):
         self._m = m  # entity dimension
         self._n = n  # item dimension
 
-        # array of item frequencies, ranging from 0 (least frequent) to n-1 (most frequent)
+        # array of item frequencies,
+        # ranging from 0 (least frequent) to n-1 (most frequent)
         self._item_frequencies = np.zeros((n,))
 
         self._checkrep()

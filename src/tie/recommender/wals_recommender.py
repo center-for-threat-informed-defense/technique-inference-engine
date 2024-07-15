@@ -1,9 +1,11 @@
-from constants import PredictionMethod
-from utils import calculate_predicted_matrix
-from .recommender import Recommender
 import numpy as np
 import tensorflow as tf
 from sklearn.metrics import mean_squared_error
+
+from tie.constants import PredictionMethod
+from tie.utils import calculate_predicted_matrix
+
+from .recommender import Recommender
 
 
 class WalsRecommender(Recommender):
@@ -74,13 +76,13 @@ class WalsRecommender(Recommender):
 
     @property
     def U(self) -> np.ndarray:
-        """Gets U as a factor of the factorization UV^T.  Requires model to be trained."""
+        """Gets U as a factor of the factorization UV^T. Model must be trained."""
         self._checkrep()
         return np.copy(self._U)
 
     @property
     def V(self) -> np.ndarray:
-        """Gets V as a factor of the factorization UV^T.  Requires model to be trained."""
+        """Gets V as a factor of the factorization UV^T. Model must be trained."""
         self._checkrep()
         return np.copy(self._V)
 
@@ -94,20 +96,19 @@ class WalsRecommender(Recommender):
         """Updates factors according to least squares on the opposing factors.
 
         Determines factors which minimize loss on data based on opposing_factors.
-        For example, if opposing_factors are the item factors, determines the entity factors which
-        minimize loss on data.
+        For example, if opposing_factors are the item factors, determines the entity
+        factors which minimize loss on data.
 
         Args:
             opposing_factors: a pxk array of the fixed factors in the optimization step
                 (ie entity or item factors).  Requires p, k > 0.
-            predictions: A pxq array of the observed values for each of the entities/items associated
-                with the p opposing_factors and the q items/entities associated with factors.
-                Requires p, q > 0.
-            alpha: Weight for positive training examples such that each positive example takes value
-                alpha + 1.  Requires alpha > 0.
-            regularization_coefficient: coefficient on the embedding regularization term.  Requires
-                regularization_coefficient > 0.
-
+            predictions: A pxq array of the observed values for each of the
+                entities/items associated with the p opposing_factors and the q
+                items/entities associated with factors. Requires p, q > 0.
+            alpha: Weight for positive training examples such that each positive example
+                takes value alpha + 1.  Requires alpha > 0.
+            regularization_coefficient: coefficient on the embedding regularization
+                term. Requires regularization_coefficient > 0.
 
         Returns:
             A qxk array of recomputed factors which minimize error.
@@ -131,7 +132,6 @@ class WalsRecommender(Recommender):
             product = np.zeros((k, k))
 
             for i in nonzero_c:
-
                 v_i = np.expand_dims(V[i, :], axis=1)
 
                 square_addition = v_i @ v_i.T
@@ -154,7 +154,6 @@ class WalsRecommender(Recommender):
         V_T_V = V.T @ V
         # update each of the q user factors
         for i in range(q):
-
             P_u = data[:, i]
             # C is c if unobserved, one otherwise
             C_u = np.where(P_u > 0, alpha + 1, 1)
@@ -188,12 +187,13 @@ class WalsRecommender(Recommender):
 
         Args:
             data: An mxn tensor of training data.
-            epochs: Number of training epochs, where each the model is trained on the cardinality
-                dataset in each epoch.
+            epochs: Number of training epochs, where each the model is trained on the
+                cardinality dataset in each epoch.
             c: Weight for negative training examples in the loss function,
                 ie each positive example takes weight 1, while negative examples take
                 discounted weight c.  Requires 0 < c < 1.
-            regularization_coefficient: Coefficient on the embedding regularization term.
+            regularization_coefficient: Coefficient on the embedding regularization
+                term.
 
         Mutates:
             The recommender to the new trained state.
@@ -282,7 +282,8 @@ class WalsRecommender(Recommender):
             c: Weight for negative training examples in the loss function,
                 ie each positive example takes weight 1, while negative examples take
                 discounted weight c.  Requires 0 < c < 1.
-            regularization_coefficient: Coefficient on the embedding regularization term.
+            regularization_coefficient: Coefficient on the embedding regularization
+                term.
             method: The prediction method to use.
 
         Returns:

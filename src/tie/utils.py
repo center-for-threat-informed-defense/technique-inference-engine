@@ -1,8 +1,10 @@
-from mitreattack.stix20 import MitreAttackData
 import math
+
 import numpy as np
 import pandas as pd
-from constants import PredictionMethod
+from mitreattack.stix20 import MitreAttackData
+
+from tie.constants import PredictionMethod
 
 
 def get_mitre_technique_ids_to_names(stix_filepath: str) -> dict[str, str]:
@@ -59,7 +61,7 @@ def _get_num_test_items_in_top_k_per_user(
 
 
 def precision_at_k(predictions: pd.DataFrame, test_data: pd.DataFrame, k: int) -> float:
-    """Calculates the precision of the top k predictions based on test data.
+    r"""Calculates the precision of the top k predictions based on test data.
 
     Precision is defined as the average fraction of items in the top k predictions
     which appear in the test set.  If k < the number of items in the test set for a
@@ -93,14 +95,15 @@ def precision_at_k(predictions: pd.DataFrame, test_data: pd.DataFrame, k: int) -
 
 
 def recall_at_k(predictions: pd.DataFrame, test_data: pd.DataFrame, k: int) -> float:
-    """Calculates the recall of the top k predictions based on test data.
+    r"""Calculates the recall of the top k predictions based on test data.
 
     Recall is defined as the average fraction of items in the test set which appear
     in the top k predictions.  If k >= the number of items in the test set for a
     particular user, then the maximum recall is 1.0.
 
     Mathematically, it is defined as
-    recall@k = (1\m) \sum_u (\sum_{i=1}^k [[pred_i in test set]] / |test set for entity i|
+    recall@k =
+        (1\m) \sum_u (\sum_{i=1}^k [[pred_i in test set]] / |test set for entity i|
 
     Args:
         predictions: an mxn matrix of predictions where m is the number of entities
@@ -131,7 +134,7 @@ def recall_at_k(predictions: pd.DataFrame, test_data: pd.DataFrame, k: int) -> f
 def normalized_discounted_cumulative_gain(
     predictions: pd.DataFrame, test_data: pd.DataFrame, k: int = 10
 ) -> float:
-    """Computes the Normalized Discounted Cumulative Gain (NDCG) on test_data.
+    r"""Computes the Normalized Discounted Cumulative Gain (NDCG) on test_data.
 
     NDCG measures the goodness of a ranking based on the relative ordering of
     test set entries in the top-k predictions.  Test set predictions

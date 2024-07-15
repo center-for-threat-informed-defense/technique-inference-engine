@@ -1,11 +1,13 @@
-import tensorflow as tf
 import math
-import numpy as np
+
 import keras
-from constants import PredictionMethod
-from utils import calculate_predicted_matrix
+import numpy as np
+import tensorflow as tf
+
+from tie.constants import PredictionMethod
+from tie.utils import calculate_predicted_matrix
+
 from .recommender import Recommender
-import time
 
 
 class BPRRecommender(Recommender):
@@ -133,7 +135,6 @@ class BPRRecommender(Recommender):
 
         # for each u
         for u, count in value_to_count.items():
-
             # get
             potential_j = non_observations[u, :]
 
@@ -146,7 +147,6 @@ class BPRRecommender(Recommender):
         all_j = []
 
         for u in all_u:
-
             j = u_to_j[u].pop()
             all_j.append(j)
 
@@ -190,9 +190,10 @@ class BPRRecommender(Recommender):
 
         Args:
             data: An mxn tensor of training data
-            learning_rate: Learning rate for each gradient step performed on a single entity-item sample.
-            epochs: number of training epochs, where each the model is trained on the cardinality
-                of the dataset in each epoch.
+            learning_rate: Learning rate for each gradient step performed on a single
+                entity-item sample.
+            epochs: Number of training epochs, where each the model is trained on the
+                cardinality of the dataset in each epoch.
             regularization_coefficient: Coefficient on the L2 regularization term.
             method: The prediction method to use.
 
@@ -213,7 +214,6 @@ class BPRRecommender(Recommender):
         # initialize theta - done - init
         # repeat
         for iteration_count in range(num_iterations):
-
             # draw u, i, j from D_s
             u = all_u[iteration_count]
             i = all_i[iteration_count]
@@ -305,9 +305,10 @@ class BPRRecommender(Recommender):
             entity: A length-n sparse tensor of consisting of the new entity's
                 ratings for each item, indexed exactly as the items used to
                 train this model.
-            learning_rate: Learning rate for each gradient step performed on a single entity-item sample.
-            epochs: number of training epochs, where each the model is trained on the cardinality
-                dataset in each epoch.
+            learning_rate: Learning rate for each gradient step performed on a single
+                entity-item sample.
+            epochs: Number of training epochs, where each the model is trained on the
+                cardinality dataset in each epoch.
             regularization_coefficient: Coefficient on the L2 regularization term.
             method: The prediction method to use.
 
@@ -330,7 +331,6 @@ class BPRRecommender(Recommender):
         # initialize theta - done - init
         # repeat
         for iteration_count in range(num_iterations):
-
             # draw u, i, j from D_s
             # u isn't used since only predicting for new user
             i = all_i[iteration_count]

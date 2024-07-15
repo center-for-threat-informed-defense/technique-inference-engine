@@ -1,15 +1,16 @@
 import json
-import random
 import math
-from matrix import ReportTechniqueMatrix
-from utils import get_mitre_technique_ids_to_names
+import random
+
+from tie.matrix import ReportTechniqueMatrix
+from tie.utils import get_mitre_technique_ids_to_names
 
 
 class ReportTechniqueMatrixBuilder:
     """A builder for report technique matrices."""
 
     # Abstraction function:
-    # 	AF(combined_datset_filepath, enterprise_attack_filepath) = a builder for
+    # 	AF(combined_dataset_filepath, enterprise_attack_filepath) = a builder for
     #       ReportTechniqueMatrix objects which adds m reports from the json object
     #       located at combined_dataset_filepath, zero-indexing them according to their
     #       location in the json, and n techniques according to the cardinality of the
@@ -19,7 +20,7 @@ class ReportTechniqueMatrixBuilder:
     #   - len(combined_dataset_filepath) >= 0
     #   - len(enterprise_attack_filepath) >= 0
     # Safety from rep exposure:
-    #   - rep is private, and immutable and never reasssigned
+    #   - rep is private, and immutable and never reassigned
 
     def __init__(self, combined_dataset_filepath: str, enterprise_attack_filepath: str):
         """Initializes a ReportTechniqueMatrixBuilder object."""
@@ -39,7 +40,8 @@ class ReportTechniqueMatrixBuilder:
     def _get_report_techniques(self, filepath: str) -> tuple[frozenset[str]]:
         """Gets a set of all MITRE technique ids present in each report.
 
-        Reports are in order of appearance in the json combined dataset located at filepath.
+        Reports are in order of appearance in the json combined dataset located at
+        filepath.
 
         All techniques are returned, regardless of whether they are valid
         MITRE ATT&CK techniques.
@@ -59,7 +61,6 @@ class ReportTechniqueMatrixBuilder:
         report_techniques = []
 
         for report in reports:
-
             techniques = report["mitre_techniques"]
             report_techniques.append(frozenset(techniques.keys()))
 
@@ -101,7 +102,6 @@ class ReportTechniqueMatrixBuilder:
             report = reports[i]
 
             for mitre_technique_id in report:
-
                 if mitre_technique_id in techniques_to_index:
                     # campaign id, technique id
                     index = (i, techniques_to_index[mitre_technique_id])
@@ -123,22 +123,23 @@ class ReportTechniqueMatrixBuilder:
     def build_train_test_validation(
         self, test_ratio: float, validation_ratio: float
     ) -> tuple[ReportTechniqueMatrix, ReportTechniqueMatrix, ReportTechniqueMatrix]:
-        """Builds three ReportTechniqueMatrix for each of the training, test, and validation data.
+        """Builds three matrices for each of the training, test, and validation data.
 
         The ReportTechniqueMatrices for each of the test and validation datasets contain
-        test_ratio and validation_ratio proportion of the positive interactions from the dataset,
-        respectively.  The training data contains the remiander of the interactions.
+        test_ratio and validation_ratio proportion of the positive interactions from the
+        dataset, respectively.  The training data contains the remainder of the
+        interactions.
 
         Ensures that each report has at least one technique example.
         To support this, requires the number of reports m > (1-test_ratio-validation_ratio) * num_observations,
         where num_observations is the number of observed report-technique interactions.
 
         Args:
-            test_ratio: The ratio of positive interactions to include in the test dataset
-                compared to the total number of observed positive interactions.
+            test_ratio: The ratio of positive interactions to include in the test
+                dataset compared to the total number of observed positive interactions.
                 Requires 0 <= test_ratio <= 1.
-            validation_ratio: The ratio of positive interactions to include in the test dataset
-                compared to the total number of observed positive interactions.
+            validation_ratio: The ratio of positive interactions to include in the test
+                dataset compared to the total number of observed positive interactions.
                 Requires 0 <= test_ratio <= 1 and test_ratio + validation_ratio <= 1.
 
         Returns:

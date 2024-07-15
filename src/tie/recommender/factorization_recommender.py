@@ -1,14 +1,16 @@
 # Code adapted from https://colab.research.google.com/github/google/eng-edu/blob/main/ml/recommendation-systems/recommendation-systems.ipynb?utm_source=ss-recommendation-systems&utm_campaign=colab-external&utm_medium=referral&utm_content=recommendation-systems
 
-import tensorflow as tf
-import numpy as np
-import keras
 import copy
+
+import keras
+import numpy as np
+import tensorflow as tf
 from sklearn.metrics import mean_squared_error
 
+from tie.constants import PredictionMethod
+from tie.utils import calculate_predicted_matrix
+
 from .recommender import Recommender
-from constants import PredictionMethod
-from utils import calculate_predicted_matrix
 
 tf.config.run_functions_eagerly(True)
 tf.compat.v1.enable_eager_execution()
@@ -133,13 +135,13 @@ class FactorizationRecommender(Recommender):
         regularization_coefficient: float,
         gravity_coefficient: float,
     ) -> float:
-        """Gets the regularized loss function.
+        r"""Gets the regularized loss function.
 
         The regularized loss is the sum of:
         - The MSE between data and predictions.
         - A regularization term which is the average of the squared norm of each
-            entity embedding, plus the average of the squared norm of each item embedding
-            r = 1/m \sum_i ||U_i||^2 + 1/n \sum_j ||V_j||^2
+            entity embedding, plus the average of the squared norm of each item
+            embedding r = 1/m \sum_i ||U_i||^2 + 1/n \sum_j ||V_j||^2
         - A gravity term which is the average of the squares of all predictions.
             g = 1/(MN) \sum_{ij} (UV^T)_{ij}^2
 
@@ -171,7 +173,7 @@ class FactorizationRecommender(Recommender):
         return self._loss(data, predictions) + regularization_loss + gravity_loss
 
     def _calculate_mean_square_error(self, data: tf.SparseTensor) -> tf.Tensor:
-        """Calculates the mean squared error between observed values in the
+        r"""Calculates the mean squared error between observed values in the
         data and predictions from UV^T.
 
         MSE = \sum_{(i,j) \in \Omega} (data_{ij} U_i \dot V_j)^2
@@ -203,9 +205,10 @@ class FactorizationRecommender(Recommender):
             data: an mxn tensor of training data.
             epochs:
             learning_rate: the learning rate.
-            epochs: number of training epochs, where each the model is trained on the cardinality
-                dataset in each epoch.
-            regularization_coefficient: coefficient on the embedding regularization term.
+            epochs: Number of training epochs, where each the model is trained on the
+                cardinality dataset in each epoch.
+            regularization_coefficient: coefficient on the embedding regularization
+                term.
             gravity_coefficient: coefficient on the prediction regularization term.
 
         Mutates:
@@ -294,9 +297,10 @@ class FactorizationRecommender(Recommender):
                 ratings for each item, indexed exactly as the items used to
                 train this model.
             learning rate: the learning rate for SGD.
-            epochs: number of training epochs, where each the model is trained on the cardinality
-                dataset in each epoch.
-            regularization_coefficient: coefficient on the embedding regularization term.
+            epochs: Number of training epochs, where each the model is trained on the
+                cardinality dataset in each epoch.
+            regularization_coefficient: coefficient on the embedding regularization
+                term.
             gravity_coefficient: coefficient on the prediction regularization term.
             method: The prediction method to use.
 

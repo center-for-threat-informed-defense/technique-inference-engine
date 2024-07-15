@@ -1,18 +1,18 @@
 import copy
-import tensorflow as tf
-from constants import PredictionMethod
-from recommender import Recommender
-from matrix import ReportTechniqueMatrix
-from exceptions import TechniqueNotFoundException
-import pandas as pd
 import numpy as np
-from utils import (
+import pandas as pd
+import tensorflow as tf
+
+from tie.constants import PredictionMethod
+from tie.matrix import ReportTechniqueMatrix
+from tie.recommender import Recommender
+from tie.exceptions import TechniqueNotFoundException
+from tie.utils import (
     get_mitre_technique_ids_to_names,
     normalized_discounted_cumulative_gain,
     precision_at_k,
     recall_at_k,
 )
-import copy
 
 tf.config.run_functions_eagerly(True)
 assert tf.executing_eagerly()
@@ -30,7 +30,8 @@ class TechniqueInferenceEngine:
     # 	AF(training_data, test_data, model, enterprise_attack_filepath) =
     #       a technique inference engine to be trained using model on
     #       training_data and evaluated on test_data
-    #       according to the MITRE ATT&CK framework specified in enterprise_attack_filepath.
+    #       according to the MITRE ATT&CK framework specified in
+    #       enterprise_attack_filepath.
     # Rep invariant:
     # - training_data.shape == test_data.shape == validation_data.shape
     # - model is not None
@@ -57,7 +58,8 @@ class TechniqueInferenceEngine:
             test_data: the data on which to evaluate the model's performance.
             model: the model to train.
             prediction_method: the method to use for predictions.
-            enterprise_attack_filepath: filepath for the MITRE enterprise ATT&CK json information.
+            enterprise_attack_filepath: filepath for the MITRE enterprise ATT&CK json
+                information.
         """
         self._enterprise_attack_filepath = enterprise_attack_filepath
 
@@ -128,7 +130,8 @@ class TechniqueInferenceEngine:
             kwargs: mapping of hyperparameter to values over which to cross-validate.
 
         Returns:
-            A mapping of each kwarg to the value from the best hyperparameter combination.
+            A mapping of each kwarg to the value from the best hyperparameter
+            combination.
         """
 
         def parameter_cartesian_product(
@@ -138,13 +141,15 @@ class TechniqueInferenceEngine:
             """Yield cartesian product of all variables.
 
             Args:
-                variable_names: iterable of variables for which to generate combinations.
+                variable_names: iterable of variables for which to generate
+                    combinations.
                 values: the values over which to generate combinations such that
                     values[i] contains all values for variables[i].
 
             Yields:
-                A dictionary mapping each variable to a value such that each dictionary yielded
-                is a unique combination of the cartesian product of values over variables.
+                A dictionary mapping each variable to a value such that each dictionary
+                yielded is a unique combination of the cartesian product of values over
+                variables.
             """
             assert len(variables_names) == len(values)
 
@@ -153,9 +158,7 @@ class TechniqueInferenceEngine:
             if len(variables_names) == 0:
                 yield {}
             else:
-
                 for value in values[0]:
-
                     for remaining_parameters in parameter_cartesian_product(
                         variables_names[1:], values[1:]
                     ):
@@ -170,12 +173,10 @@ class TechniqueInferenceEngine:
         for hyperparameters in parameter_cartesian_product(
             variable_names, variable_values
         ):
-
             self.fit(**hyperparameters)
             score = recall_at_k(self.predict(), self._validation_data.to_pandas(), k=20)
 
             if score > best_score:
-
                 best_score = score
                 best_hyperparameters = hyperparameters
 
@@ -184,7 +185,7 @@ class TechniqueInferenceEngine:
         return best_hyperparameters
 
     def precision(self, k: int = 10) -> float:
-        """Calculates the precision of the top k model predictions.
+        r"""Calculates the precision of the top k model predictions.
 
         Precision is defined as the average fraction of items in the top k predictions
         which appear in the test set.  If k < the number of items in the test set for a
@@ -202,14 +203,15 @@ class TechniqueInferenceEngine:
         return precision_at_k(self.predict(), self._test_data.to_pandas(), k)
 
     def recall(self, k: int = 10) -> float:
-        """Calculates the recall of the top k model predictions.
+        r"""Calculates the recall of the top k model predictions.
 
         Recall is defined as the average fraction of items in the test set which appear
         in the top k predictions.  If k >= the number of items in the test set for a
         particular user, then the maximum recall is 1.0.
 
         Mathematically, it is defined as
-        recall@k = (1\m) \sum_u (\sum_{i=1}^k [[pred_i in test set]] / |test set for entity i|
+        recall@k =
+            (1\m) \sum_u (\sum_{i=1}^k [[pred_i in test set]] / |test set for entity i|
 
         Args:
             k: the number of predictions to include in the top k.  Requires k > 0.
@@ -220,7 +222,7 @@ class TechniqueInferenceEngine:
         return recall_at_k(self.predict(), self._test_data.to_pandas(), k)
 
     def normalized_discounted_cumulative_gain(self, k: int = 10) -> float:
-        """Computes the Normalized Discounted Cumulative Gain (NDCG) on the test set.
+        r"""Computes the Normalized Discounted Cumulative Gain (NDCG) on the test set.
 
         NDCG measures the goodness of a ranking based on the relative ordering of
         test set entries in the top-k predictions of the model.  Test set predictions
@@ -253,8 +255,9 @@ class TechniqueInferenceEngine:
         likely in the report than technique b.
 
         Returns:
-            A dataframe with the same shape, index, and columns as training_data and test_data
-                containing the predictions values for each report and technique combination.
+            A dataframe with the same shape, index, and columns as training_data and
+            test_data containing the predictions values for each report and technique
+            combination.
         """
         predictions = self._model.predict(method=self._prediction_method)
 
@@ -278,11 +281,13 @@ class TechniqueInferenceEngine:
                 test_data.
 
         Returns:
-            A length len(training_data) dataframe indexed by technique id containing the following columns:
-                - predictions, the predicted value for that echnique
+            A length len(training_data) dataframe indexed by technique id containing the
+            following columns:
+                - predictions, the predicted value for that Technique
                 - training_data: 1 if technique was present in the input, 0 otherwise
                 - test_data: all 0's since no test data for cold start predictions
-                - technique_name: the technique name for the identifying technique in the index
+                - technique_name: the technique name for the identifying technique in
+                  the index
         """
         report_data = pd.DataFrame(
             {
@@ -308,11 +313,13 @@ class TechniqueInferenceEngine:
                 in the new report.
 
         Returns:
-            A length n dataframe indexed by technique id containing the following columns:
-                - predictions, the predicted value for that echnique
+            A length n dataframe indexed by technique id containing the following
+            columns:
+                - predictions, the predicted value for that Technique
                 - training_data: 1 if technique was present in the input, 0 otherwise
                 - test_data: all 0's since no test data for cold start predictions
-                - technique_name: the technique name for the identifying technique in the index
+                - technique_name: the technique name for the identifying technique in
+                  the index
         """
         # need to turn into the embeddings in the original matrix
         all_technique_ids = self._training_data.technique_ids

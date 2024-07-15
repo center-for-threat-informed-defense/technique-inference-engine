@@ -1,6 +1,6 @@
-import tensorflow as tf
 import numpy as np
 import pandas as pd
+import tensorflow as tf
 
 
 class ReportTechniqueMatrix:
@@ -63,7 +63,7 @@ class ReportTechniqueMatrix:
         return len(self._technique_ids)
 
     @property
-    def shape(self) -> tuple[int]:
+    def shape(self) -> tuple[int, int]:
         """Gets the shape of the matrix."""
         return (self.m, self.n)
 
@@ -115,7 +115,7 @@ class ReportTechniqueMatrix:
         )
 
     def mask(self, indices: frozenset[tuple[int]]):  # -> ReportTechniqueMatrix:
-        """Generates a new ReportTechniqueMatrix object with only a subset of the indices.
+        """Generates a new ReportTechniqueMatrix object with a subset of the indices.
 
         Args:
             indices: indices to include in the new object.
@@ -127,11 +127,9 @@ class ReportTechniqueMatrix:
         new_values = []
 
         for i in range(len(self._indices)):
-
             old_index = self._indices[i]
 
             if old_index in indices:
-
                 old_value = self._values[i]
                 new_indices.append(old_index)
                 new_values.append(old_value)

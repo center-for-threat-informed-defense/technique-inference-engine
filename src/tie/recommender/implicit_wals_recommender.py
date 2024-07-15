@@ -1,41 +1,40 @@
-import math
-from .recommender import Recommender
 import numpy as np
 import tensorflow as tf
-from implicit.bpr import BayesianPersonalizedRanking
+from implicit.als import AlternatingLeastSquares
 from scipy import sparse
 from sklearn.metrics import mean_squared_error
-from constants import PredictionMethod
-from utils import calculate_predicted_matrix
+
+from tie.constants import PredictionMethod
+from tie.utils import calculate_predicted_matrix
+
+from .recommender import Recommender
 
 
-class ImplicitBPRRecommender:
-    """A matrix factorization recommender model to suggest items for a particular entity."""
+class ImplicitWalsRecommender(Recommender):
+    """A WALS matrix factorization collaborative filtering recommender model."""
 
     # Abstraction function:
-    #   AF(m, n, k, model, num_new_users) = model to be trained with embedding dimension k
-    #       on m entities and n items if model is None,
-    #       or model trained on such data and with predictions for num_new_users
-    #       if model is not None
+    # AF(model, m, n, k, num_new_users) = a matrix factorization collaborative filtering
+    #   recommendation model of embedding dimension k with m entity embeddings
+    #   model.user_factors and n item embeddings model.item_factors. The model has
+    #   performed cold start prediction for num_new_users.
     # Rep invariant:
     #   - m > 0
     #   - n > 0
     #   - k > 0
-    #   - num_new_users >= 0
     # Safety from rep exposure:
     #   - k is private and immutable
     #   - model is never returned
 
-    def __init__(self, m: int, n: int, k: int):
-        """Initializes an ImplicitBPRRecommender object.
+    def __init__(self, m: int, n: int, k: int = 10):
+        """Initializes a new ImplicitWALSRecommender object.
 
         Args:
             m: number of entities.  Requires m > 0.
             n: number of items.  Requires n > 0.
-            k: the embedding dimension.  Requires k > 0.
+            k: embedding dimension.  Requires k > 0.
         """
-        # assert preconditions
-        assert k > 0
+        assert m > 0
         assert n > 0
         assert k > 0
 
@@ -44,6 +43,7 @@ class ImplicitBPRRecommender:
         self._k = k
         self._model = None
 
+        # for tracking how many new users we've seen so far
         self._num_new_users = 0
 
         self._checkrep()
@@ -56,12 +56,10 @@ class ImplicitBPRRecommender:
         assert self._n > 0
         #   - k > 0
         assert self._k > 0
-        #   - num_new_users >= 0
-        assert self._num_new_users >= 0
 
     @property
     def U(self) -> np.ndarray:
-        """Gets U as a factor of the factorization UV^T.  Requires model to be trained."""
+        """Gets U as a factor of the factorization UV^T. Model must be trained."""
         assert self._model
 
         self._checkrep()
@@ -69,7 +67,7 @@ class ImplicitBPRRecommender:
 
     @property
     def V(self) -> np.ndarray:
-        """Gets V as a factor of the factorization UV^T.  Requires model to be trained."""
+        """Gets V as a factor of the factorization UV^T. Model must be trained."""
         assert self._model
 
         self._checkrep()
@@ -78,31 +76,31 @@ class ImplicitBPRRecommender:
     def fit(
         self,
         data: tf.SparseTensor,
-        learning_rate: float,
         epochs: int,
-        regularization_coefficient: float,
-        **kwargs,
+        c: float = 0.024,
+        regularization_coefficient: float = 0.01,
     ):
         """Fits the model to data.
 
         Args:
-            data: An mxn tensor of training data.
-            learning_rate: The learning rate.
-                Requires learning_rate > 0.
-            epochs: Number of training epochs, where each the model is trained on the cardinality
+            data: an mxn tensor of training data.
+            epochs: number of training epochs, where each the model is trained on the cardinality
                 dataset in each epoch.
-            regularization_coefficient: Coefficient on the embedding regularization term.
+            c: weight for negative training examples.  Requires 0 < c < 1.
+            regularization_coefficient: coefficient on the embedding regularization
+                term.
 
         Mutates:
             The recommender to the new trained state.
         """
+        assert 0 < c < 1
 
-        self._model = BayesianPersonalizedRanking(
+        alpha = (1 / c) - 1
+        self._model = AlternatingLeastSquares(
             factors=self._k,
-            learning_rate=learning_rate,
             regularization=regularization_coefficient,
             iterations=epochs,
-            verify_negative_samples=True,
+            alpha=alpha,
         )
 
         row_indices = tuple(index[0] for index in data.indices)
@@ -167,4 +165,38 @@ class ImplicitBPRRecommender:
         method: PredictionMethod = PredictionMethod.DOT,
         **kwargs,
     ) -> np.array:
-        raise NotImplementedError
+        """Recommends items to an unseen entity.
+
+        Args:
+            entity: A length-n sparse tensor of consisting of the new entity's
+                ratings for each item, indexed exactly as the items used to
+                train this model.
+            method: The prediction method to use.
+
+
+        Returns:
+            An array of predicted values for the new entity.
+        """
+        # just need an item 0 for all entity indices
+        row_indices = np.zeros(len(entity.indices))
+        column_indices = entity.indices[:, 0]
+
+        sparse_data = sparse.csr_matrix(
+            (entity.values, (row_indices, column_indices)), shape=(1, entity.shape[0])
+        )
+
+        user_id = self._m + self._num_new_users
+
+        self._model.partial_fit_users((user_id,), sparse_data)
+
+        self._num_new_users += 1
+
+        self._checkrep()
+
+        return np.squeeze(
+            calculate_predicted_matrix(
+                np.expand_dims(self._model.user_factors[user_id], axis=1).T,
+                self._model.item_factors,
+                method,
+            )
+        )
