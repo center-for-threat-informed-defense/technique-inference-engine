@@ -3,7 +3,6 @@ import math
 import numpy as np
 import pandas as pd
 from constants import PredictionMethod
-from sklearn.metrics import ndcg_score
 
 
 def get_mitre_technique_ids_to_names(stix_filepath: str) -> dict[str, str]:
