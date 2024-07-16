@@ -190,7 +190,9 @@ class WalsRecommender(Recommender):
             data: An mxn tensor of training data.
             epochs: Number of training epochs, where each the model is trained on the cardinality
                 dataset in each epoch.
-            c: Weight for negative training examples.  Requires 0 < c < 1.
+            c: Weight for negative training examples in the loss function,
+                ie each positive example takes weight 1, while negative examples take
+                discounted weight c.  Requires 0 < c < 1.
             regularization_coefficient: Coefficient on the embedding regularization term.
 
         Mutates:
@@ -277,7 +279,9 @@ class WalsRecommender(Recommender):
             entity: A length-n sparse tensor of consisting of the new entity's
                 ratings for each item, indexed exactly as the items used to
                 train this model.
-            c: Weight for negative training examples.  Requires 0 < c < 1.
+            c: Weight for negative training examples in the loss function,
+                ie each positive example takes weight 1, while negative examples take
+                discounted weight c.  Requires 0 < c < 1.
             regularization_coefficient: Coefficient on the embedding regularization term.
             method: The prediction method to use.
 
