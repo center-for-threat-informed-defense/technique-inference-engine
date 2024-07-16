@@ -3,6 +3,7 @@ import tensorflow as tf
 from constants import PredictionMethod
 from recommender import Recommender
 from matrix import ReportTechniqueMatrix
+from exceptions import TechniqueNotFoundException
 import pandas as pd
 import numpy as np
 from utils import (
@@ -329,9 +330,16 @@ class TechniqueInferenceEngine:
             all_technique_ids[i]: i for i in range(len(all_technique_ids))
         }
 
-        technique_indices = list(
-            set(technique_ids_to_indices[technique] for technique in techniques)
-        )
+        technique_indices = set()
+        for technique in techniques:
+            if technique in technique_ids_to_indices:
+                technique_indices.add(technique)
+            else:
+                raise TechniqueNotFoundException(
+                    f"Model has not been trained on {technique}."
+                )
+
+        technique_indices = list(technique_indices)
         technique_indices.sort()
         technique_indices_2d = np.expand_dims(np.array(technique_indices), axis=1)
 
