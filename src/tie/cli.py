@@ -9,7 +9,7 @@ from tie.matrix_builder import ReportTechniqueMatrixBuilder
 from tie.recommender import WalsRecommender
 
 
-def export_model(dataset_filepath: str, outfile: str):
+def export_model(dataset_filepath: str, enterprise_attack_filepath: str, outfile: str):
     """Trains the TechniqueInferenceEngine and exports the model.
 
     Trains the TechniqueInferenceEngine based on dataset and exports the model to
@@ -17,6 +17,8 @@ def export_model(dataset_filepath: str, outfile: str):
 
     Args:
         dataset_filepath: A JSON file formatted according the provided specification.
+        enterprise_attack_filepath: A JSON file containing an Enterprise ATT&CK STIX
+            bundle.
         outfile: A .npz file in which to save the resulting embeddings.
 
     Mutates:
@@ -29,7 +31,6 @@ def export_model(dataset_filepath: str, outfile: str):
             - technique_ids: Length-n array of the n technique ids
     """
     # could be added to arguments later
-    enterprise_attack_filepath = "./enterprise-attack.json"
     validation_ratio = 0.1
     test_ratio = 0.2
     k = 4
@@ -115,12 +116,13 @@ def main():
         epilog="For further help and support, please reach out to CTID.",
     )
 
-    parser.add_argument("-f", "--filename", required=True)
+    parser.add_argument("-r", "--report-data", required=True)
+    parser.add_argument("-a", "--attack-data", required=True)
     parser.add_argument("-o", "--outfile", required=True)
 
     args = parser.parse_args()
 
-    export_model(args.filename, args.outfile)
+    export_model(args.report_data, args.attack_data, args.outfile)
 
 
 if __name__ == "__main__":
