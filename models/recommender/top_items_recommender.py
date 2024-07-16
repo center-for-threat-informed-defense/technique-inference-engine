@@ -68,8 +68,7 @@ class TopItemsRecommender(Recommender):
         # assert 1d array
         assert len(item_frequencies.shape) == 1
 
-        ranks = self._item_frequencies.argsort().argsort()
-        scaled_ranks = ranks / (len(ranks) - 1)
+        scaled_ranks = item_frequencies / (len(item_frequencies) - 1)
 
         assert scaled_ranks.shape == item_frequencies.shape
 
@@ -84,7 +83,9 @@ class TopItemsRecommender(Recommender):
         technique_frequency = technique_matrix.sum(axis=0)
         assert technique_frequency.shape == (self._n,)
 
-        self._item_frequencies = technique_frequency
+        ranks = technique_frequency.argsort().argsort()
+
+        self._item_frequencies = ranks
         self._checkrep()
 
     def evaluate(self, test_data: tf.SparseTensor, **kwargs) -> float:
