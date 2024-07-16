@@ -45,6 +45,15 @@ export class NpzFile {
     }
 
     /**
+     * Disposes all Tensors contained within the {@link NpzFile}.
+     */
+    public dispose() {
+        for (const tensor of this.tensors.values()) {
+            tensor.dispose();
+        }
+    }
+
+    /**
      * Iterates over the contents of a zip File.
      * @param blob
      *  A blob contain a zip file.

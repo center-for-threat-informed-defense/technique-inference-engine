@@ -1,7 +1,7 @@
 import { NpzFile } from "../../Numpy";
+import { Tensor } from "@tensorflow/tfjs";
 import { ModelSource } from "./ModelSource";
 import { ManagedModel } from "./ManagedModel";
-import { Tensor, tensor } from "@tensorflow/tfjs";
 
 export class RemoteModelSource extends ModelSource {
 
@@ -14,6 +14,16 @@ export class RemoteModelSource extends ModelSource {
      * The name of the exported V component.
      */
     private static EXPORTED_V_NAME = "V";
+
+    /**
+     * The name of the exported technique ids.
+     */
+    private static EXPORTED_IDS_NAME = "technique_ids";
+
+    /**
+     * The name of the exported hyperparameters.
+     */
+    private static EXPORTED_PARAMS_NAME = "hyperparameters";
 
 
     /**
@@ -46,40 +56,64 @@ export class RemoteModelSource extends ModelSource {
         if (file.status === 200) {
             const npzFile = await NpzFile.fromBlob(await file.blob());
             if (!npzFile.tensors.has(RemoteModelSource.EXPORTED_U_NAME)) {
-                throw new Error(`Cannot locate 'U' in NPZ file at '${this._url}'.`)
+                const err = `Cannot locate 'U' in NPZ file at '${this._url}'.`;
+                throw new Error(err)
             }
             if (!npzFile.tensors.has(RemoteModelSource.EXPORTED_V_NAME)) {
-                throw new Error(`Cannot locate 'V' in NPZ file at '${this._url}'.`)
+                const err = `Cannot locate 'V' in NPZ file at '${this._url}'.`;
+                throw new Error(err);
+            }
+            if (!npzFile.tensors.has(RemoteModelSource.EXPORTED_IDS_NAME)) {
+                const err = `Cannot locate technique ids in NPZ file at '${this._url}'.`;
+                throw new Error(err);
+            }
+            if (!npzFile.tensors.has(RemoteModelSource.EXPORTED_PARAMS_NAME)) {
+                const err = `Cannot locate hyperparameters in NPZ file at '${this._url}'.`;
+                throw new Error(err);
             }
             // Parse U component
-            const U = npzFile.tensors.get(RemoteModelSource.EXPORTED_U_NAME)!;
-            if (!(U instanceof Tensor) || U.dtype !== "float32") {
+            const u = npzFile.tensors.get(RemoteModelSource.EXPORTED_U_NAME)!;
+            if (!(u instanceof Tensor) || u.dtype !== "float32") {
                 throw new Error("Expected 'U' to be of type 'float32'.");
             }
+            const U = u.clone();
             // Parse V component
             const v = npzFile.tensors.get(RemoteModelSource.EXPORTED_V_NAME)!;
-            if (!(v instanceof Tensor) || v.dtype !== "string") {
-                throw new Error("Expected 'V' to be of type 'string'.");
+            if (!(v instanceof Tensor) || v.dtype !== "float32") {
+                throw new Error("Expected 'V' to be of type 'float32'.");
             }
-            if (v.shape.length !== 2) {
-                throw new Error("Expected 'V' to be 2-dimensional matrix.");
+            const V = v.clone();
+            // Parse Technique IDs
+            const IDs = npzFile.tensors.get(RemoteModelSource.EXPORTED_IDS_NAME)!;
+            if (!(IDs instanceof Tensor) || IDs.dtype !== "string") {
+                throw new Error("Expected technique ids to be of type 'string'.");
             }
-            // Separate header from data
-            const data = v.dataSync() as any as string[];
-            const f32 = new Float32Array(v.shape[0] * (v.shape[1] - 1));
             const T = new Map<string, number>();
-            const V = tensor(f32, [v.shape[0], v.shape[1] - 1], "float32");
-            for (let i = 0, j = 0; i < data.length; i++) {
-                if (i % v.shape[1] === 0) {
-                    T.set(data[i], j++);
-                } else {
-                    f32[i - j] = parseFloat(data[i]);
-                }
+            const ids = IDs.dataSync() as any as string[];
+            for (let i = 0; i < ids.length; i++) {
+                T.set(ids[i], i);
             }
-            // Free intermediate tensors from memory
-            v.dispose();
+            // Parse Hyperparameters
+            const H = npzFile.tensors.get(RemoteModelSource.EXPORTED_PARAMS_NAME)!;
+            if ((H instanceof Tensor) || H.length !== 1) {
+                throw new Error("Expected hyperparameters to be a fielded tensor.");
+            }
+            const [C, RC] = ["c", "regularization_coefficient"].map(
+                key => {
+                    const v = H[0][key];
+                    if (v instanceof Tensor && v.dtype === "float32" && v.size === 1) {
+                        return v.dataSync()[0];
+                    } else {
+                        throw new Error(
+                            `Expected '${key}' to be of type 'float32' with one value.`
+                        )
+                    }
+                }
+            );
+            // Dispose of NPZ File
+            npzFile.dispose();
             // Create trained model
-            return this.newModel(T, U, V);
+            return this.newModel(T, U, V, C, RC);
         } else {
             throw new Error(`Failed to fetch '${this._url}'. [Status: ${file.status}]`);
         }

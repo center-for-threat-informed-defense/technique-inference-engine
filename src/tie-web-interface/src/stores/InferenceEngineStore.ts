@@ -6,7 +6,6 @@ import {
   RemoteEnrichmentSource,
   RemoteModelSource,
   TechniqueInferenceEngine,
-  WalsRecommender,
   type EnrichmentFile,
 } from '@/assets/scripts/TechniqueInferenceEngine';
 
@@ -14,7 +13,6 @@ export const useInferenceEngineStore = defineStore('inferenceEngineStore', {
   state: () => ({
     inferenceEngine: markRaw(
       new TechniqueInferenceEngine(
-        new WalsRecommender(0.5, 0.05),
         new RemoteModelSource(Configuration.trained_model, true),
         new RemoteEnrichmentSource(Configuration.enrichment_file, true)
       )

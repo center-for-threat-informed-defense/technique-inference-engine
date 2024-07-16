@@ -18,6 +18,16 @@ export class Model {
     public V: Tensor;
 
     /**
+     * The trained model's `c` value.
+     */
+    public C: number;
+
+    /**
+     * The trained model's regularization coefficient.
+     */
+    public RC: number;
+
+    /**
      * If true, the model cannot be disposed.
      */
     protected disposalLocked: boolean;
@@ -31,15 +41,23 @@ export class Model {
      *  An {@link NpyArray} containing the 'U' component of the trained model.
      * @param V
      *  An {@link NpyArray} containing the 'V' component of the trained model.
+     * @param C
+     *  The trained model's `c` value.
+     * @param RC
+     *  The trained model's regularization coefficient.
      */
     constructor(
         techniques: Map<string, number>,
         U: Tensor,
-        V: Tensor
+        V: Tensor,
+        C: number,
+        RC: number
     ) {
         this.techniques = techniques;
         this.U = U;
         this.V = V;
+        this.C = C;
+        this.RC = RC;
         this.disposalLocked = false;
     }
 

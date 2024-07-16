@@ -12,11 +12,21 @@ export abstract class ModelSource extends DataSource<ManagedModel> {
      *  A {@link Tensor} containing the 'U' component of the trained model.
      * @param V
      *  A {@link Tensor} containing the 'V' component of the trained model.
+     * @param C
+     *  The trained model's `c` value.
+     * @param RC
+     *  The trained model's regularization coefficient.
      * @returns
      *  The configured {@link ManagedModel}.
      */
-    protected newModel(T: Map<string, number>, U: Tensor, V: Tensor): ManagedModel {
-        return new ManagedModel(T, U, V).lockDisposal(this.cachingEnabled);
+    protected newModel(
+        T: Map<string, number>,
+        U: Tensor,
+        V: Tensor,
+        C: number,
+        RC: number
+    ): ManagedModel {
+        return new ManagedModel(T, U, V, C, RC).lockDisposal(this.cachingEnabled);
     }
 
     /**

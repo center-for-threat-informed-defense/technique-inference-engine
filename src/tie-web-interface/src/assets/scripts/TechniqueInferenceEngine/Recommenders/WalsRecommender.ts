@@ -104,7 +104,7 @@ export class WalsRecommender extends Recommender {
         this.assert(p === data.shape[0]);
         this.assert(q === undefined || 0 < q);
         this.assert(0 < alpha);
-        this.assert(0 < regularization_coefficient);
+        this.assert(0 <= regularization_coefficient);
 
         const V_T_C_I_V = async (V: Tensor, c_array: Tensor) => {
             const k = V.shape[1]!;

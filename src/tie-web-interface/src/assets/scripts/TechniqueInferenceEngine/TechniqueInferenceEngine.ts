@@ -1,14 +1,9 @@
+import { WalsRecommender } from "./Recommenders";
 import { getBackend, tensor, tidy } from "@tensorflow/tfjs";
 import { PredictedTechniques, PredictedTechniquesMetadata, type PredictedTechnique } from "./Results";
-import type { Recommender } from "./Recommenders";
 import type { DataSource, EnrichmentFile, Model } from "./DataSource";
 
 export class TechniqueInferenceEngine {
-
-    /**
-     * The engine's underlying recommender model.
-     */
-    public readonly recommender: Recommender;
 
     /**
      * The engine's {@link Model}'s source.
@@ -31,11 +26,9 @@ export class TechniqueInferenceEngine {
      *  The engine's {@link EnrichmentFile}'s source.
      */
     constructor(
-        recommender: Recommender,
         modelSource: DataSource<Model>,
         enrichmentSource: DataSource<EnrichmentFile>,
     ) {
-        this.recommender = recommender;
         this.modelSource = modelSource;
         this.enrichmentSource = enrichmentSource;
     }
@@ -99,7 +92,8 @@ export class TechniqueInferenceEngine {
         );
 
         // Perform predictions
-        const predictionsTensor = await this.recommender.predictNewEntity(
+        const recommender = new WalsRecommender(model.C, model.RC);
+        const predictionsTensor = await recommender.predictNewEntity(
             techniquesTensor, model.U, model.V
         );
 
