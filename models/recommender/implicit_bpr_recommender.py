@@ -80,7 +80,7 @@ class ImplicitBPRRecommender:
         data: tf.SparseTensor,
         learning_rate: float,
         num_iterations: int,
-        regularization: float,
+        regularization_coefficient: float,
         **kwargs,
     ):
         """Fits the model to data.
@@ -91,7 +91,7 @@ class ImplicitBPRRecommender:
                 Requires learning_rate > 0.
             num_iterations: number of training iterations to execute.
                 Requires num_iterations > 0.
-            regularization: coefficient on the embedding regularization term.
+            regularization_coefficient: coefficient on the embedding regularization term.
 
         Mutates:
             The recommender to the new trained state.
@@ -100,7 +100,7 @@ class ImplicitBPRRecommender:
         self._model = BayesianPersonalizedRanking(
             factors=self._k,
             learning_rate=learning_rate,
-            regularization=regularization,
+            regularization=regularization_coefficient,
             iterations=num_iterations,
             verify_negative_samples=True,
         )
