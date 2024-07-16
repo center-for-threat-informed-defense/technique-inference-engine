@@ -323,7 +323,7 @@ class BPRRecommender(Recommender):
             loc=0, scale=math.sqrt(1 / self._U.shape[1]), size=(1, self._U.shape[1])
         )
 
-        all_u, all_i, all_j = self._sample_dataset(
+        _, all_i, all_j = self._sample_dataset(
             tf.expand_dims(new_entity, axis=0), num_samples=num_iterations
         )
 
@@ -332,7 +332,7 @@ class BPRRecommender(Recommender):
         for iteration_count in range(num_iterations):
 
             # draw u, i, j from D_s
-            u = all_u[iteration_count]
+            # u isn't used since only predicting for new user
             i = all_i[iteration_count]
             j = all_j[iteration_count]
 
