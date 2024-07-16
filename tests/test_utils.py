@@ -3,6 +3,7 @@ import math
 import pandas as pd
 from models import utils
 import numpy as np
+from sklearn.metrics import ndcg_score
 
 
 class TestPrecisionAtK(unittest.TestCase):
@@ -365,3 +366,21 @@ class TestNormalizedDiscountedCumulativeGain(unittest.TestCase):
         ndcg = utils.normalized_discounted_cumulative_gain(predictions, test_data, k=k)
 
         self.assertEqual(expected_ndcg, ndcg)
+
+    # BENCHMARK TESTING
+
+    def test_ndcg_benchmark(self):
+        """Benchmark against sklearn NDCG."""
+
+        np.random.seed(9)
+        data_size = (1, 13)
+        k = 7
+
+        predictions = pd.DataFrame(np.random.normal(size=data_size))
+        test_data = pd.DataFrame(np.random.binomial(n=1, p=0.2, size=data_size))
+
+        ndcg = utils.normalized_discounted_cumulative_gain(predictions, test_data, k=k)
+
+        sklearn_ndcg = ndcg_score(test_data, predictions, k=7)
+
+        self.assertAlmostEqual(sklearn_ndcg, ndcg, delta=0.00001)

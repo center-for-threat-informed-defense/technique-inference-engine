@@ -3,6 +3,7 @@ import math
 import numpy as np
 import pandas as pd
 from constants import PredictionMethod
+from sklearn.metrics import ndcg_score
 
 
 def get_mitre_technique_ids_to_names(stix_filepath: str) -> dict[str, str]:
@@ -170,8 +171,8 @@ def normalized_discounted_cumulative_gain(
         return sum(1 / math.log2(i + 1) for i in range(1, min(test_size, k) + 1))
 
     user_idcg = test_set_size.apply(lambda x: max_idcg(x, k))
-    assert not np.any(np.isnan(user_idcg))
-    idcg = user_idcg.mean()
+
+    idcg = np.mean(np.where(lambda x: x > 0, user_idcg, np.nan))
 
     prediction_ranking = predictions.rank(axis=1, method="first", ascending=False)
     assert m, 1 == prediction_ranking.shape
@@ -188,7 +189,9 @@ def normalized_discounted_cumulative_gain(
     # in test set or rank should never be nan
     assert not np.any(np.isnan(dcg))
 
-    dcg = np.mean(np.sum(dcg, axis=1))
+    entity_dcg = np.sum(dcg, axis=1)
+    # only count for test
+    dcg = np.mean(np.where(lambda x: x > 0, entity_dcg, np.nan))
 
     return dcg / idcg
 
