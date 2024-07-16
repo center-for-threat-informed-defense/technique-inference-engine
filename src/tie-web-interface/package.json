@@ -10,7 +10,7 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "build-model": "cd ../.. && poetry run python ./src/tie-web-interface/build_tools/compile_model.py",
+    "build-model": "poetry run export-tie -r ../../data/combined_dataset_full_frequency.json -a ../../data/stix/enterprise-attack.json -o ./public/app.trained.model.zip",
     "update-enrichment": "node ./build_tools/update_enrichment_file.cjs"
   },
   "dependencies": {
