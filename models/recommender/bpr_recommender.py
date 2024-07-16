@@ -183,7 +183,7 @@ class BPRRecommender(Recommender):
         self,
         data: tf.SparseTensor,
         learning_rate: float,
-        num_iterations: int,
+        epochs: int,
         regularization_coefficient: float,
     ):
         """Fits the model to data.
@@ -191,8 +191,8 @@ class BPRRecommender(Recommender):
         Args:
             data: An mxn tensor of training data
             learning_rate: Learning rate for each gradient step performed on a single entity-item sample.
-            num_iterations: Number of training iterations, where each iteration corresponds to a single
-                entity-item sample from the dataset.
+            epochs: number of training epochs, where each the model is trained on the cardinality
+                of the dataset in each epoch.
             regularization_coefficient: Coefficient on the L2 regularization term.
             method: The prediction method to use.
 
@@ -205,6 +205,8 @@ class BPRRecommender(Recommender):
         data = tf.sparse.reorder(data)
         data = tf.sparse.to_dense(data)
         data = data.numpy()
+
+        num_iterations = epochs * data.shape[0] * data.shape[1]
 
         all_u, all_i, all_j = self._sample_dataset(data, num_samples=num_iterations)
 
@@ -292,7 +294,7 @@ class BPRRecommender(Recommender):
         self,
         entity: tf.SparseTensor,
         learning_rate: float,
-        num_iterations: int,
+        epochs: int,
         regularization_coefficient: float,
         method: PredictionMethod = PredictionMethod.DOT,
         **kwargs,
@@ -304,8 +306,8 @@ class BPRRecommender(Recommender):
                 ratings for each item, indexed exactly as the items used to
                 train this model.
             learning_rate: Learning rate for each gradient step performed on a single entity-item sample.
-            num_iterations: Number of training iterations, where each iteration corresponds to a single
-                entity-item sample from the dataset.
+            epochs: number of training epochs, where each the model is trained on the cardinality
+                dataset in each epoch.
             regularization_coefficient: Coefficient on the L2 regularization term.
             method: The prediction method to use.
 
@@ -314,6 +316,8 @@ class BPRRecommender(Recommender):
         """
         new_entity = tf.sparse.reorder(entity)
         new_entity = tf.sparse.to_dense(new_entity)
+
+        num_iterations = epochs * len(new_entity)
 
         new_entity_embedding = np.random.normal(
             loc=0, scale=math.sqrt(1 / self._U.shape[1]), size=(1, self._U.shape[1])

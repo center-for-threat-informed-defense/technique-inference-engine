@@ -75,7 +75,7 @@ class ImplicitWalsRecommender(Recommender):
     def fit(
         self,
         data: tf.SparseTensor,
-        num_iterations: int = 20,
+        epochs: int,
         c: float = 0.024,
         regularization_coefficient: float = 0.01,
     ):
@@ -83,7 +83,8 @@ class ImplicitWalsRecommender(Recommender):
 
         Args:
             data: an mxn tensor of training data.
-            num_iterations: number of training iterations to execute.
+            epochs: number of training epochs, where each the model is trained on the cardinality
+                dataset in each epoch.
             c: weight for negative training examples.  Requires 0 < c < 1.
             regularization_coefficient: coefficient on the embedding regularization term.
 
@@ -96,7 +97,7 @@ class ImplicitWalsRecommender(Recommender):
         self._model = AlternatingLeastSquares(
             factors=self._k,
             regularization=regularization_coefficient,
-            iterations=num_iterations,
+            iterations=epochs,
             alpha=alpha,
         )
 

@@ -103,17 +103,7 @@ class TechniqueInferenceEngine:
     def fit(self, **kwargs) -> float:
         """Fit the model to the data.
 
-        Args:
-            learning_rate: learning rate for the optimizer.
-            num_iterations: number of iterations for the optimizer.
-            regularization_coefficient: coefficient for the regularization term, which
-                is the sum of the average squared magnitude of each of both the
-                technique and report embeddings.
-            gravity_coefficient: coefficient for the gravity term, which is the average
-                of the squared entries of the prediction matrix, or alternatively,
-                the squared Frobenius norm of the prediction matrix P divided by the number
-                of entries in P.  Note that this is proportional to penalizing the sum
-                of the squares of the singular values of P.
+        Kwargs: Model specific args.
 
         Returns:
             The MSE of the prediction matrix, as determined by the test set.
@@ -333,7 +323,7 @@ class TechniqueInferenceEngine:
         technique_indices = set()
         for technique in techniques:
             if technique in technique_ids_to_indices:
-                technique_indices.add(technique)
+                technique_indices.add(technique_ids_to_indices[technique])
             else:
                 raise TechniqueNotFoundException(
                     f"Model has not been trained on {technique}."

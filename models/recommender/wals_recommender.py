@@ -180,7 +180,7 @@ class WalsRecommender(Recommender):
     def fit(
         self,
         data: tf.SparseTensor,
-        num_iterations: int = 20,
+        epochs: int,
         c: float = 0.024,
         regularization_coefficient: float = 0.01,
     ):
@@ -188,7 +188,8 @@ class WalsRecommender(Recommender):
 
         Args:
             data: An mxn tensor of training data.
-            num_iterations: Number of training iterations to execute.
+            epochs: Number of training epochs, where each the model is trained on the cardinality
+                dataset in each epoch.
             c: Weight for negative training examples.  Requires 0 < c < 1.
             regularization_coefficient: Coefficient on the embedding regularization term.
 
@@ -206,7 +207,7 @@ class WalsRecommender(Recommender):
 
         alpha = (1 / c) - 1
 
-        for _ in range(num_iterations):
+        for _ in range(epochs):
 
             # step 1: update U
             self._U = self._update_factor(

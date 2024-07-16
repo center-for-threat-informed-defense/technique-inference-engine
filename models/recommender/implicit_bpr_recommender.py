@@ -79,19 +79,19 @@ class ImplicitBPRRecommender:
         self,
         data: tf.SparseTensor,
         learning_rate: float,
-        num_iterations: int,
+        epochs: int,
         regularization_coefficient: float,
         **kwargs,
     ):
         """Fits the model to data.
 
         Args:
-            data: an mxn tensor of training data.
-            learning_rate: the learning rate.
+            data: An mxn tensor of training data.
+            learning_rate: The learning rate.
                 Requires learning_rate > 0.
-            num_iterations: number of training iterations to execute.
-                Requires num_iterations > 0.
-            regularization_coefficient: coefficient on the embedding regularization term.
+            epochs: Number of training epochs, where each the model is trained on the cardinality
+                dataset in each epoch.
+            regularization_coefficient: Coefficient on the embedding regularization term.
 
         Mutates:
             The recommender to the new trained state.
@@ -101,7 +101,7 @@ class ImplicitBPRRecommender:
             factors=self._k,
             learning_rate=learning_rate,
             regularization=regularization_coefficient,
-            iterations=num_iterations,
+            iterations=epochs,
             verify_negative_samples=True,
         )
 
