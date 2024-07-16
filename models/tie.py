@@ -127,7 +127,7 @@ class TechniqueInferenceEngine:
         self._checkrep()
         return mean_squared_error
 
-    def fit_with_cross_validation(
+    def fit_with_validation(
         self, method: PredictionMethod = PredictionMethod.DOT, **kwargs
     ) -> dict[str, float]:
         """Fits the model by validating hyperparameters on the cross validation data.

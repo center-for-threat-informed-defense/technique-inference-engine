@@ -57,7 +57,7 @@ def export_model(dataset_filepath: str, outfile: str):
         "regularization_coefficient": [0.0, 0.0001, 0.001, 0.01],
     }
 
-    best_hyperparameters = tie.fit_with_cross_validation(**hyperparameters)
+    best_hyperparameters = tie.fit_with_validation(**hyperparameters)
     hyperparameters_array = np.array(
         [list(best_hyperparameters.keys()), list(best_hyperparameters.values())]
     ).T
