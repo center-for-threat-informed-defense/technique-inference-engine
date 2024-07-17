@@ -29,7 +29,7 @@
           </div>
           <div class="ctid-links">
             <div class="link-list">
-              <h5>CTID</h5>
+              <h5>About Us</h5>
               <ul>
                 <li>
                   <a href="https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/">
@@ -43,12 +43,12 @@
                 </li>
                 <li>
                   <a href="https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/participants/">
-                    Our Members
+                    Membership
                   </a>
                 </li>
                 <li>
                   <a href="https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/membership/">
-                    Join Us
+                    Get Involved
                   </a>
                 </li>
               </ul>
@@ -59,30 +59,30 @@
                 <li><a href="/">Attack Flow</a></li>
                 <li><a href="/about">Mappings Explorer</a></li>
                 <li><a href="/about">Summiting the Pyramid</a></li>
-                <li><a href="/about">D3FEND</a></li>
+                <li><a href="/about">TRAM</a></li>
               </ul>
             </div>
             <div class="link-list">
-              <h5>Social</h5>
+              <h5>TIE</h5>
               <ul>
                 <li>
-                  <a href="mailto:ctid@mitre-engenuity.org?subject=Technique%20Inference%20Engine">
-                    E-mail
+                  <a href="#">
+                    Home
                   </a>
                 </li>
                 <li>
-                  <a href="https://www.linkedin.com/showcase/center-for-threat-informed-defense/">
-                    LinkedIn
+                  <a href="#">
+                    About
                   </a>
                 </li>
                 <li>
-                  <a href="https://www.youtube.com/@mitreengenuity">
-                    YouTube
+                  <a href="#">
+                    Methodology
                   </a>
                 </li>
                 <li>
-                  <a href="https://github.com/center-for-threat-informed-defense/technique-inference-engine">
-                    GitHub
+                  <a href="#">
+                    Help
                   </a>
                 </li>
               </ul>
