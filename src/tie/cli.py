@@ -72,14 +72,14 @@ def export_model(dataset_filepath: str, enterprise_attack_filepath: str, outfile
         [
             (
                 best_hyperparameters["c"],
-                best_hyperparameters["num_iterations"],
+                best_hyperparameters["epochs"],
                 best_hyperparameters["regularization_coefficient"],
             )
         ],
         dtype=np.dtype(
             [
                 ("c", "<f4"),
-                ("num_iterations", "<f4"),
+                ("epochs", "<f4"),
                 ("regularization_coefficient", "<f4"),
             ]
         ),
