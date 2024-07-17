@@ -1,0 +1,44 @@
+{
+  "name": "tie-web-interface",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build --force",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "build-model": "poetry run export-tie -r ../../data/combined_dataset_full_frequency.json -a ../../data/stix/enterprise-attack.json -o ./public/app.trained.model.zip",
+    "update-enrichment": "node ./build_tools/update_enrichment_file.cjs"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs": "^4.20.0",
+    "@zip.js/zip.js": "^2.7.45",
+    "markdown-it": "^14.1.0",
+    "papaparse": "^5.4.1",
+    "pinia": "^2.1.7",
+    "vectorious": "^6.1.14",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.8.0",
+    "@tsconfig/node20": "^20.1.4",
+    "@types/markdown-it": "^14.1.1",
+    "@types/node": "^20.12.5",
+    "@types/papaparse": "^5.3.14",
+    "@types/zip.js": "^2.0.33",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/eslint-config-typescript": "^13.0.0",
+    "@vue/tsconfig": "^0.5.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.23.0",
+    "npm-run-all2": "^6.1.2",
+    "sass": "^1.77.1",
+    "typescript": "~5.4.0",
+    "vite": "^5.2.8",
+    "vue-tsc": "^2.0.11"
+  }
+}

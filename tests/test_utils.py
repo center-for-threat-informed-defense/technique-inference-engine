@@ -7,7 +7,6 @@ from sklearn.metrics import ndcg_score
 
 
 class TestPrecisionAtK(unittest.TestCase):
-
     # Testing strategy:
     # Partitions over precision_at_k:
     #   value: 0, 0 < precision < 1, 1
@@ -99,7 +98,6 @@ class TestPrecisionAtK(unittest.TestCase):
 
 
 class TestRecallAtK(unittest.TestCase):
-
     # Testing strategy:
     # Partitions over recall_at_k:
     #   value: 0, 0 < recall < 1, 1
@@ -239,7 +237,6 @@ class TestRecallAtK(unittest.TestCase):
 
 
 class TestNormalizedDiscountedCumulativeGain(unittest.TestCase):
-
     # Testing strategy:
     # Partitions over normalized_discounted_cumulative_gain:
     #   value: 0, 0 < ndcg < 1

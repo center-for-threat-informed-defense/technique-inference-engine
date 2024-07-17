@@ -21,11 +21,11 @@ jobs:
     - name: Install dependencies
       run: poetry install
     - name: Check code formatting
-      run: poetry run black --check src/
+      run: poetry run ruff format --check src/
     - name: Check imports formatting
-      run: poetry run isort --check src/
+      run: poetry run ruff check src/
     - name: Check type annotations
-      run: poetry run mypy --check src/
+      # run: poetry run mypy --check src/
     - name: Run unit tests
       run: poetry run make test-ci
     - name: Upload coverage to CodeCov

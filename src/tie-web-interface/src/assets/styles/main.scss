@@ -1,0 +1,26 @@
+@import '../fonts/trade_gothic.css';
+@import './engenuity_scaling_system.scss';
+@import './engenuity_color_system.scss';
+
+*,
+*::before,
+*::after {
+  margin: 0;
+}
+
+
+html,
+body {
+  min-height: 100vh;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+#app {
+  flex: 1;
+}
