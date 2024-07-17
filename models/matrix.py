@@ -13,9 +13,7 @@ class ReportTechniqueMatrix:
     #       technique technique_ids[j]
     # Rep invariant:
     # - len(indices) > 0
-    # - len(values) > 0
-    # - # TODO every row contains value
-    # - # TODO every column contains value
+    # - len(values) == len(indices)
     # Safety from rep exposure:
     # - all fields in rep are private and immutable
 
@@ -49,8 +47,8 @@ class ReportTechniqueMatrix:
         """Asserts the rep invariant."""
         # - len(indices) > 0
         assert len(self._indices) > 0
-        # - len(values) > 0
-        assert len(self._values) > 0
+        # - len(values) == len(indices)
+        assert len(self._values) == len(self._indices)
 
     @property
     def m(self):

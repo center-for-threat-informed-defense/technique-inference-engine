@@ -2,6 +2,8 @@ import unittest
 import math
 import pandas as pd
 from models import utils
+import numpy as np
+from sklearn.metrics import ndcg_score
 
 
 class TestPrecisionAtK(unittest.TestCase):
@@ -135,17 +137,15 @@ class TestRecallAtK(unittest.TestCase):
     #   |test data|/k: <1
     #   k: >1
     def test_recall_no_test_data(self):
-        """Test that recall with no test data is 0."""
+        """Test that recall with no test data is nan."""
 
         predictions = pd.DataFrame([[1.0, 2.0, 3.0]])
         test_data = pd.DataFrame([[0.0, 0.0, 0.0]])
         k = 2
 
-        expected_recall = 0.0
-
         recall = utils.recall_at_k(predictions, test_data, k=k)
 
-        self.assertEqual(expected_recall, recall)
+        self.assertTrue(np.isnan(recall))
 
     # Covers:
     #   value: 0
@@ -160,7 +160,7 @@ class TestRecallAtK(unittest.TestCase):
         predictions = pd.DataFrame(
             [
                 [1.0, 2.0, 3.0, 2.0, 1.0],
-                [3.0, 2.0, 1.0, 2.0, 3.0],
+                [2.9, 2.0, 1.0, 2.0, 3.0],
             ]
         )
         test_data = pd.DataFrame(
@@ -172,6 +172,64 @@ class TestRecallAtK(unittest.TestCase):
             ]
         )
         k = 1
+
+        expected_recall = 0.5
+
+        recall = utils.recall_at_k(predictions, test_data, k=k)
+
+        self.assertEqual(expected_recall, recall)
+
+    # Glass box testing
+    def test_recall_items_no_test_data_excluded(self):
+        """Items that have no test data shouldn't factor into recall calculation.
+
+        When the number of test items for an entity is 0,
+        that entity is excluded from the calculation.
+        Recall should only be averaged over entities with some test data.
+        """
+        predictions = pd.DataFrame(
+            [
+                [1.0, 1.0],
+                [0.0, 1.0],
+            ]
+        )
+        test_data = pd.DataFrame(
+            [
+                [0.0, 0.0],
+                [0.0, 1.0],
+            ]
+        )
+        k = 1
+
+        expected_recall = 1.0
+
+        recall = utils.recall_at_k(predictions, test_data, k=k)
+
+        self.assertEqual(expected_recall, recall)
+
+    # first - np.mean
+    # second - tie
+
+    def test_recall_tied_predictions(self):
+        """If multiple predictions tied, don't get points for all if they don't fit in top k.
+
+        Only get points for tied predictions if they all fit in the top k.
+        Example:
+            prediction: [2, 1, 1] with k=2 would get recall of 50%
+            for test set of [1, 1, 0] since both 1's do not fit in
+            the top k predictions.
+        """
+        predictions = pd.DataFrame(
+            [
+                [0.0, 0.0, 1.0],
+            ]
+        )
+        test_data = pd.DataFrame(
+            [
+                [1.0, 0.0, 1.0],
+            ]
+        )
+        k = 2
 
         expected_recall = 0.5
 
@@ -213,13 +271,9 @@ class TestNormalizedDiscountedCumulativeGain(unittest.TestCase):
         )
         k = 1
 
-        expected_recall = 1.0
+        ndcg = utils.normalized_discounted_cumulative_gain(predictions, test_data, k=k)
 
-        recall = utils.normalized_discounted_cumulative_gain(
-            predictions, test_data, k=k
-        )
-
-        self.assertEqual(expected_recall, recall)
+        self.assertTrue(np.isnan(ndcg))
 
     # Covers:
     #   value: 0 < ndcg < 1
@@ -312,3 +366,21 @@ class TestNormalizedDiscountedCumulativeGain(unittest.TestCase):
         ndcg = utils.normalized_discounted_cumulative_gain(predictions, test_data, k=k)
 
         self.assertEqual(expected_ndcg, ndcg)
+
+    # BENCHMARK TESTING
+
+    def test_ndcg_benchmark(self):
+        """Benchmark against sklearn NDCG."""
+
+        np.random.seed(9)
+        data_size = (1, 13)
+        k = 7
+
+        predictions = pd.DataFrame(np.random.normal(size=data_size))
+        test_data = pd.DataFrame(np.random.binomial(n=1, p=0.2, size=data_size))
+
+        ndcg = utils.normalized_discounted_cumulative_gain(predictions, test_data, k=k)
+
+        sklearn_ndcg = ndcg_score(test_data, predictions, k=7)
+
+        self.assertAlmostEqual(sklearn_ndcg, ndcg, delta=0.00001)

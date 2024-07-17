@@ -50,6 +50,8 @@ class FactorizationRecommender(Recommender):
 
         self._loss = keras.losses.MeanSquaredError()
 
+        self._init_stddev = 1
+
         self._checkrep()
 
     def _reset_embeddings(self):
@@ -190,8 +192,8 @@ class FactorizationRecommender(Recommender):
     def fit(
         self,
         data: tf.SparseTensor,
-        learning_rate: float = 10.0,
-        num_iterations: int = 1000,
+        learning_rate: float,
+        epochs: int,
         regularization_coefficient: float = 0.1,
         gravity_coefficient: float = 0.0,
     ):
@@ -199,8 +201,10 @@ class FactorizationRecommender(Recommender):
 
         Args:
             data: an mxn tensor of training data.
+            epochs:
             learning_rate: the learning rate.
-            num_iterations: number of training iterations to execute.
+            epochs: number of training epochs, where each the model is trained on the cardinality
+                dataset in each epoch.
             regularization_coefficient: coefficient on the embedding regularization term.
             gravity_coefficient: coefficient on the prediction regularization term.
 
@@ -212,7 +216,7 @@ class FactorizationRecommender(Recommender):
         # preliminaries
         optimizer = keras.optimizers.SGD(learning_rate=learning_rate)
 
-        for i in range(num_iterations + 1):
+        for i in range(epochs + 1):
             with tf.GradientTape() as tape:
                 # need to predict here and not in loss so doesn't affect gradient
                 predictions = self._predict(data)
@@ -278,7 +282,7 @@ class FactorizationRecommender(Recommender):
         self,
         entity: tf.SparseTensor,
         learning_rate: float,
-        num_iterations: int,
+        epochs: int,
         regularization_coefficient: float,
         gravity_coefficient: float,
         method: PredictionMethod = PredictionMethod.DOT,
@@ -290,7 +294,8 @@ class FactorizationRecommender(Recommender):
                 ratings for each item, indexed exactly as the items used to
                 train this model.
             learning rate: the learning rate for SGD.
-            num_iterations: the number of iterations for SGD.
+            epochs: number of training epochs, where each the model is trained on the cardinality
+                dataset in each epoch.
             regularization_coefficient: coefficient on the embedding regularization term.
             gravity_coefficient: coefficient on the prediction regularization term.
             method: The prediction method to use.
@@ -298,8 +303,6 @@ class FactorizationRecommender(Recommender):
         Returns:
             An array of predicted values for the new entity.
         """
-        # TODO factor out
-        init_stddev = 1
 
         # preliminaries
         optimizer = keras.optimizers.SGD(learning_rate=learning_rate)
@@ -307,11 +310,11 @@ class FactorizationRecommender(Recommender):
         embedding = tf.Variable(
             tf.random.normal(
                 [self._U.shape[1], 1],
-                stddev=init_stddev,
+                stddev=self._init_stddev,
             )
         )
 
-        for i in range(num_iterations + 1):
+        for i in range(epochs + 1):
             with tf.GradientTape() as tape:
                 # need to predict here and not in loss so doesn't affect gradient
                 # V is nxk, embedding is kx1

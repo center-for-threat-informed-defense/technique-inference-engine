@@ -129,6 +129,10 @@ class ReportTechniqueMatrixBuilder:
         test_ratio and validation_ratio proportion of the positive interactions from the dataset,
         respectively.  The training data contains the remiander of the interactions.
 
+        Ensures that each report has at least one technique example.
+        To support this, requires the number of reports m > (1-test_ratio-validation_ratio) * num_observations,
+        where num_observations is the number of observed report-technique interactions.
+
         Args:
             test_ratio: The ratio of positive interactions to include in the test dataset
                 compared to the total number of observed positive interactions.
@@ -147,23 +151,56 @@ class ReportTechniqueMatrixBuilder:
 
         data = self.build()
 
-        train_and_validation_indices = frozenset(
-            random.sample(
-                data.indices, k=math.floor((1 - test_ratio) * len(data.indices))
-            )
+        num_observations = data.to_numpy().sum()
+        # make sure that we have enough observations to at least provide a single one per report
+        assert data.m <= num_observations * (1 - test_ratio - validation_ratio)
+        # use floor since we need to have at least one example in the training set for each report
+        # may mean slightly less (by 1) items in test or validation set
+        num_validation_samples = math.floor(validation_ratio * num_observations)
+        num_test_samples = math.floor(test_ratio * num_observations)
+
+        # stategy:
+        # sample one index per row to make sure we have at least one training item per row
+        # remove these from the indices available from which to sample the test and validation data
+        # sample test and validation data
+        # training data = all indices - test indices - validation indices
+        # make sure to sample at least one index per row by splitting indices by row and sampling from each
+        indices_by_row = {index[0]: [] for index in data.indices}
+        for index in data.indices:
+            row, _ = index
+            indices_by_row[row].append(index)
+
+        min_training_indices = set()
+        for _, indices in indices_by_row.items():
+            minimum_sample_for_row = random.sample(indices, k=1)
+            assert len(minimum_sample_for_row) == 1
+            min_training_indices.add(minimum_sample_for_row[0])
+
+        remaining_indices_to_sample = frozenset(data.indices).difference(
+            min_training_indices
         )
-        validation_indices = frozenset(
-            random.sample(
-                tuple(train_and_validation_indices),
-                k=math.floor((validation_ratio) * len(train_and_validation_indices)),
-            )
+
+        sampled_validation_indices = frozenset(
+            random.sample(sorted(remaining_indices_to_sample), k=num_validation_samples)
         )
-        train_indices = frozenset(train_and_validation_indices).difference(
-            validation_indices
+        remaining_indices_to_sample = remaining_indices_to_sample.difference(
+            sampled_validation_indices
         )
-        test_indices = frozenset(data.indices).difference(train_and_validation_indices)
-        training_data = data.mask(train_indices)
-        validation_data = data.mask(validation_indices)
-        test_data = data.mask(test_indices)
+
+        sampled_test_indices = frozenset(
+            random.sample(sorted(remaining_indices_to_sample), k=num_test_samples)
+        )
+
+        sampled_train_indices = frozenset(data.indices).difference(
+            sampled_validation_indices, sampled_test_indices
+        )
+
+        assert sampled_train_indices.isdisjoint(sampled_test_indices)
+        assert sampled_train_indices.isdisjoint(sampled_validation_indices)
+        assert sampled_test_indices.isdisjoint(sampled_validation_indices)
+
+        training_data = data.mask(sampled_train_indices)
+        validation_data = data.mask(sampled_validation_indices)
+        test_data = data.mask(sampled_test_indices)
 
         return (training_data, test_data, validation_data)

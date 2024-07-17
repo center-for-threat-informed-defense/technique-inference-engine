@@ -49,7 +49,7 @@ def _get_num_test_items_in_top_k_per_user(
     # find overlap with test set
     # if 1 in both, then predicted in top k
     # min to get lowest rank in group, aka less than k
-    top_k_predictions = predictions.rank(axis=1, method="min", ascending=False) <= k
+    top_k_predictions = predictions.rank(axis=1, method="max", ascending=False) <= k
     assert m, 1 == top_k_predictions.shape
     test_items_in_top_k = (test_data > 0) & top_k_predictions
     num_test_items_in_top_k = test_items_in_top_k.sum(axis=1)
@@ -76,7 +76,7 @@ def precision_at_k(predictions: pd.DataFrame, test_data: pd.DataFrame, k: int) -
         k: the number of predictions to include in the top k.  Requires 0 < k <= n.
 
     Returns:
-        The computed precision for the top k predictions.
+        The computed precision for the top k predictions, or np.nan if the test set is empty.
     """
     m, n = test_data.shape
     assert m > 0
@@ -89,7 +89,7 @@ def precision_at_k(predictions: pd.DataFrame, test_data: pd.DataFrame, k: int) -
     )
 
     # sum number of predictions in top k, divide by k
-    return (1 / m) * num_test_items_in_top_k.sum() / k
+    return num_test_items_in_top_k.mean(skipna=True) / k
 
 
 def recall_at_k(predictions: pd.DataFrame, test_data: pd.DataFrame, k: int) -> float:
@@ -110,7 +110,7 @@ def recall_at_k(predictions: pd.DataFrame, test_data: pd.DataFrame, k: int) -> f
         k: the number of predictions to include in the top k.  Requires 0 < k <= n.
 
     Returns:
-        The computed recall for the top k predictions.
+        The computed recall for the top k predictions, or np.,nan if the test set is empty.
     """
     m, n = test_data.shape
     assert m > 0
@@ -125,7 +125,7 @@ def recall_at_k(predictions: pd.DataFrame, test_data: pd.DataFrame, k: int) -> f
 
     fraction_recalled_predictions = num_test_items_in_top_k / num_test_items_per_user
     # sum number of predictions in top k, divide by k
-    return (1 / m) * fraction_recalled_predictions.sum()
+    return fraction_recalled_predictions.mean(skipna=True)
 
 
 def normalized_discounted_cumulative_gain(
@@ -153,7 +153,7 @@ def normalized_discounted_cumulative_gain(
         k: the number of predictions to include in the top k.  Requires 0 < k <= n.
 
     Returns:
-        NDCG computed on the top k predictions.
+        NDCG computed on the top k predictions, or np.nan if the test set is empty.
     """
     # assert preconditions
     m, n = test_data.shape
@@ -162,6 +162,7 @@ def normalized_discounted_cumulative_gain(
     assert m, n == predictions.shape
     assert 0 < k <= n
 
+    # calculate idcg
     test_set_size = test_data.sum(axis=1).astype("int")
     assert m, 1 == test_set_size.shape
 
@@ -169,25 +170,27 @@ def normalized_discounted_cumulative_gain(
         return sum(1 / math.log2(i + 1) for i in range(1, min(test_size, k) + 1))
 
     user_idcg = test_set_size.apply(lambda x: max_idcg(x, k))
-    idcg = user_idcg.sum() / m
 
-    if idcg == 0.0:
-        return 1.0
+    idcg = np.mean(np.where(lambda x: x > 0, user_idcg, np.nan))
 
     prediction_ranking = predictions.rank(axis=1, method="first", ascending=False)
     assert m, 1 == prediction_ranking.shape
 
+    # calculating dcg
     # numerator: 1 if test set is in prediction, 0 otherwise
     numerator = np.logical_and(
         (prediction_ranking <= k).to_numpy(), test_data.to_numpy()
     )
-
     # denominator: log_2 of ranking + 1
     denominator = np.log2(prediction_ranking.to_numpy() + 1)
 
-    divide = np.divide(numerator, denominator)
+    dcg = np.divide(numerator, denominator)
+    # in test set or rank should never be nan
+    assert not np.any(np.isnan(dcg))
 
-    dcg = (1 / m) * np.sum(divide)
+    entity_dcg = np.sum(dcg, axis=1)
+    # only count for test
+    dcg = np.mean(np.where(lambda x: x > 0, entity_dcg, np.nan))
 
     return dcg / idcg
 

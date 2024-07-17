@@ -49,7 +49,7 @@ def export_model(dataset_filepath: str, outfile: str):
     )
 
     hyperparameters = {
-        "num_iterations": [25],  # default
+        "epochs": [25],  # default
         # parameters combinations from https://dl.acm.org/doi/10.1145/3522672
         # with the addition of c 0.0001 and regularization_coefficient 0.00001
         # since experimentally, we saw these used at times in optimal hyperparameter combination
@@ -57,7 +57,7 @@ def export_model(dataset_filepath: str, outfile: str):
         "regularization_coefficient": [0.0, 0.0001, 0.001, 0.01],
     }
 
-    best_hyperparameters = tie.fit_with_cross_validation(**hyperparameters)
+    best_hyperparameters = tie.fit_with_validation(**hyperparameters)
     hyperparameters_array = np.array(
         [list(best_hyperparameters.keys()), list(best_hyperparameters.values())]
     ).T
