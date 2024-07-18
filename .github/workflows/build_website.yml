@@ -3,6 +3,9 @@ name: Build Website
 on:
   push:
     branches: [main]
+    path:
+      - './src/**'
+      - './data/**/*.json'
   pull_request:
   workflow_dispatch:
 
@@ -28,6 +31,8 @@ jobs:
 
     # Configure Environment
     - uses: actions/checkout@v3
+
+    # Configure Node
     - uses: actions/setup-node@v3
       id: "setup-node"
       with:
@@ -43,10 +48,28 @@ jobs:
       working-directory: src/tie-web-interface/
       run: npm run lint
 
-    # Build and Upload Artifact
+    # Run Type Checks
     - name: Type Check
       working-directory: src/tie-web-interface/
       run: npm run type-check
+
+    # Configure Python
+    - uses: actions/setup-python@v4
+          with:
+            python-version: '3.11.8'
+    - name: Install Poetry
+      run: curl -sSL https://install.python-poetry.org/ | python -
+    - name: Add Poetry to PATH
+      run: echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+    - name: Install dependencies
+      run: poetry install
+
+    # Build Model
+    - name: Build Technique Inference Engine Model
+      working-directory: src/tie-web-interface/
+      run: npm run build-model
+
+    # Build Website
     - name: Build
       working-directory: src/tie-web-interface/
       run: npm run build-only -- --base /$BRANCH_NAME/
