@@ -3,7 +3,11 @@ name: Python Tests
 on:
   push:
     branches: [main]
+    paths:
+      - './src/**'
   pull_request:
+    paths:
+      - './src/**'
 
 jobs:
   test:
