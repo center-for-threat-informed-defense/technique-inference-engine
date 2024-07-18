@@ -29,55 +29,55 @@ jobs:
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
     steps:
 
-    # Configure Environment
-    - uses: actions/checkout@v3
+      # Configure Environment
+      - uses: actions/checkout@v3
 
-    # Configure Node
-    - uses: actions/setup-node@v3
-      id: "setup-node"
-      with:
-        node-version: '19'
-        cache: 'npm'
-        cache-dependency-path: 'src/tie-web-interface/package-lock.json'
-    - name: Install dependencies
-      working-directory: src/tie-web-interface/
-      run: npm ci
+      # Configure Node
+      - uses: actions/setup-node@v3
+        id: "setup-node"
+        with:
+          node-version: '19'
+          cache: 'npm'
+          cache-dependency-path: 'src/tie-web-interface/package-lock.json'
+      - name: Install dependencies
+        working-directory: src/tie-web-interface/
+        run: npm ci
 
-    # Lint
-    - name: Lint
-      working-directory: src/tie-web-interface/
-      run: npm run lint
+      # Lint
+      - name: Lint
+        working-directory: src/tie-web-interface/
+        run: npm run lint
 
-    # Run Type Checks
-    - name: Type Check
-      working-directory: src/tie-web-interface/
-      run: npm run type-check
+      # Run Type Checks
+      - name: Type Check
+        working-directory: src/tie-web-interface/
+        run: npm run type-check
 
-    # Configure Python
-    - uses: actions/setup-python@v4
-          with:
-            python-version: '3.11.8'
-    - name: Install Poetry
-      run: curl -sSL https://install.python-poetry.org/ | python -
-    - name: Add Poetry to PATH
-      run: echo "$HOME/.poetry/bin" >> $GITHUB_PATH
-    - name: Install dependencies
-      run: poetry install
+      # Configure Python
+      - uses: actions/setup-python@v4
+            with:
+              python-version: '3.11.8'
+      - name: Install Poetry
+        run: curl -sSL https://install.python-poetry.org/ | python -
+      - name: Add Poetry to PATH
+        run: echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+      - name: Install dependencies
+        run: poetry install
 
-    # Build Model
-    - name: Build Technique Inference Engine Model
-      working-directory: src/tie-web-interface/
-      run: npm run build-model
+      # Build Model
+      - name: Build Technique Inference Engine Model
+        working-directory: src/tie-web-interface/
+        run: npm run build-model
 
-    # Build Website
-    - name: Build
-      working-directory: src/tie-web-interface/
-      run: npm run build-only -- --base /$BRANCH_NAME/
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: tie_website
-        path: src/tie-web-interface/dist/
+      # Build Website
+      - name: Build
+        working-directory: src/tie-web-interface/
+        run: npm run build-only -- --base /$BRANCH_NAME/
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: tie_website
+          path: src/tie-web-interface/dist/
 
   # Publish to Azure blob only on PRs, not main.
   azure_blob:
