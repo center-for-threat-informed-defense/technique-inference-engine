@@ -7,6 +7,9 @@ on:
       - './src/**'
       - './data/**/*.json'
   pull_request:
+    path:
+      - './src/**'
+      - './data/**/*.json'
   workflow_dispatch:
 
 # If another web build starts for the same branch, cancel the previous build. This
