@@ -3,11 +3,11 @@ name: Build Website
 on:
   push:
     branches: [main]
-    path:
+    paths:
       - './src/**'
       - './data/**/*.json'
   pull_request:
-    path:
+    paths:
       - './src/**'
       - './data/**/*.json'
   workflow_dispatch:
