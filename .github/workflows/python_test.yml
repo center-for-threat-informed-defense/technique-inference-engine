@@ -24,7 +24,7 @@ jobs:
       run: poetry run ruff format --check src/
     - name: Check imports formatting
       run: poetry run ruff check src/
-    - name: Check type annotations
+    # - name: Check type annotations
       # run: poetry run mypy --check src/
     - name: Run unit tests
       run: poetry run make test-ci
