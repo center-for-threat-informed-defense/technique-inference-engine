@@ -64,13 +64,13 @@ jobs:
       - name: Install dependencies
         run: poetry install
 
-      # Build Model
-      - name: Build Technique Inference Engine Model
+      # Train Model
+      - name: Retrain Technique Inference Engine Model
         working-directory: src/tie-web-interface/
         run: npm run build-model
 
       # Build Website
-      - name: Build
+      - name: Compile Website
         working-directory: src/tie-web-interface/
         run: npm run build-only -- --base /$BRANCH_NAME/
       - name: Upload artifact
