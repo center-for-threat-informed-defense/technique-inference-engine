@@ -55,8 +55,8 @@ jobs:
 
       # Configure Python
       - uses: actions/setup-python@v4
-          with:
-            python-version: '3.11.8'
+        with:
+          python-version: '3.11.8'
       - name: Install Poetry
         run: curl -sSL https://install.python-poetry.org/ | python -
       - name: Add Poetry to PATH
