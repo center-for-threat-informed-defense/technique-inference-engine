@@ -1,12 +1,13 @@
 import copy
+
 import numpy as np
 import pandas as pd
 import tensorflow as tf
 
 from tie.constants import PredictionMethod
+from tie.exceptions import TechniqueNotFoundException
 from tie.matrix import ReportTechniqueMatrix
 from tie.recommender import Recommender
-from tie.exceptions import TechniqueNotFoundException
 from tie.utils import (
     get_mitre_technique_ids_to_names,
     normalized_discounted_cumulative_gain,

@@ -78,7 +78,8 @@ def precision_at_k(predictions: pd.DataFrame, test_data: pd.DataFrame, k: int) -
         k: the number of predictions to include in the top k.  Requires 0 < k <= n.
 
     Returns:
-        The computed precision for the top k predictions, or np.nan if the test set is empty.
+        The computed precision for the top k predictions, or np.nan if the test set is
+        empty.
     """
     m, n = test_data.shape
     assert m > 0
@@ -113,7 +114,8 @@ def recall_at_k(predictions: pd.DataFrame, test_data: pd.DataFrame, k: int) -> f
         k: the number of predictions to include in the top k.  Requires 0 < k <= n.
 
     Returns:
-        The computed recall for the top k predictions, or np.,nan if the test set is empty.
+        The computed recall for the top k predictions, or np.,nan if the test set is
+        empty.
     """
     m, n = test_data.shape
     assert m > 0
