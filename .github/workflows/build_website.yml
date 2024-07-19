@@ -4,12 +4,12 @@ on:
   push:
     branches: [main]
     paths:
-      - './src/**'
-      - './data/**/*.json'
+      - 'src/**'
+      - 'data/**/*.json'
   pull_request:
     paths:
-      - './src/**'
-      - './data/**/*.json'
+      - 'src/**'
+      - 'data/**/*.json'
   workflow_dispatch:
 
 # If another web build starts for the same branch, cancel the previous build. This
