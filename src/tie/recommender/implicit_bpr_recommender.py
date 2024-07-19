@@ -89,9 +89,10 @@ class ImplicitBPRRecommender:
             data: An mxn tensor of training data.
             learning_rate: The learning rate.
                 Requires learning_rate > 0.
-            epochs: Number of training epochs, where each the model is trained on the cardinality
-                dataset in each epoch.
-            regularization_coefficient: Coefficient on the embedding regularization term.
+            epochs: Number of training epochs, where each the model is trained on the
+                cardinality dataset in each epoch.
+            regularization_coefficient: Coefficient on the embedding regularization
+                term.
 
         Mutates:
             The recommender to the new trained state.

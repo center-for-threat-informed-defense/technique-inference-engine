@@ -84,8 +84,8 @@ class ImplicitWalsRecommender(Recommender):
 
         Args:
             data: an mxn tensor of training data.
-            epochs: number of training epochs, where each the model is trained on the cardinality
-                dataset in each epoch.
+            epochs: number of training epochs, where each the model is trained on the
+                cardinality dataset in each epoch.
             c: weight for negative training examples.  Requires 0 < c < 1.
             regularization_coefficient: coefficient on the embedding regularization
                 term.

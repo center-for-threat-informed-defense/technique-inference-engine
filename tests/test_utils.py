@@ -1,7 +1,7 @@
 import unittest
 import math
 import pandas as pd
-from models import utils
+import tie.utils as utils
 import numpy as np
 from sklearn.metrics import ndcg_score
 

@@ -131,8 +131,9 @@ class ReportTechniqueMatrixBuilder:
         interactions.
 
         Ensures that each report has at least one technique example.
-        To support this, requires the number of reports m > (1-test_ratio-validation_ratio) * num_observations,
-        where num_observations is the number of observed report-technique interactions.
+        To support this, requires the number of reports
+        m > (1-test_ratio-validation_ratio) * num_observations, where num_observations
+        is the number of observed report-technique interactions.
 
         Args:
             test_ratio: The ratio of positive interactions to include in the test
@@ -153,19 +154,23 @@ class ReportTechniqueMatrixBuilder:
         data = self.build()
 
         num_observations = data.to_numpy().sum()
-        # make sure that we have enough observations to at least provide a single one per report
+        # make sure that we have enough observations
+        # to at least provide a single one per report
         assert data.m <= num_observations * (1 - test_ratio - validation_ratio)
-        # use floor since we need to have at least one example in the training set for each report
-        # may mean slightly less (by 1) items in test or validation set
+        # use floor since we need to have at least one example in the training set for
+        # each report may mean slightly less (by 1) items in test or validation set
         num_validation_samples = math.floor(validation_ratio * num_observations)
         num_test_samples = math.floor(test_ratio * num_observations)
 
-        # stategy:
-        # sample one index per row to make sure we have at least one training item per row
-        # remove these from the indices available from which to sample the test and validation data
-        # sample test and validation data
-        # training data = all indices - test indices - validation indices
-        # make sure to sample at least one index per row by splitting indices by row and sampling from each
+        # Strategy:
+        # - sample one index per row to make sure we have at least one training item per
+        #   row
+        # - remove these from the indices available from which to sample the test and
+        #   validation data
+        # - sample test and validation data
+        # - training data = all indices - test indices - validation indices
+        # - make sure to sample at least one index per row by splitting indices by row
+        #   and sampling from each
         indices_by_row = {index[0]: [] for index in data.indices}
         for index in data.indices:
             row, _ = index

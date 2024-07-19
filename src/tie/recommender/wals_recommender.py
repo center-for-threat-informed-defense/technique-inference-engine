@@ -210,7 +210,6 @@ class WalsRecommender(Recommender):
         alpha = (1 / c) - 1
 
         for _ in range(epochs):
-
             # step 1: update U
             self._U = self._update_factor(
                 self._V, P.T, alpha, regularization_coefficient

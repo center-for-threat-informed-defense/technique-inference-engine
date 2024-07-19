@@ -3,7 +3,13 @@ name: Build Website
 on:
   push:
     branches: [main]
+    paths:
+      - 'src/**'
+      - 'data/**/*.json'
   pull_request:
+    paths:
+      - 'src/**'
+      - 'data/**/*.json'
   workflow_dispatch:
 
 # If another web build starts for the same branch, cancel the previous build. This
@@ -26,35 +32,55 @@ jobs:
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
     steps:
 
-    # Configure Environment
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      id: "setup-node"
-      with:
-        node-version: '19'
-        cache: 'npm'
-        cache-dependency-path: 'src/tie-web-interface/package-lock.json'
-    - name: Install dependencies
-      working-directory: src/tie-web-interface/
-      run: npm ci
+      # Configure Environment
+      - uses: actions/checkout@v3
 
-    # Lint
-    - name: Lint
-      working-directory: src/tie-web-interface/
-      run: npm run lint
+      # Configure Node
+      - uses: actions/setup-node@v3
+        id: "setup-node"
+        with:
+          node-version: '19'
+          cache: 'npm'
+          cache-dependency-path: 'src/tie-web-interface/package-lock.json'
+      - name: Install dependencies
+        working-directory: src/tie-web-interface/
+        run: npm ci
 
-    # Build and Upload Artifact
-    - name: Type Check
-      working-directory: src/tie-web-interface/
-      run: npm run type-check
-    - name: Build
-      working-directory: src/tie-web-interface/
-      run: npm run build-only -- --base /$BRANCH_NAME/
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: tie_website
-        path: src/tie-web-interface/dist/
+      # Lint
+      - name: Lint
+        working-directory: src/tie-web-interface/
+        run: npm run lint
+
+      # Run Type Checks
+      - name: Type Check
+        working-directory: src/tie-web-interface/
+        run: npm run type-check
+
+      # Configure Python
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11.8'
+      - name: Install Poetry
+        run: curl -sSL https://install.python-poetry.org/ | python -
+      - name: Add Poetry to PATH
+        run: echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+      - name: Install dependencies
+        run: poetry install
+
+      # Train Model
+      - name: Retrain Technique Inference Engine Model
+        working-directory: src/tie-web-interface/
+        run: npm run build-model
+
+      # Build Website
+      - name: Compile Website
+        working-directory: src/tie-web-interface/
+        run: npm run build-only -- --base /$BRANCH_NAME/
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: tie_website
+          path: src/tie-web-interface/dist/
 
   # Publish to Azure blob only on PRs, not main.
   azure_blob:
