@@ -6,8 +6,9 @@ import tensorflow as tf
 
 from tie.constants import PredictionMethod
 from tie.utils import calculate_predicted_matrix
-
+import time
 from .recommender import Recommender
+import matplotlib.pyplot as plt
 
 
 class BPRRecommender(Recommender):
@@ -101,40 +102,59 @@ class BPRRecommender(Recommender):
 
         m, n = data.shape
 
+        start = time.time()
         sample_user_probability = self._calculate_sample_user_probability(data)
 
+        end = time.time()
+        print("sample user", end - start)
+
+        start_2 = time.time()
         # repeat for each of n items
-        num_items_per_user = np.sum(data, axis=1).astype(float)
-        assert not np.any(np.isnan(num_items_per_user))
-        num_items_per_user[num_items_per_user == 0.0] = np.nan
-        assert num_items_per_user.shape == (m,)  # m users
-        sample_item_probability = np.nan_to_num(
-            data / np.expand_dims(num_items_per_user, axis=1)
+        # num_items_per_user = np.sum(data, axis=1).astype(float)
+        # assert not np.any(np.isnan(num_items_per_user))
+        # num_items_per_user[num_items_per_user == 0.0] = np.nan
+        # assert num_items_per_user.shape == (m,)  # m users
+        # sample_item_probability = np.nan_to_num(
+        #     data / np.expand_dims(num_items_per_user, axis=1)
+        # )
+
+        # joint_user_item_probability = (
+        #     np.expand_dims(sample_user_probability, axis=1) * sample_item_probability
+        # )
+        # assert joint_user_item_probability.shape == (m, n)
+
+        # flattened_probability = joint_user_item_probability.flatten("C")
+        # u_i = np.random.choice(
+        #     np.arange(m * n), size=(num_samples,), p=flattened_probability
+        # )
+
+        # all_u = u_i // n
+        # all_i = u_i % n
+        # assert (all_i < 611).all()
+        all_u = np.random.choice(
+            m, size=num_samples, replace=True, p=sample_user_probability
         )
 
-        joint_user_item_probability = (
-            np.expand_dims(sample_user_probability, axis=1) * sample_item_probability
-        )
-        assert joint_user_item_probability.shape == (m, n)
+        end_2 = time.time()
+        print("u and i", end_2 - start_2)
 
-        flattened_probability = joint_user_item_probability.flatten("C")
-        u_i = np.random.choice(
-            np.arange(m * n), size=(num_samples,), p=flattened_probability
-        )
-
-        all_u = u_i // n
-        all_i = u_i % n
-        assert (all_i < 611).all()
-
+        start_3 = time.time()
         non_observations = 1 - data
 
         unique_users, counts = np.unique(all_u, return_counts=True)
         value_to_count = dict(zip(unique_users, counts))
 
+        u_to_i = {}
         u_to_j = {}
 
         # for each u
         for u, count in value_to_count.items():
+            potential_i = data[u, :]
+            all_i_for_user = np.random.choice(
+                n, size=count, replace=True, p=potential_i / np.sum(potential_i)
+            )
+            u_to_i[u] = all_i_for_user.tolist()
+
             # get
             potential_j = non_observations[u, :]
 
@@ -144,11 +164,18 @@ class BPRRecommender(Recommender):
 
             u_to_j[u] = all_j_for_user.tolist()
 
+        all_i = []
         all_j = []
 
         for u in all_u:
+            i = u_to_i[u].pop()
+            all_i.append(i)
             j = u_to_j[u].pop()
             all_j.append(j)
+
+        end_3 = time.time()
+
+        print("j", end_3 - start_3)
 
         assert len(all_u) == len(all_j) == len(all_i)
 
@@ -182,6 +209,7 @@ class BPRRecommender(Recommender):
     def fit(
         self,
         data: tf.SparseTensor,
+        test_data: tf.SparseTensor,
         learning_rate: float,
         epochs: int,
         regularization_coefficient: float,
@@ -211,22 +239,37 @@ class BPRRecommender(Recommender):
 
         all_u, all_i, all_j = self._sample_dataset(data, num_samples=num_iterations)
 
+        losses = []
         # initialize theta - done - init
         # repeat
+        elapsed_1 = 0
+        elapsed_2 = 0
+        elapsed_3 = 0
         for iteration_count in range(num_iterations):
             # draw u, i, j from D_s
+            start = time.time()
             u = all_u[iteration_count]
             i = all_i[iteration_count]
             j = all_j[iteration_count]
 
-            assert data[u, i] == 1
-            assert data[u, j] == 0
+            # u, i, j = all_samples[iteration_count]
 
+            # assert data[u, i] == 1
+            # assert data[u, j] == 0
+
+            end = time.time()
+            elapsed_1 += end - start
+
+            start_2 = time.time()
             # theta = theta + alpha * (e^(-x) sigma(x) d/dtheta x + lambda theta)
             x_ui = self._predict_for_single_entry(u, i)
             x_uj = self._predict_for_single_entry(u, j)
             x_uij = x_ui - x_uj
 
+            end_2 = time.time()
+            elapsed_2 += end_2 - start_2
+
+            start_3 = time.time()
             sigmoid_derivative = (math.e ** (-x_uij)) / (1 + math.e ** (-x_uij))
 
             d_w = self._V[i, :] - self._V[j, :]
@@ -244,9 +287,20 @@ class BPRRecommender(Recommender):
             self._V[j, :] += learning_rate * (
                 sigmoid_derivative * d_hj - (regularization_coefficient * self._V[j, :])
             )
+            end_3 = time.time()
 
+            elapsed_3 = end_3 - start_3
+
+            if iteration_count % len(data) == 0:
+                losses.append(self.evaluate(test_data))
+
+        print("1", elapsed_1 / num_iterations)
+        print("2", elapsed_2 / num_iterations)
+        print("3", elapsed_3 / num_iterations)
         # return theta
         # set in rep
+        plt.plot(list(range(len(losses))), losses)
+        plt.show()
 
     def evaluate(
         self,
