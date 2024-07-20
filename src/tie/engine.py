@@ -111,7 +111,11 @@ class TechniqueInferenceEngine:
             The MSE of the prediction matrix, as determined by the test set.
         """
         # train
-        self._model.fit(self._training_data.to_sparse_tensor(), **kwargs)
+        self._model.fit(
+            self._training_data.to_sparse_tensor(),
+            self._validation_data.to_sparse_tensor(),
+            **kwargs,
+        )
 
         mean_squared_error = self._model.evaluate(
             self._test_data.to_sparse_tensor(), method=self._prediction_method

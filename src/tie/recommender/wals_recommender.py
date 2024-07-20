@@ -4,7 +4,7 @@ from sklearn.metrics import mean_squared_error
 
 from tie.constants import PredictionMethod
 from tie.utils import calculate_predicted_matrix
-
+import matplotlib.pyplot as plt
 from .recommender import Recommender
 
 
@@ -179,6 +179,7 @@ class WalsRecommender(Recommender):
     def fit(
         self,
         data: tf.SparseTensor,
+        test_data: tf.SparseTensor,
         epochs: int,
         c: float = 0.024,
         regularization_coefficient: float = 0.01,
@@ -209,6 +210,8 @@ class WalsRecommender(Recommender):
 
         alpha = (1 / c) - 1
 
+        losses = []
+
         for _ in range(epochs):
 
             # step 1: update U
@@ -219,6 +222,10 @@ class WalsRecommender(Recommender):
             # step 2: update V
             self._V = self._update_factor(self._U, P, alpha, regularization_coefficient)
 
+            losses.append(self.evaluate(test_data))
+
+        plt.plot(list(range(len(losses))), losses)
+        plt.show()
         self._checkrep()
 
     def evaluate(
