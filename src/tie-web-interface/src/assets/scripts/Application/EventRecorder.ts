@@ -52,7 +52,7 @@ export class EventRecorder {
         this._storage.record(
             "make_prediction",
             {
-                "total_techniques_provided": provided,
+                "total_observed_techniques": provided,
                 "prediction_backend": backend,
                 "prediction_time": time
             }
