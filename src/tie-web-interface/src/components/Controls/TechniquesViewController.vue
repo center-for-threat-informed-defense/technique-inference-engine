@@ -52,7 +52,6 @@
 
 <script lang="ts">
 // Dependencies
-import { Browser } from "@/assets/scripts/Utilities";
 import { defineComponent, type PropType } from "vue";
 import type { PredictionsView } from "@/assets/scripts/PredictionsView";
 import type { ControlCommand } from "@/assets/scripts/PredictionsView/Commands";
@@ -75,7 +74,7 @@ export default defineComponent({
   data: () => ({
     active: false,
   }),
-  emits: ["execute"],
+  emits: ["execute", "download"],
   methods: {
 
     /**
@@ -92,7 +91,7 @@ export default defineComponent({
      */
     downloadViewAsCsv() {
       const contents = this.view.exportViewToCsv();
-      Browser.downloadFile("predictions", contents, "csv");
+      this.$emit("download", "csv", contents);
     },
 
     /**
@@ -100,7 +99,7 @@ export default defineComponent({
      */
     downloadViewAsNavigatorLayer() {
       const contents = this.view.exportViewToNavigatorLayer(false);
-      Browser.downloadFile("predictions_navigator_layer", contents, "json");
+      this.$emit("download", "navigator_layer", contents);
     }
 
   },

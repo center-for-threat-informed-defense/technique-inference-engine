@@ -6,7 +6,7 @@
       </div>
       <div class="options-selector">
         <OptionSelector class="options-field" placeholder="Add Technique" :options="allTechniqueOptions"
-          @select="addObservedTechnique" />
+          @select="addObservedTechniqueFromField" />
         <button @click="addObservedTechniqueFromCsv()">
           <UploadArrow class="icon" /><span>.CSV</span>
         </button>
@@ -19,7 +19,7 @@
               included in the training. Its inclusion here will not affect the predictions.
             </template>
             <template #default>
-              <div class="delete-icon" @click="deleteObservedTechnique(observed.id)">
+              <div class="action-icon" @click="deleteObservedTechnique(observed.id)">
                 <DeleteIcon />
               </div>
             </template>
@@ -32,7 +32,7 @@
         <h3>Predicted Techniques</h3>
         <small>{{ predictionMetadata }}</small>
       </div>
-      <TechniquesViewController class="view-controller" :view="viewer" @execute="execute" />
+      <TechniquesViewController class="view-controller" :view="viewer" @execute="execute" @download="download" />
       <div class="instructions" v-if="!predicted">
         To generate a set of predictions, add one or more observed techniques.
       </div>
@@ -40,7 +40,7 @@
         <template v-for="[key, item] of view.items" :key="key">
           <component class="summary" :is="getSummaryType(item)" :item="item">
             <template v-slot="{ technique }">
-              <div class="delete-icon" @click="addObservedTechnique(technique.id)">
+              <div class="action-icon" @click="addObservedTechniqueFromPivot(technique.id)">
                 <AddIcon />
               </div>
             </template>
@@ -167,11 +167,34 @@ export default defineComponent({
     async addObservedTechnique(id: string) {
       id = id.toLocaleUpperCase();
       if (this.allTechniqueOptions.has(id)) {
-        // Add techniques
         this.observed.add(id);
-        // Update predictions
-        await this.updatePredictions();
       }
+    },
+
+    /**
+     * Pivots a technique to the observed set.
+     * @param id
+     *  The id of the technique to add.
+     */
+    async addObservedTechniqueFromPivot(id: string) {
+      // Add Technique
+      this.addObservedTechnique(id);
+      this.engine.recorder.addTechniques("technique_pivot", 1);
+      // Update predictions
+      await this.updatePredictions();
+    },
+
+    /**
+     * Adds an observed technique to the set from the technique field.
+     * @param id
+     *  The id of the technique to add.
+     */
+    async addObservedTechniqueFromField(id: string) {
+      // Add Technique
+      this.addObservedTechnique(id);
+      this.engine.recorder.addTechniques("technique_field", 1);
+      // Update predictions
+      await this.updatePredictions();
     },
 
     /**
@@ -189,6 +212,7 @@ export default defineComponent({
       for (let obj of objects) {
         this.addObservedTechnique(obj.id);
       }
+      this.engine.recorder.addTechniques("import_csv", objects.length);
       // Update predictions
       await this.updatePredictions();
     },
@@ -214,6 +238,11 @@ export default defineComponent({
         const b = this.trainedTechniques;
         const techniques = new Set(a.filter(t => b.has(t)));
         this.predicted = await this.engine.predictNewReport(techniques);
+        this.engine.recorder.makePrediction(
+          techniques.size,
+          this.predicted.metadata.humanReadableBackend,
+          this.predicted.metadata.time
+        );
       } else {
         this.predicted = null;
       }
@@ -227,6 +256,29 @@ export default defineComponent({
      */
     execute(cmd: ControlCommand) {
       cmd.execute();
+      this.engine.recorder.applyViewControl(cmd);
+    },
+
+    /**
+     * Downloads a file to the device.
+     * @param type
+     *  The file's type.
+     * @param contents
+     *  The file's contents.
+     */
+    download(type: string, contents: string) {
+      switch (type) {
+        case "csv":
+          Browser.downloadFile("predictions", contents, "csv");
+          this.engine.recorder.downloadArtifact(type);
+          break;
+        case "navigator_layer":
+          Browser.downloadFile("predictions_navigator_layer", contents, "json");
+          this.engine.recorder.downloadArtifact(type);
+          break;
+        default:
+          console.warn(`Cannot download unknown file type: '${type}'.`)
+      }
     }
 
   },
@@ -307,7 +359,7 @@ export default defineComponent({
   margin-right: scale.size("s");
 }
 
-.delete-icon {
+.action-icon {
   @include color.icon;
   display: flex;
   align-items: center;

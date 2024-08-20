@@ -1,6 +1,7 @@
 import Configuration from "@/assets/configuration/app.config";
 import { markRaw } from 'vue';
 import { defineStore } from 'pinia'
+import { EventRecorder, GoogleEventStorage } from "@/assets/scripts/Application";
 import {
   PredictedTechniques,
   RemoteEnrichmentSource,
@@ -11,6 +12,7 @@ import {
 
 export const useInferenceEngineStore = defineStore('inferenceEngineStore', {
   state: () => ({
+    recorder: markRaw(new EventRecorder(new GoogleEventStorage())),
     inferenceEngine: markRaw(
       new TechniqueInferenceEngine(
         new RemoteModelSource(Configuration.trained_model, true),
