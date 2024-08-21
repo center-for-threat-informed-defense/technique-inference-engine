@@ -26,15 +26,21 @@ export class EventRecorder {
      * Records an "add techniques" event.
      * @param method
      *  The method used to add the techniques.
-     * @param total
-     *  The total number of techniques added.
+     * @param techniques
+     *  The techniques added.
      */
-    public addTechniques(method: string, total: number) {
+    public addTechniques(method: string, techniques: string[]) {
+        // Sanitize techniques
+        const sanitizedTechniques = techniques
+            .filter(id => id.match(/^T[0-9]{4}(?:.[0-9]{3})?$/gi))
+            .map(id => id.toLocaleUpperCase());
+        // Record
         this._storage.record(
             "add_techniques",
             {
                 "method": method,
-                "total_techniques": total
+                "techniques": sanitizedTechniques,
+                "total_techniques": sanitizedTechniques.length
             }
         )
     }
@@ -42,17 +48,18 @@ export class EventRecorder {
     /**
      * Records a "technique prediction" event.
      * @param techniqueBasis
-     *  The number of techniques provided for the prediction.
+     *  The observed techniques provided for the prediction.
      * @param backend
      *  The prediction backend.
      * @param time
      *  The prediction time (in ms).
      */
-    public makePrediction(provided: number, backend: string, time: number,) {
+    public makePrediction(techniques: string[], backend: string, time: number,) {
         this._storage.record(
             "make_prediction",
             {
-                "total_observed_techniques": provided,
+                "observed_techniques": techniques,
+                "total_observed_techniques": techniques.length,
                 "prediction_backend": backend,
                 "prediction_time": time
             }

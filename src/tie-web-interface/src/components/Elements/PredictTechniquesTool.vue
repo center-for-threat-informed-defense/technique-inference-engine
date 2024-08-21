@@ -179,7 +179,7 @@ export default defineComponent({
     async addObservedTechniqueFromPivot(id: string) {
       // Add Technique
       this.addObservedTechnique(id);
-      this.engine.recorder.addTechniques("technique_pivot", 1);
+      this.engine.recorder.addTechniques("technique_pivot", [id]);
       // Update predictions
       await this.updatePredictions();
     },
@@ -192,7 +192,7 @@ export default defineComponent({
     async addObservedTechniqueFromField(id: string) {
       // Add Technique
       this.addObservedTechnique(id);
-      this.engine.recorder.addTechniques("technique_field", 1);
+      this.engine.recorder.addTechniques("technique_field", [id]);
       // Update predictions
       await this.updatePredictions();
     },
@@ -212,7 +212,7 @@ export default defineComponent({
       for (let obj of objects) {
         this.addObservedTechnique(obj.id);
       }
-      this.engine.recorder.addTechniques("import_csv", objects.length);
+      this.engine.recorder.addTechniques("import_csv", objects.map(o => o.id));
       // Update predictions
       await this.updatePredictions();
     },
@@ -239,7 +239,7 @@ export default defineComponent({
         const techniques = new Set(a.filter(t => b.has(t)));
         this.predicted = await this.engine.predictNewReport(techniques);
         this.engine.recorder.makePrediction(
-          techniques.size,
+          [...techniques],
           this.predicted.metadata.humanReadableBackend,
           this.predicted.metadata.time
         );

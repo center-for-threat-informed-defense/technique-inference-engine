@@ -1,9 +1,10 @@
 import type { EventStorage } from "./EventStorage";
+import type { RecordParameter } from "./RecordParameter";
 
 declare const gtag: (
     command: "event",
     event_name: string,
-    parameters: { [key: string]: string | number | boolean; }
+    parameters: { [key: string]: RecordParameter; }
 ) => void
 
 export class GoogleEventStorage implements EventStorage {
@@ -27,19 +28,11 @@ export class GoogleEventStorage implements EventStorage {
      * @param parameters
      *  The event's parameters.
      */
-    record(name: string, parameters: { [key: string]: string | number | boolean; }): void {
+    record(name: string, parameters: { [key: string]: RecordParameter; }): void {
         // Validate record
         if (!name.match(/^[a-z][a-z_]*$/g)) {
             const error = `Event name '${name}' does not follow typical convention.`;
             throw new Error(error);
-        }
-        for (const key in parameters) {
-            const type = typeof parameters[key];
-            if (type !== "string" && type !== "number" && type !== "boolean") {
-                const types = "string, number, or boolean";
-                const error = `Value of event parameter '${key}' must be a ${types}.`
-                throw new Error(error);
-            }
         }
         // Record event
         gtag('event', name, parameters);

@@ -1,3 +1,5 @@
+import type { RecordParameter } from "./RecordParameter";
+
 export interface EventStorage {
 
     /**
@@ -7,6 +9,6 @@ export interface EventStorage {
      * @param parameters
      *  The event's parameters.
      */
-    record(name: string, parameters: { [key: string]: string | number | boolean; }): void;
+    record(name: string, parameters: { [key: string]: RecordParameter; }): void;
 
 }
