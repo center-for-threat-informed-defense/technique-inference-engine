@@ -52,8 +52,7 @@ function processMarkdownText(source, references = []) {
         .replace(/<\/?code>/g, "`");
     // Replace citations
     const citationIndex = new Map();
-    source = source.replace(/\(Citation:(.*?)\)/g, (match, name) => {
-        name = name.trim();
+    source = source.replace(/\(Citation: (.*?)\)/g, (match, name) => {
         if (!citationIndex.has(name)) {
             const ref = references;
             const url = ref[ref.findIndex(o => o.source_name === name)]?.url;
