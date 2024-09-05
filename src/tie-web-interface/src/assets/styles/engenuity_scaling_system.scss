@@ -676,3 +676,12 @@ input {
   border-style: solid;
   border-width: 1px;
 }
+
+@mixin selection-area {
+  & {
+    transition: background .15s;
+  }
+  &:hover {
+    background: var(--accent-2-border);
+  }
+}

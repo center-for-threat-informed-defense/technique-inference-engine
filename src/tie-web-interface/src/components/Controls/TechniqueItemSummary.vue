@@ -110,6 +110,7 @@ svg:not(.collapsed) {
 }
 
 .technique-header {
+  @include scale.selection-area;
   display: flex;
   align-items: stretch;
 }
