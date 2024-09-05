@@ -13,11 +13,11 @@ The Technique Inference Engine (TIE) allows cyber defenders to forecast an adver
 
 To get started, we suggest visiting the project website, reading about the project, and experimenting with the Engine. Next, you may want to try training the Engine on your own CTI data.
 
-| Resource                                                                                                                         | Description                                                        |
-| -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| [Technique Inference Engine (Website)](https://center-for-threat-informed-defense.github.io/technique-inference-engine/)         | Learn about the project and run the Engine, right in your browser. |
-| [Technique Inference Engine (Python Notebook)](https://center-for-threat-informed-defense.github.io/technique-inference-engine/) | Train and run the Engine locally.                                  |
-| [Training Data](https://github.com/center-for-threat-informed-defense/technique-inference-engine/tree/main/data)                 | Access the CTI Data used to train the engine.                      |
+| Resource                                                                                                                 | Description                                                        |
+| ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| [Technique Inference Engine (Website)](https://center-for-threat-informed-defense.github.io/technique-inference-engine/) | Learn about the project and run the Engine, right in your browser. |
+| [Python Notebook](https://center-for-threat-informed-defense.github.io/technique-inference-engine/)                      | Train and run the Engine locally.                                  |
+| [Training Data](https://github.com/center-for-threat-informed-defense/technique-inference-engine/tree/main/data)         | Access the CTI Data used to train the engine.                      |
 
 ## Getting Involved
 
