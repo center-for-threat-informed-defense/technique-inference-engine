@@ -1,6 +1,19 @@
+[![MITRE ATT&CK® v15](https://img.shields.io/badge/MITRE%20ATT%26CK®-v15-red)](https://attack.mitre.org/versions/v15/)
+
 # Technique Inference Engine
 
-The Technique Inference Engine (TIE) allows cyber defenders to forecast an adversary's next steps by predicting, given a small set of observed [ATT&CK](https://attack.mitre.org/) Techniques, the next most likely set of leveraged Techniques. By doing so, TIE enables defenders to build a complete picture of an adversary and their actions. TIE also offers one of the largest publicly available datasets of its kind, linking CTI Reports to ATT&CK Techniques. The dataset includes 43,899 technique observations across 6,236 CTI Reports, achieving 96% coverage of ATT&CK Enterprise v15.0. This project is created and maintained by the [MITRE Engenuity Center for Threat-Informed Defense](https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/) in furtherance of our mission to advance the start of the art and the state of the practice in threat-informed defense globally. The project is funded by our research participants.
+The Technique Inference Engine (TIE) allows cyber defenders to forecast an adversary's
+next steps by predicting associated [MITRE ATT&CK]((https://attack.mitre.org/))
+techniques from previously observed techniques. TIE enables defenders to build a
+complete picture of an adversary and their actions. TIE also offers one of the largest
+publicly available datasets of its kind, linking CTI Reports to ATT&CK Techniques. The
+dataset includes 43,899 technique observations across 6,236 CTI Reports, achieving 96%
+coverage of ATT&CK Enterprise v15.0. This project is created and maintained by the
+[MITRE Engenuity Center for Threat-Informed
+Defense](https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/)
+in furtherance of our mission to advance the start of the art and the state of the
+practice in threat-informed defense globally. The project is funded by our research
+participants.
 
 **Table Of Contents:**
 
@@ -11,13 +24,15 @@ The Technique Inference Engine (TIE) allows cyber defenders to forecast an adver
 
 ## Getting Started
 
-To get started, we suggest visiting the project website, reading about the project, and experimenting with the Engine. Next, you may want to try training the Engine on your own CTI data.
+To get started, we suggest visiting the project website, reading about the project, and
+experimenting with the Engine. For machine learning engineers, you may want to try
+training your own models using the Python notebook and/or training data.
 
-| Resource                                                                                                                 | Description                                                        |
-| ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
-| [Technique Inference Engine (Website)](https://center-for-threat-informed-defense.github.io/technique-inference-engine/) | Learn about the project and run the Engine, right in your browser. |
-| [Python Notebook](https://center-for-threat-informed-defense.github.io/technique-inference-engine/)                      | Train and run the Engine locally.                                  |
-| [Training Data](https://github.com/center-for-threat-informed-defense/technique-inference-engine/tree/main/data)         | Access the CTI Data used to train the engine.                      |
+| Resource                                                                                                                         | Description                                                                  |
+| -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [Technique Inference Engine (Website)](https://center-for-threat-informed-defense.github.io/technique-inference-engine/)         | Learn about the project and run TIE right in your browser.                   |
+| [Technique Inference Engine (Python Notebook)](https://center-for-threat-informed-defense.github.io/technique-inference-engine/) | Run TIE locally and modify the code or training data to build custom models. |
+| [Training Data](https://github.com/center-for-threat-informed-defense/technique-inference-engine/tree/main/data)                 | Access the CTI Data used to train TIE.                                       |
 
 ## Getting Involved
 
@@ -42,9 +57,7 @@ directly for more general inquiries.
 
 ## Notice
 
-<!-- TODO Add PRS prior to publication. -->
-
-Copyright 2023 MITRE Engenuity. Approved for public release. Document number REPLACE_WITH_PRS_NUMBER
+Copyright 2024 MITRE Engenuity. Approved for public release. Document number CT0124.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
 file except in compliance with the License. You may obtain a copy of the License at
