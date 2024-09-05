@@ -1,67 +1,34 @@
 # Technique Inference Engine
 
-The goal of the Technique Inference Engine (TIE) project is to, given a small set of
-observed MITRE ATT&CK techniques, predict the next most likely techniques.
+The Technique Inference Engine (TIE) allows cyber defenders to forecast an adversary's next steps by predicting, given a small set of observed [ATT&CK](https://attack.mitre.org/) Techniques, the next most likely set of leveraged Techniques. By doing so, TIE enables defenders to build a complete picture of an adversary and their actions. TIE also offers one of the largest publicly available datasets of its kind, linking CTI Reports to ATT&CK Techniques. The dataset includes 43,899 technique observations across 6,236 CTI Reports, achieving 96% coverage of ATT&CK Enterprise v15.0. This project is created and maintained by the [MITRE Engenuity Center for Threat-Informed Defense](https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/) in furtherance of our mission to advance the start of the art and the state of the practice in threat-informed defense globally. The project is funded by our research participants.
 
 **Table Of Contents:**
-
-<!--
-TODO The table of contents should include only h2-h6, NOT h1. The "Markdown All In One"
-extension for VS Code will update the TOC automatically for you:
-https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one
-Set the extension's TOC:Levels setting to "2..6"
--->
 
 - [Getting Started](#getting-started)
 - [Getting Involved](#getting-involved)
 - [Questions and Feedback](#questions-and-feedback)
-- [How Do I Contribute?](#how-do-i-contribute)
 - [Notice](#notice)
 
 ## Getting Started
 
-To get started, clone the repository using git.  All required packages may be installed
-via
+To get started, we suggest visiting the project website, reading about the project, and experimenting with the Engine. Next, you may want to try training the Engine on your own CTI data.
 
-`poetry build`
-
-See https://python-poetry.org for details.
-
-As the UI is still in the early stages of development, please utilize the provided
-notebook main.ipynb in the models folder to play with the model during development.
-All cells should be executed in order.  Feel free to play with the hyperparameters,
-such as learning_rate, regularization_coefficient, gravity_coefficient, etc.
-
-| Resource        | Description              |
-| --------------- | ------------------------ |
-| [Resource 1](#) | Description of resource. |
-| [Resource 2](#) | Description of resource. |
-| [Resource 3](#) | Description of resource. |
+| Resource                                                                                                                         | Description                                                        |
+| -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| [Technique Inference Engine (Website)](https://center-for-threat-informed-defense.github.io/technique-inference-engine/)         | Learn about the project and run the Engine, right in your browser. |
+| [Technique Inference Engine (Python Notebook)](https://center-for-threat-informed-defense.github.io/technique-inference-engine/) | Train and run the Engine locally.                                  |
+| [Training Data](https://github.com/center-for-threat-informed-defense/technique-inference-engine/tree/main/data)                 | Access the CTI Data used to train the engine.                      |
 
 ## Getting Involved
-
-<!-- TODO Add some bullets telling users how to get involved. -->
 
 There are several ways that you can get involved with this project and help
 advance threat-informed defense:
 
-- **Way to get involved 1.** Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-- **Way to get involved 2.** Ut enim ad minim veniam, quis nostrud exercitation ullamco
-  laboris nisi ut aliquip ex ea commodo consequat.
-- **Way to get involved 3.** Duis aute irure dolor in reprehenderit in voluptate velit
-  esse cillum dolore eu fugiat nulla pariatur.
+- **Visit the Technique Inference Engine website.** Use the website to learn how the Engine works and make your own predictions.
+- **Train your own Engine.** Train the Technique Inference Engine on your own CTI data using the official Python Notebook.
+- **Contribute your own CTI.** We are interested in further expanding the Engine's dataset. If you have your own CTI you'd like to share, we would welcome your contribution.
 
 ## Questions and Feedback
-
-Please submit issues for any technical questions/concerns or contact
-[ctid@mitre-engenuity.org](mailto:ctid@mitre-engenuity.org?subject=Question%20about%20technique-inference-engine)
-directly for more general inquiries.
-
-Also see the guidance for contributors if are you interested in contributing or simply
-reporting issues.
-
-## How Do I Contribute?
 
 We welcome your feedback and contributions to help advance
 Technique Inference Engine. Please see the guidance for contributors if are you
