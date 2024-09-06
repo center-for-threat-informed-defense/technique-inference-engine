@@ -235,6 +235,11 @@ var {
   background: var(--tag-background);
 }
 
+blockquote {
+  border-color: var(--primary-font);
+  background: var(--tag-background);
+}
+
 @mixin placeholder {
   color: var(--field-border)
 }
