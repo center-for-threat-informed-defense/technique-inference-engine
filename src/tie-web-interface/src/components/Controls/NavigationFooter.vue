@@ -92,7 +92,7 @@
 
         <div class="disclosures-section">
           <small>
-            Copyright © 2024 MITRE Engenuity. Approved for public release. Document number(s) PUT_PRS_NUMBER_HERE.
+            Copyright © 2024 MITRE Engenuity. Approved for public release. Document number(s) CT0124.
           </small>
         </div>
 
