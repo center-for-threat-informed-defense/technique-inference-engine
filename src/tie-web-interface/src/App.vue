@@ -40,42 +40,33 @@ export default defineComponent({
       },
       {
         name: "About",
-        url: "/about",
+        url: "/#/about",
         sections: [
           {
             name: "Learn More",
             description: "Learn about the project.",
-            url: "/about"
+            url: "/#/about"
           },
           {
-            name: "Methodology",
-            description: "Learn how we trained the model.",
-            url: "/about"
+            name: "Our Dataset",
+            description: "Learn about our training data.",
+            url: "/#/about/#dataset"
           }
         ]
       },
       {
-        name: "Methodology",
-        url: "/about"
-      },
-      {
-        name: "Help",
-        url: "/about",
+        name: "Resources",
+        url: "/#/resources",
         sections: [
           {
-            name: "Predicting Techniques",
-            description: "Learn how to predict Techniques.",
-            url: "/about"
-          },
-          {
-            name: "Tuning the Model",
-            description: "Learn how to tune the model.",
-            url: "/about"
+            name: "Use the Python Notebook",
+            description: "Run the Engine locally on your machine.",
+            url: "/#/resources/"
           },
           {
             name: "Contribute",
             description: "Learn how to contribute.",
-            url: "/about"
+            url: "https://github.com/center-for-threat-informed-defense/technique-inference-engine"
           }
         ]
       },
@@ -92,7 +83,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style lang="scss">
 #app {
   display: flex;
   flex-direction: column;

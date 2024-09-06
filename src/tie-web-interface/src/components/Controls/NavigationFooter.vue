@@ -56,33 +56,49 @@
             <div class="link-list">
               <h5>Related Projects</h5>
               <ul>
-                <li><a href="/">Attack Flow</a></li>
-                <li><a href="/about">Mappings Explorer</a></li>
-                <li><a href="/about">Summiting the Pyramid</a></li>
-                <li><a href="/about">TRAM</a></li>
+                <li>
+                  <a href="https://center-for-threat-informed-defense.github.io/attack-flow/">
+                    Attack Flow
+                  </a>
+                </li>
+                <li>
+                  <a href="https://center-for-threat-informed-defense.github.io/mappings-explorer/">
+                    Mappings Explorer
+                  </a>
+                </li>
+                <li>
+                  <a href="https://center-for-threat-informed-defense.github.io/summiting-the-pyramid/">
+                    Summiting the Pyramid
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/center-for-threat-informed-defense/tram/wiki">
+                    TRAM
+                  </a>
+                </li>
               </ul>
             </div>
             <div class="link-list">
               <h5>TIE</h5>
               <ul>
                 <li>
-                  <a href="#">
+                  <a href="/#/">
                     Home
                   </a>
                 </li>
                 <li>
-                  <a href="#">
+                  <a href="/#/about">
                     About
                   </a>
                 </li>
                 <li>
-                  <a href="#">
-                    Methodology
+                  <a href="/#/about/#dataset">
+                    Our Dataset
                   </a>
                 </li>
                 <li>
-                  <a href="#">
-                    Help
+                  <a href="/#/resources">
+                    Resources
                   </a>
                 </li>
               </ul>
@@ -92,7 +108,7 @@
 
         <div class="disclosures-section">
           <small>
-            Copyright © 2024 MITRE Engenuity. Approved for public release. Document number(s) PUT_PRS_NUMBER_HERE.
+            Copyright © 2024 MITRE Engenuity. Approved for public release. Document number(s) CT0124.
           </small>
         </div>
 

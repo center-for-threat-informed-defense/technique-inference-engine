@@ -30,4 +30,4 @@ coverage
 *.tsbuildinfo
 
 # Ignore Model
-app.trained.model.zip
+# app.trained.model.zip

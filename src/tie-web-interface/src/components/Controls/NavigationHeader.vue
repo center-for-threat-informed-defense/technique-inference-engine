@@ -12,17 +12,17 @@
           <ul class="page-links">
             <template v-for="l of pageLinks" :key="l.name">
               <li class="page-link link-hover-trigger">
-                <RouterLink class="primary-link" :to="l.url">
+                <a class="primary-link" :href="l.url">
                   {{ l.name }}<span class="dropdown" v-if="l.sections?.length"></span>
-                </RouterLink>
+                </a>
                 <div class="section-links-container" v-if="l.sections?.length">
                   <ul class="section-links theme-light">
                     <template v-for="s of l.sections" :key="s.name">
                       <li class="section-link section-name-hover-trigger">
-                        <RouterLink :to="s.url">
+                        <a :href="s.url">
                           <p class="section-name">{{ s.name }}</p>
                           <p class="section-description">{{ s.description }}</p>
-                        </RouterLink>
+                        </a>
                       </li>
                     </template>
                   </ul>

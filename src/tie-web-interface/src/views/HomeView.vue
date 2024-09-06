@@ -12,7 +12,7 @@
             hunting, and incident responders can use this information to highlight important lateral movement and
             persistence behaviors that are essential to threat eviction and recovery.
           </p>
-          <a class="learn-more" href="/about">
+          <a class="learn-more" href="/#/about">
             Learn More
           </a>
         </div>
