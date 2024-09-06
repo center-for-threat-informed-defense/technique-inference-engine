@@ -4,10 +4,12 @@ on:
   push:
     branches: [main]
     paths:
+      - '.github/workflows/**'
       - 'src/**'
       - 'data/**/*.json'
   pull_request:
     paths:
+      - '.github/workflows/**'
       - 'src/**'
       - 'data/**/*.json'
   workflow_dispatch:
