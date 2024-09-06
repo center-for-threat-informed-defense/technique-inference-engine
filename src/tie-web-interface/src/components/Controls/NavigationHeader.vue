@@ -12,17 +12,17 @@
           <ul class="page-links">
             <template v-for="l of pageLinks" :key="l.name">
               <li class="page-link link-hover-trigger">
-                <RouterLink class="primary-link" :to="l.url">
+                <component class="primary-link" :is="getLinkComp(l.url)" v-bind="getLinkProp(l.url)">
                   {{ l.name }}<span class="dropdown" v-if="l.sections?.length"></span>
-                </RouterLink>
+                </component>
                 <div class="section-links-container" v-if="l.sections?.length">
                   <ul class="section-links theme-light">
                     <template v-for="s of l.sections" :key="s.name">
                       <li class="section-link section-name-hover-trigger">
-                        <RouterLink :to="s.url">
+                        <component :is="getLinkComp(s.url)" v-bind="getLinkProp(s.url)">
                           <p class="section-name">{{ s.name }}</p>
                           <p class="section-description">{{ s.description }}</p>
-                        </RouterLink>
+                        </component>
                       </li>
                     </template>
                   </ul>
@@ -72,6 +72,24 @@ export default defineComponent({
     openMobileMenu(open: boolean) {
       this.mobile = open;
       this.lockPageScroll(open);
+    },
+
+    /**
+     * Given a link, returns the appropriate component.
+     * @param link
+     *  The link.
+     */
+    getLinkComp(link: string) {
+      return link.startsWith("http") ? "a" : "RouterLink";
+    },
+
+    /**
+     * Given a link, returns the appropriate component properties.
+     * @param link
+     *  The link.
+     */
+    getLinkProp(link: string) {
+      return { [link.startsWith("http") ? 'href' : 'to']: link };
     }
 
   },

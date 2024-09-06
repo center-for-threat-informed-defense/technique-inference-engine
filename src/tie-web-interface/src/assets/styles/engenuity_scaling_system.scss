@@ -566,6 +566,20 @@ var { @include var }
 }
 code { @include code }
 
+@mixin blockquote {
+  padding: size("m") size("l");
+  border-left-style: solid;
+  border-left-width: 4px;
+}
+blockquote { @include blockquote }
+
+@mixin codeblock {
+  @include code;
+  display: block;
+  padding: size("m") size("l");
+}
+.codeblock { @include codeblock }
+
 @mixin placeholder {
   font-family: "Oswald";
   font-weight: 400;

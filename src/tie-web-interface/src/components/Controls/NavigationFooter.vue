@@ -7,7 +7,8 @@
           <div class="ctid-info">
             <img class="ctid-logo" src="@/assets/images/engenuity_ctid_logo.png">
             <p class="site-description">
-              The <a href="">Center for Threat-Informed Defense</a> is a non-profit, privately funded research and
+              The <a href="https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/">Center for
+                Threat-Informed Defense</a> is a non-profit, privately funded research and
               development
               organization. Our mission is to advance the state of the art and the state of the practice in
               threat-informed defense globally.
@@ -56,34 +57,50 @@
             <div class="link-list">
               <h5>Related Projects</h5>
               <ul>
-                <li><a href="/">Attack Flow</a></li>
-                <li><a href="/about">Mappings Explorer</a></li>
-                <li><a href="/about">Summiting the Pyramid</a></li>
-                <li><a href="/about">TRAM</a></li>
+                <li>
+                  <a href="https://center-for-threat-informed-defense.github.io/attack-flow/">
+                    Attack Flow
+                  </a>
+                </li>
+                <li>
+                  <a href="https://center-for-threat-informed-defense.github.io/mappings-explorer/">
+                    Mappings Explorer
+                  </a>
+                </li>
+                <li>
+                  <a href="https://center-for-threat-informed-defense.github.io/summiting-the-pyramid/">
+                    Summiting the Pyramid
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/center-for-threat-informed-defense/tram/wiki">
+                    TRAM
+                  </a>
+                </li>
               </ul>
             </div>
             <div class="link-list">
               <h5>TIE</h5>
               <ul>
                 <li>
-                  <a href="#">
+                  <RouterLink to="/">
                     Home
-                  </a>
+                  </RouterLink>
                 </li>
                 <li>
-                  <a href="#">
+                  <RouterLink to="/about">
                     About
-                  </a>
+                  </RouterLink>
                 </li>
                 <li>
-                  <a href="#">
-                    Methodology
-                  </a>
+                  <RouterLink to="/about#dataset">
+                    Our Dataset
+                  </RouterLink>
                 </li>
                 <li>
-                  <a href="#">
-                    Help
-                  </a>
+                  <RouterLink to="/resources">
+                    Resources
+                  </RouterLink>
                 </li>
               </ul>
             </div>
@@ -92,7 +109,7 @@
 
         <div class="disclosures-section">
           <small>
-            Copyright © 2024 MITRE Engenuity. Approved for public release. Document number(s) PUT_PRS_NUMBER_HERE.
+            Copyright © 2024 MITRE Engenuity. Approved for public release. Document number(s) CT0124.
           </small>
         </div>
 
@@ -105,6 +122,7 @@
 // Dependencies
 import { defineComponent } from "vue";
 // Components
+import { RouterLink } from "vue-router";
 import IconEmail from "@/components/Icons/IconEmail.vue"
 import IconGitHub from "../Icons/IconGitHub.vue";
 import IconYoutube from "../Icons/IconYoutube.vue";
@@ -112,7 +130,7 @@ import IconLinkedIn from "../Icons/IconLinkedIn.vue";
 
 export default defineComponent({
   name: "NavigationFooter",
-  components: { IconEmail, IconGitHub, IconYoutube, IconLinkedIn }
+  components: { RouterLink, IconEmail, IconGitHub, IconYoutube, IconLinkedIn }
 });
 </script>
 

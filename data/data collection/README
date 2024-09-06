@@ -1,0 +1,20 @@
+# Obtaining Annotated Reports from OpenCTI:
+
+- OpenCTI has reports that come in daily, over 13,000 total reports and some of them have TTPs
+
+Steps to Get Reports from OpenCTI using the Jupyter Notebook here: OpenCTI Reports to TTPs (shareable).ipynb
+
+1. Specify the URL for your OpenCTI instance and set your API key in the corresponding field in the script.
+
+2. Run the first few cells to import the necessary libraries and connect to the OpenCTI instance.
+
+3. Run the cell that contains the Query to obtain all report objects in OpenCTI via GraphQL to obtain list of report IDs. This list of report IDs will have to be iterated on next. It will grab two report IDs for all reports present in the database.
+
+   - GraphQL queries have been formulated within MITRE to collect the necessary fields. This query is just looking for reports and the fields attached to it can be modified within the script if additional information is needed.
+
+4. Run the next query to use the the Report’s ID field as input to collect all the TTPs linked with the ReportID; each query runs independently using the single report ID and then returns the data with the ATT&CK techniques. The loop will finish once every report is checked for TTPs; discarding any reports that return an empty list.
+
+   - If additional information beyond TTPs is needed from each report, you can add any other fields (e.g., description, publication date, etc.) to return from OpenCTI.
+
+5. Parse the JSON response to filter out any non-Enterprise ATT&CK techniques (since OpenCTI also contains other domains like mobile and ICS techniques) duplicate URLs/TTP combinations, and only use TLP-clear field.
+

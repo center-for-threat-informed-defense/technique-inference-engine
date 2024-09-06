@@ -12,9 +12,9 @@
             hunting, and incident responders can use this information to highlight important lateral movement and
             persistence behaviors that are essential to threat eviction and recovery.
           </p>
-          <a class="learn-more" href="/about">
+          <RouterLink class="learn-more" to="/about">
             Learn More
-          </a>
+          </RouterLink>
         </div>
       </div>
     </div>
@@ -41,6 +41,7 @@
 // Dependencies
 import { defineComponent } from "vue";
 // Components
+import { RouterLink } from "vue-router";
 import PredictTechniquesTool from "@/components/Elements/PredictTechniquesTool.vue";
 
 export default defineComponent({
@@ -60,7 +61,7 @@ export default defineComponent({
   methods: {
 
   },
-  components: { PredictTechniquesTool }
+  components: { RouterLink, PredictTechniquesTool }
 });
 </script>
 
