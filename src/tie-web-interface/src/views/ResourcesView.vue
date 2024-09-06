@@ -23,7 +23,7 @@
         virtual environment and dependencies.</p>
       <code>poetry install</code>
       <h3>3. Start Experimenting</h3>
-      Open the Python Notebook located in <code>./notebooks/main.ipynb</code> in your editor of choice and get going!
+      Open the Python Notebook (<code>./notebooks/main.ipynb</code>) in your editor of choice and get going!
       <img src="/images/python_notebook_standard.png" srcset="/images/python_notebook_retina.png 2x"
         style="max-width:850px;">
       <p>
