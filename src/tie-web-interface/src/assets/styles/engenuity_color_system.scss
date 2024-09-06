@@ -240,6 +240,10 @@ blockquote {
   background: var(--tag-background);
 }
 
+.codeblock {
+  background: var(--accent-2-border);
+}
+
 @mixin placeholder {
   color: var(--field-border)
 }

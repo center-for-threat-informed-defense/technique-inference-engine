@@ -573,6 +573,13 @@ code { @include code }
 }
 blockquote { @include blockquote }
 
+@mixin codeblock {
+  @include code;
+  display: block;
+  padding: size("m") size("l");
+}
+.codeblock { @include codeblock }
+
 @mixin placeholder {
   font-family: "Oswald";
   font-weight: 400;
