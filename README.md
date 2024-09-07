@@ -28,11 +28,11 @@ To get started, we suggest visiting the project website, reading about the proje
 experimenting with the Engine. For machine learning engineers, you may want to try
 training your own models using the Python notebook and/or training data.
 
-| Resource                                                                                                                         | Description                                                                  |
-| -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| [Technique Inference Engine (Website)](https://center-for-threat-informed-defense.github.io/technique-inference-engine/)         | Learn about the project and run TIE right in your browser.                   |
-| [Technique Inference Engine (Python Notebook)](https://center-for-threat-informed-defense.github.io/technique-inference-engine/) | Run TIE locally and modify the code or training data to build custom models. |
-| [Training Data](https://github.com/center-for-threat-informed-defense/technique-inference-engine/tree/main/data)                 | Access the CTI Data used to train TIE.                                       |
+| Resource                                                                                                                                    | Description                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [Technique Inference Engine (Website)](https://center-for-threat-informed-defense.github.io/technique-inference-engine/)                    | Learn about the project and run TIE right in your browser.                   |
+| [Technique Inference Engine (Python Notebook)](https://center-for-threat-informed-defense.github.io/technique-inference-engine/#/resources) | Run TIE locally and modify the code or training data to build custom models. |
+| [Training Data](https://github.com/center-for-threat-informed-defense/technique-inference-engine/tree/main/data)                            | Access the CTI Data used to train TIE.                                       |
 
 ## Getting Involved
 
