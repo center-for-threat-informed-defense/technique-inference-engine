@@ -11,7 +11,7 @@ dataset includes 43,899 technique observations across 6,236 CTI Reports, achievi
 coverage of ATT&CK Enterprise v15.0. This project is created and maintained by the
 [MITRE Engenuity Center for Threat-Informed
 Defense](https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/)
-in furtherance of our mission to advance the start of the art and the state of the
+in furtherance of our mission to advance the state of the art and
 practice in threat-informed defense globally. The project is funded by our research
 participants.
 
