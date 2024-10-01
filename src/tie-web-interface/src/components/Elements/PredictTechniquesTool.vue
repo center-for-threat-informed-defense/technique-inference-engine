@@ -13,6 +13,14 @@
         <button @click="addObservedTechniqueFromCsv()">
           <UploadArrow class="icon" /><span>.CSV</span>
         </button>
+        <div class="help-tooltip">
+          <HelpTooltip align="right">
+            <p>
+              CSV file must include an <code>id</code> column which contains ATT&CK
+              Technique IDs (e.g. T1140). Letter case does not matter.
+            </p>
+          </HelpTooltip>
+        </div>
       </div>
       <div class="techniques">
         <template v-for="observed of observedTechniquesList" :key="observed.id">
@@ -78,6 +86,7 @@ import {
 import AddIcon from "../Icons/AddIcon.vue";
 import DeleteIcon from "@/components/Icons/DeleteIcon.vue";
 import UploadArrow from "@/components/Icons/UploadArrow.vue";
+import HelpTooltip from "../Controls/HelpTooltip.vue";
 import OptionSelector from "../Controls/Fields/OptionSelector.vue";
 import TechniqueItemSummary from "../Controls/TechniqueItemSummary.vue";
 import TechniqueGroupSummary from "../Controls/TechniqueGroupSummary.vue";
@@ -299,7 +308,7 @@ export default defineComponent({
     this.trainedTechniques = await trainedTechniques;
   },
   components: {
-    AddIcon, DeleteIcon, UploadArrow, OptionSelector,
+    AddIcon, DeleteIcon, UploadArrow, OptionSelector, HelpTooltip,
     TechniqueItemSummary, TechniqueGroupSummary, TechniquesViewController
   }
 });
@@ -378,6 +387,12 @@ export default defineComponent({
 .options-field {
   flex: 1;
   margin-right: scale.size("s");
+}
+
+.help-tooltip {
+  display: flex;
+  align-items: center;
+  margin-left: scale.size("s");
 }
 
 .action-icon {

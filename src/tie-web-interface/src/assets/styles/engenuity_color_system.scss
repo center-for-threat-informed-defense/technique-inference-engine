@@ -318,6 +318,10 @@ input {
   color: var(--icon);
 }
 
+@mixin help-icon {
+  color: var(--field-border);
+}
+
 @mixin dormant-list-item {
   color: var(--cta-hyperlink);
 }
