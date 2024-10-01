@@ -2,7 +2,10 @@
   <div class="predict-techniques-tool-element">
     <div class="observed-section">
       <div class="section-header">
-        <h3>Observed Techniques</h3>
+        <div class="section-title">
+          <h3 class="title">1. Add Techniques</h3>
+          <p class="subtitle">Add ATT&CK Techniques you've observed.</p>
+        </div>
       </div>
       <div class="options-selector">
         <OptionSelector class="options-field" placeholder="Add Technique" :options="allTechniqueOptions"
@@ -29,8 +32,11 @@
     </div>
     <div class="predicted-section">
       <div class="section-header">
-        <h3>Predicted Techniques</h3>
-        <small>{{ predictionMetadata }}</small>
+        <div class="section-title">
+          <h3 class="title">2. Get Predictions</h3>
+          <p class="subtitle">Be on the lookout for these ATT&CK Techniques:</p>
+        </div>
+        <small class="prediction-metadata">{{ predictionMetadata }}</small>
       </div>
       <TechniquesViewController class="view-controller" :view="viewer" @execute="execute" @download="download" />
       <div class="instructions" v-if="!predicted">
@@ -316,8 +322,17 @@ export default defineComponent({
 
 .section-header {
   display: flex;
-  align-items: baseline;
   justify-content: space-between;
+  align-items: end;
+}
+
+.section-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.subtitle {
+  margin-top: scale.size("xt");
 }
 
 .techniques {
@@ -344,6 +359,12 @@ export default defineComponent({
 @include scale.at-and-below-mobile-width {
   .section-header {
     flex-direction: column;
+    align-items: baseline;
+  }
+
+  .prediction-metadata {
+    margin-top: scale.size("s");
+    opacity: 0.75;
   }
 }
 
