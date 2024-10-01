@@ -37,7 +37,7 @@ $min-width: 450px;
 /**
  * Default Desktop font size (in px).
  */
-$desktop-em-size: 13;
+$desktop-em-size: 13.5;
 
 /**
  * Default tablet/mobile font size (in px).
@@ -246,8 +246,8 @@ $font-sizes: (
   h5    : size-of(1 - $oa),
   h6    : semitone-of(0 - $oa, 1 - $oa),
   h7    : size-of(0 - $oa),
-  p     : size-of(0),
-  small : semitone-of(-1, 0),
+  p     : semitone-of(0, 0.5),
+  small : semitone-of(-0.5, 0),
 );
 
 /**
@@ -445,7 +445,7 @@ $font-sizes: (
 
 
 body {
-  font-family: "Libre Franklin";
+  font-family: "Roboto";
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -527,7 +527,7 @@ h6 { @include h6; }
 }
 
 @mixin p {
-  font-family: "Libre Franklin";
+  font-family: "Roboto";
   font-weight: 400;
   font-size: font-size("p");
   line-height: line-height("p");
@@ -535,7 +535,7 @@ h6 { @include h6; }
 p { @include p; }
 
 @mixin small {
-  font-family: "Libre Franklin";
+  font-family: "Roboto";
   font-weight: 400;
   font-size: font-size("small");
   line-height: line-height("small");
@@ -567,6 +567,9 @@ var { @include var }
 code { @include code }
 
 @mixin blockquote {
+  font-family: "Roboto";
+  font-weight: 400;
+  font-size: font-size("p");
   padding: size("m") size("l");
   border-left-style: solid;
   border-left-width: 4px;

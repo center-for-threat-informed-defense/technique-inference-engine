@@ -149,7 +149,7 @@ $header-height: calc(($header-padding * 2) + ($_fs * $_lh / scale.$units));
     position: absolute;
     top: calc(100% - 1px);
     width: max-content;
-    max-height: 300px;
+    max-height: 325px;
     border-style: solid;
     border-width: 1px;
     padding: scale.size("xl") scale.size("xxl");
