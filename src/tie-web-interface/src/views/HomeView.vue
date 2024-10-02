@@ -55,12 +55,6 @@ export default defineComponent({
     ],
     activeTool: 0
   }),
-  computed: {
-
-  },
-  methods: {
-
-  },
   components: { RouterLink, PredictTechniquesTool }
 });
 </script>
