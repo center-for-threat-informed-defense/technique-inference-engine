@@ -33,6 +33,19 @@ const router = createRouter({
       return { top: 0 }
     }
   }
+});
+router.beforeEach((to, from, next) => {
+  const url = new URL(window.location.href);
+  const params = url.search;
+  // If URL contains query parameters...
+  if (params) {
+    // ...restructure URL for webhash routing
+    const path = url.pathname + (url.pathname.endsWith("/") ? "" : "/");
+    const newUrl = `${url.origin}${path}#/${params}`;
+    window.location.replace(newUrl);
+  } else {
+    next();
+  }
 })
 
 export default router

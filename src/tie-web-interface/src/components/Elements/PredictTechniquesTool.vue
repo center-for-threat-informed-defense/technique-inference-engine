@@ -213,6 +213,28 @@ export default defineComponent({
     },
 
     /**
+     * Adds observed techniques to the set from the URL's query parameters.
+     */
+    async addObservedTechniqueFromQueryParameter() {
+      // Parse query parameters
+      const techniques = this.$route.query.techniques;
+      if (!techniques || Array.isArray(techniques)) {
+        return;
+      }
+      // Parse IDs
+      const ids = techniques.split(/,/).filter(
+        t => t.match(/^T[0-9]{4}(?:\.[0-9]{3})?$/i)
+      );
+      // Add Techniques
+      for (let id of ids) {
+        this.addObservedTechnique(id);
+      }
+      this.engine.recorder.addTechniques("query_parameter", ids);
+      // Update predictions
+      await this.updatePredictions();
+    },
+
+    /**
      * Adds observed techniques to the set from a CSV file.
      */
     async addObservedTechniqueFromCsv() {
@@ -306,6 +328,8 @@ export default defineComponent({
     // Await results
     this.enrichmentFile = await enrichmentFile;
     this.trainedTechniques = await trainedTechniques;
+    // Add techniques from query parameters
+    await this.addObservedTechniqueFromQueryParameter();
   },
   components: {
     AddIcon, DeleteIcon, UploadArrow, OptionSelector, HelpTooltip,
