@@ -10,7 +10,7 @@
       <div class="options-selector">
         <OptionSelector class="options-field" placeholder="Add Technique" :options="allTechniqueOptions"
           @select="addObservedTechniqueFromField" />
-        <button @click="addObservedTechniqueFromCsv()">
+        <button class="upload-button" @click="addObservedTechniqueFromCsv()">
           <UploadArrow class="icon" /><span>.CSV</span>
         </button>
         <div class="help-tooltip">
@@ -46,7 +46,8 @@
         </div>
         <small class="prediction-metadata">{{ predictionMetadata }}</small>
       </div>
-      <TechniquesViewController class="view-controller" :view="viewer" @execute="execute" @download="download" />
+      <TechniquesViewController class="view-controller" :view="viewer" @execute="execute" @download="download"
+        @share="share" />
       <div class="instructions" v-if="!predicted">
         To generate a set of predictions, add one or more observed techniques.
       </div>
@@ -316,6 +317,34 @@ export default defineComponent({
         default:
           console.warn(`Cannot download unknown file type: '${type}'.`)
       }
+    },
+
+    /**
+     * Shares a link to the current view.
+     */
+    async share() {
+      // Resolve URL
+      let url = `${window.location.origin}${window.location.pathname}`;
+      let title = "Technique Inference Engine";
+      if (this.observed.size) {
+        url = `${url}?techniques=${[...this.observed].join(",")}`
+        title = "TIE — Technique Predictions"
+      }
+      // Share URL
+      const data = { title, url };
+      if (Browser.isMobileDevice() && navigator.canShare(data)) {
+        // Attempt to send url to share sheet
+        try {
+          await navigator.share(data);
+          this.engine.recorder.shareResults("native");
+        } catch (ex) {
+          /* empty */
+        }
+      } else {
+        // Otherwise copy url to clipboard
+        navigator.clipboard.writeText(data.url);
+        this.engine.recorder.shareResults("clipboard");
+      }
     }
 
   },
@@ -427,6 +456,10 @@ export default defineComponent({
   user-select: none;
   padding: 0em scale.size("xl");
   cursor: pointer;
+}
+
+.upload-button {
+  height: unset;
 }
 
 /** === Predicted Techniques Section === */

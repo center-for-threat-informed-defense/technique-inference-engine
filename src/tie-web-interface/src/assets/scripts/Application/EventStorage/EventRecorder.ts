@@ -1,8 +1,8 @@
-import { SetViewFilter } from "../PredictionsView/Commands/SetViewFilter";
-import { SetViewLimit } from "../PredictionsView/Commands/SetViewLimit";
-import { SetViewOption } from "../PredictionsView/Commands/SetViewOption";
+import { SetViewFilter } from "../../PredictionsView/Commands/SetViewFilter";
+import { SetViewLimit } from "../../PredictionsView/Commands/SetViewLimit";
+import { SetViewOption } from "../../PredictionsView/Commands/SetViewOption";
 import type { EventStorage } from "./EventStorage";
-import type { ControlCommand } from "../PredictionsView";
+import type { ControlCommand } from "../../PredictionsView";
 
 export class EventRecorder {
 
@@ -119,6 +119,18 @@ export class EventRecorder {
             {
                 "file_type": fileType
             }
+        )
+    }
+
+    /**
+     * Records a "share results" event.
+     * @param method
+     *  The method used to share the results.
+     */
+    public shareResults(method: string) {
+        this._storage.record(
+            "share_results",
+            { share_method: method }
         )
     }
 

@@ -34,6 +34,7 @@
         </template>
       </ButtonMenu>
     </div>
+    <div class="export-controls">
     <ButtonList class="view-export">
       <template #button>
         <DownloadArrow class="icon" /><span>Save</span>
@@ -47,6 +48,8 @@
         </button>
       </template>
     </ButtonList>
+      <ShareButton class="share-button" @share="$emit('share')" />
+    </div>
   </div>
 </template>
 
@@ -58,6 +61,7 @@ import type { ControlCommand } from "@/assets/scripts/PredictionsView/Commands";
 // Components
 import ButtonList from "./ButtonList.vue";
 import ButtonMenu from "./ButtonMenu.vue";
+import ShareButton from "./ShareButton.vue";
 import FilterStack from "../Icons/FilterStack.vue";
 import DownloadArrow from "../Icons/DownloadArrow.vue";
 import OrganizeArrows from "../Icons/OrganizeArrows.vue";
@@ -74,7 +78,7 @@ export default defineComponent({
   data: () => ({
     active: false,
   }),
-  emits: ["execute", "download"],
+  emits: ["execute", "download", "share"],
   methods: {
 
     /**
@@ -104,8 +108,8 @@ export default defineComponent({
 
   },
   components: {
-    ButtonList, ButtonMenu, FilterStack, DownloadArrow,
-    OrganizeArrows, DynamicViewControl
+    ShareButton, ButtonList, ButtonMenu, FilterStack,
+    DownloadArrow, OrganizeArrows, DynamicViewControl
   }
 });
 </script>
@@ -123,7 +127,8 @@ export default defineComponent({
 
 /** === View Controls === */
 
-.view-controls {
+.view-controls,
+.export-controls {
   display: flex;
 }
 
@@ -142,6 +147,16 @@ export default defineComponent({
 .menu-active {
   .menu:not(.menu-open) :deep(button) {
     opacity: 0.5;
+  }
+}
+
+.share-button {
+  margin-left: scale.size("xl");
+}
+
+@include scale.below-mobile-width {
+  :deep(button:not(.export) span) {
+    display: none;
   }
 }
 

@@ -669,7 +669,8 @@ button {
   @include h7;
   display: flex;
   align-items: center;
-  padding: size("s") size("m");
+  padding: 0em size("m");
+  height: 3 * size("m");
   border-style: solid;
   border-width: 1px;
   user-select: none;

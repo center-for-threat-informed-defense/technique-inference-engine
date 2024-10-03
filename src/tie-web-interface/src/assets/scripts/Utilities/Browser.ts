@@ -148,6 +148,15 @@ export class Browser {
         }
     }
     
+    /**
+     * Tests if the device is a mobile device.
+     * @returns
+     *  True if the device is a mobile device, false otherwise.
+     */
+    public static isMobileDevice(): boolean {
+        const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+        return mobile.test(navigator.userAgent) ? true : false;
+    }
     
 }
 
