@@ -29,5 +29,8 @@ coverage
 
 *.tsbuildinfo
 
+# Ignore HTTPS Certs
+.certs
+
 # Ignore Model
 # app.trained.model.zip
