@@ -3,7 +3,7 @@
     <div class="view-controls">
       <ButtonMenu class="menu" @menu-open="active = true" @menu-close="active = false">
         <template #button>
-          <OrganizeArrows class="icon" /><span>Organize</span>
+          <OrganizeArrows /><span>Organize</span>
         </template>
         <template #menuHeader>
           <mark>
@@ -19,7 +19,7 @@
       </ButtonMenu>
       <ButtonMenu class="menu" @menu-open="active = true" @menu-close="active = false">
         <template #button>
-          <FilterStack class="icon" /><span>Filter</span>
+          <FilterStack /><span>Filter</span>
         </template>
         <template #menuHeader>
           <mark>
@@ -35,19 +35,19 @@
       </ButtonMenu>
     </div>
     <div class="export-controls">
-    <ButtonList class="view-export">
-      <template #button>
-        <DownloadArrow class="icon" /><span>Save</span>
-      </template>
-      <template #buttonList>
-        <button class="export" @click="downloadViewAsNavigatorLayer()">
-          <DownloadArrow class="icon" /><span>Navigator Layer</span>
-        </button>
-        <button class="export" @click="downloadViewAsCsv()">
-          <DownloadArrow class="icon" /><span>.CSV</span>
-        </button>
-      </template>
-    </ButtonList>
+      <ButtonList class="view-export">
+        <template #button>
+          <DownloadArrow class="download-icon" /><span>Export</span>
+        </template>
+        <template #buttonList>
+          <button class="export" @click="downloadViewAsNavigatorLayer()">
+            <DownloadArrow class="download-icon" /><span>Navigator Layer</span>
+          </button>
+          <button class="export" @click="downloadViewAsCsv()">
+            <DownloadArrow class="download-icon" /><span>.CSV</span>
+          </button>
+        </template>
+      </ButtonList>
       <ShareButton class="share-button" @share="$emit('share')" />
     </div>
   </div>
@@ -148,6 +148,10 @@ export default defineComponent({
   .menu:not(.menu-open) :deep(button) {
     opacity: 0.5;
   }
+}
+
+.download-icon {
+  height: 13px;
 }
 
 .share-button {
