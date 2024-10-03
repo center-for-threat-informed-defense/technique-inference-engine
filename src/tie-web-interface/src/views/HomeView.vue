@@ -45,7 +45,7 @@ import { RouterLink } from "vue-router";
 import PredictTechniquesTool from "@/components/Elements/PredictTechniquesTool.vue";
 
 export default defineComponent({
-  name: "App",
+  name: "HomeView",
   data: () => ({
     tools: [
       {

@@ -42,7 +42,7 @@ import { defineComponent } from "vue";
 declare const MathJax: { typeset: () => void }
 
 export default defineComponent({
-  name: "AboutView",
+  name: "ResourcesView",
   mounted() {
     MathJax.typeset();
   },
