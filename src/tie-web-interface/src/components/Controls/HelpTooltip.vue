@@ -50,7 +50,7 @@ export default defineComponent({
   position: absolute;
   top: 100%;
   width: max-content;
-  max-width: 300px;
+  max-width: 250px;
   padding: scale.size("l");
   border: solid 1px;
   margin-top: scale.size("t");

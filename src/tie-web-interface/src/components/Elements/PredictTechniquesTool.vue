@@ -16,7 +16,7 @@
         <div class="help-tooltip">
           <HelpTooltip align="right">
             <p>
-              CSV file must include an <code>id</code> column which contains ATT&CK
+              CSV file must include an <code>id</code> column containing ATT&CK
               Technique IDs (e.g. T1140). Letter case does not matter.
             </p>
           </HelpTooltip>
