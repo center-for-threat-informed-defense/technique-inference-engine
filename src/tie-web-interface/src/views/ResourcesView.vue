@@ -19,12 +19,25 @@
         cd technique-inference-engine
       </div>
       <h3>2. Install the Project's Dependencies</h3>
-      <p>We highly recommend using <a href="https://python-poetry.org/">Poetry</a> to setup the project's
-        virtual environment and dependencies.</p>
-      <code>poetry install</code>
-      <h3>3. Start Experimenting</h3>
-      Open the Python Notebook (<code>./notebooks/main.ipynb</code>) in your editor of choice and get going!
-      <img src="/images/python_notebook_standard.png" srcset="/images/python_notebook_retina.png 2x"
+      <p>You will need to install <a href="https://python-poetry.org/docs/#installation">Poetry</a> and
+        then run the following command to set up a virtual environment and dependencies.</p>
+      <div class="codeblock">
+        poetry install
+      </div>
+      <h3>3. Start Jupyter Lab</h3>
+      <p>Run the following command to run Jupyter Lab inside the project's virtual environment.</p>
+      <div class="codeblock">
+        poetry run jupyter lab
+      </div>
+      <p>Once it has started, you should be able to access it by loading
+      <code>http://localhost:8888/lab</code> in your browser. You should see the
+      following Jupyter interface:</p>
+      <img src="/images/jupyter_lab_standard.png" srcset="/images/jupyter_lab_retina.png 2x"
+        style="max-width:850px;">
+      <h3>4. Open the TIE notebook</h3>
+      <p>Navigate into the <code>notebooks</code> folder and then open
+      <code>main.ipynb</code>. You can run the code as-is or modify it to meet your own needs.</p>
+      <img src="/images/jupyter_lab2_standard.png" srcset="/images/jupyter_lab2_retina.png 2x"
         style="max-width:850px;">
       <p>
         <i>For additional information, refer to the Technique Inference
