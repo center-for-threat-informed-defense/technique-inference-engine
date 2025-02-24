@@ -24,6 +24,7 @@ pytest = "^7.1.2"
 pytest-cov = "2.11.1"
 safety = "1.10.3"
 mypy = "^1.2.0"
+jupyter = "^1.1.1"
 
 [tool.poetry.scripts]
 export-tie = "tie.cli:main"

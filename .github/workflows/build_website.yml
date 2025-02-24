@@ -35,10 +35,10 @@ jobs:
     steps:
 
       # Configure Environment
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       # Configure Node
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         id: "setup-node"
         with:
           node-version: '19'
@@ -79,7 +79,7 @@ jobs:
         working-directory: src/tie-web-interface/
         run: npm run build-only -- --base /technique-inference-engine/
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: tie_website
           path: src/tie-web-interface/dist/
@@ -95,12 +95,12 @@ jobs:
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
       STATICRYPT_PASS: ${{ secrets.STATICRYPT_PASS }}
     steps:
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: "19"
       - run: npm install -g staticrypt
       - name: Download Web Site
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: tie_website
           path: tie_website
@@ -149,16 +149,16 @@ jobs:
 
     steps:
     - name: Setup Pages
-      uses: actions/configure-pages@v2
+      uses: actions/configure-pages@v5
     - name: Download Web Site
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: tie_website
         path: tie_website
     - name: Upload artifact
-      uses: actions/upload-pages-artifact@v1
+      uses: actions/upload-pages-artifact@v3
       with:
         path: ./tie_website
     - name: Deploy to GitHub Pages
       id: deployment
-      uses: actions/deploy-pages@v1
+      uses: actions/deploy-pages@v4
