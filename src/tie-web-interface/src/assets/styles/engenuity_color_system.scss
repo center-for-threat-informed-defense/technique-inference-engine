@@ -8,22 +8,24 @@
  * MITRE Engenuity color pallette.
  */
 :root {
-  --engenuity-black: #000000;
+  --engenuity-black: #111921;
   --engenuity-white: #ffffff;
-  --engenuity-light-default-text: #0b2338;
-  --engenuity-light-h2-highlight: #6241c5;
-  --engenuity-dark-h2-highlight: #bca9dd;
-  --engenuity-light-hyperlink: #6241c5;
+  --engenuity-light-default-text: #111921;
+  --engenuity-light-h2-highlight: #005b94;
+  --engenuity-dark-h2-highlight: #87DEFF;
+  --engenuity-light-hyperlink: #005b94;
   --engenuity-dark-hyperlink: #88deff;
   --engenuity-mitre-blue: #005b94;
   --engenuity-blue: #0096d1;
-  --engenuity-navy: #212c5e;
-  --engenuity-dark-navy: #0f1538;
+  --engenuity-navy: #0D2F4F;
+  --engenuity-dark-navy: #0B2338;
   --engenuity-dark-purple: #2b1972;
-  --engenuity-core-color-8: #b2b2b2;
-  --engenuity-core-color-9: #f0f1f2;
-  --engenuity-field-border: #7e7f83;
+  --engenuity-core-color-8: #d4d4d3;
+  --engenuity-core-color-9: #f1f3f4;
+  --engenuity-field-border: #7e8284;
   --engenuity-topic-tag-background: #e0e0e0;
+  --mitre-light-blue: #87DEFF;
+  --mitre-black: #111921;
 }
 
 
@@ -38,15 +40,15 @@ $themes: (
     primary-background: var(--engenuity-white),
     highlight: var(--engenuity-light-h2-highlight),
     hyperlink: var(--engenuity-mitre-blue),
-    cta-hyperlink: var(--engenuity-blue),
+    cta-hyperlink: var(--engenuity-mitre-blue),
     hyperlink-hover: var(--engenuity-navy),
     learn-more-arrow: url("../images/link_arrow_005b94.svg"),
-    learn-more-arrow-cta: url("../images/link_arrow_0096d1.svg"),
+    learn-more-arrow-cta: url("../images/link_arrow_005b94.svg"),
     learn-more-arrow-hover: url("../images/link_arrow_212c5e.svg"),
     accent-1-border: var(--engenuity-core-color-8),
     accent-2-border: var(--engenuity-core-color-9),
     field-border: var(--engenuity-field-border),
-    icon: var(--engenuity-dark-purple),
+    icon: var(--engenuity-dark-navy),
     tag-font: var(--engenuity-black),
     tag-background: var(--engenuity-topic-tag-background)
   ),
@@ -64,7 +66,7 @@ $themes: (
     accent-1-border: var(--engenuity-navy),
     accent-2-border: var(--engenuity-navy),
     field-border: var(--engenuity-navy),
-    icon: var(--engenuity-dark-purple),
+    icon: var(--engenuity-dark-navy),
     tag-font: var(--engenuity-black),
     tag-background: var(--engenuity-topic-tag-background)
   )

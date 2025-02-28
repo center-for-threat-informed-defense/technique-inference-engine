@@ -3,14 +3,14 @@
 # Technique Inference Engine
 
 The Technique Inference Engine (TIE) allows cyber defenders to forecast an adversary's
-next steps by predicting associated [MITRE ATT&CK]((https://attack.mitre.org/))
+next steps by predicting associated [MITRE ATT&CK](<(https://attack.mitre.org/)>)
 techniques from previously observed techniques. TIE enables defenders to build a
 complete picture of an adversary and their actions. TIE also offers one of the largest
 publicly available datasets of its kind, linking CTI Reports to ATT&CK Techniques. The
 dataset includes 43,899 technique observations across 6,236 CTI Reports, achieving 96%
 coverage of ATT&CK Enterprise v15.0. This project is created and maintained by the
-[MITRE Engenuity Center for Threat-Informed
-Defense](https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/)
+[MITRE Center for Threat-Informed
+Defense](https://ctid.mitre.org/)
 in furtherance of our mission to advance the start of the art and the state of the
 practice in threat-informed defense globally. The project is funded by our research
 participants.
@@ -52,12 +52,12 @@ interested in [contributing or simply reporting issues.](/CONTRIBUTING.md)
 Please submit
 [issues](https://github.com/center-for-threat-informed-defense/technique-inference-engine/issues) for
 any technical questions/concerns or contact
-[ctid@mitre-engenuity.org](mailto:ctid@mitre-engenuity.org?subject=subject=Question%20about%20technique-inference-engine)
+[ctid@mitre.org](mailto:ctid@mitre.org?subject=subject=Question%20about%20technique-inference-engine)
 directly for more general inquiries.
 
 ## Notice
 
-Copyright 2024 MITRE Engenuity. Approved for public release. Document number CT0124.
+Copyright 2024 MITRE. Approved for public release. Document number CT0124.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
 file except in compliance with the License. You may obtain a copy of the License at

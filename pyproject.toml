@@ -2,7 +2,7 @@
 name = "technique-inference-engine"
 version = "1.0.0"
 description = "The goal of the Technique Inference Engine (TIE) project is to, given a small set of observed MITRE ATT&CK techniques, predict the next most likely techniques."
-authors = ["Center for Threat-Informed Defense <ctid@mitre-engenuity.org>"]
+authors = ["Center for Threat-Informed Defense <ctid@mitre.org>"]
 packages = [{ include = "tie", from = "src" }]
 license = "Apache"
 

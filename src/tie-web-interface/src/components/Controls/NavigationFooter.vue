@@ -5,26 +5,27 @@
       <div class="navigation-footer-contents">
         <div class="ctid-section">
           <div class="ctid-info">
-            <img class="ctid-logo" src="@/assets/images/engenuity_ctid_logo.png">
+            <img class="ctid-logo" src="@/assets/images/engenuity_ctid_logo.png"
+              alt="Center for Threat-Informed Defense">
             <p class="site-description">
-              The <a href="https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/">Center for
+              The <a href="https://ctid.mitre.org/">Center for
                 Threat-Informed Defense</a> is a non-profit, privately funded research and
               development
               organization. Our mission is to advance the state of the art and the state of the practice in
               threat-informed defense globally.
             </p>
             <div class="social-icons">
-              <a href="mailto:ctid@mitre-engenuity.org?subject=Technique%20Inference%20Engine">
-                <IconEmail />
+              <a href="mailto:ctid@mitre.org?subject=Technique%20Inference%20Engine">
+                <IconEmail aria-label="email the center for threat-informed defense" />
               </a>
               <a href="https://www.linkedin.com/showcase/center-for-threat-informed-defense/">
-                <IconLinkedIn />
+                <IconLinkedIn aria-label="center for threat-informed defense linkedin" />
               </a>
-              <a href="https://www.youtube.com/@mitreengenuity">
-                <IconYoutube />
+              <a href="https://www.youtube.com/playlist?list=PLALq3Th79NnpUkRy8TUYVBKvysCp9xwNh">
+                <IconYoutube aria-label="center for threat-informed defense youtube" />
               </a>
               <a href="https://github.com/center-for-threat-informed-defense/technique-inference-engine">
-                <IconGitHub />
+                <IconGitHub aria-label="center for threat-informed defense github" />
               </a>
             </div>
           </div>
@@ -33,22 +34,22 @@
               <h5>About Us</h5>
               <ul>
                 <li>
-                  <a href="https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/">
+                  <a href="https://ctid.mitre.org/">
                     Home
                   </a>
                 </li>
                 <li>
-                  <a href="https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/our-work/">
+                  <a href="https://ctid.mitre.org/projects/">
                     Our Work
                   </a>
                 </li>
                 <li>
-                  <a href="https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/participants/">
+                  <a href="https://ctid.mitre.org/membership/">
                     Membership
                   </a>
                 </li>
                 <li>
-                  <a href="https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/membership/">
+                  <a href="https://ctid.mitre.org/get-involved/">
                     Get Involved
                   </a>
                 </li>
@@ -109,7 +110,7 @@
 
         <div class="disclosures-section">
           <small>
-            Copyright © 2024 MITRE Engenuity. Approved for public release. Document number(s) CT0124.
+            Copyright © 2024 MITRE. Approved for public release. Document number(s) CT0124.
           </small>
         </div>
 
@@ -194,6 +195,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 100%;
 }
 
 .ctid-links {
