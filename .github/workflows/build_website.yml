@@ -81,7 +81,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tie_website
-          path: ./tie-web-interface/dist/
+          path: src/tie-web-interface/dist/
 
   # Publish to Azure blob only on PRs, not main.
   azure_blob:
