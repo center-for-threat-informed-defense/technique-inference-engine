@@ -4,14 +4,14 @@ on:
   push:
     branches: [main]
     paths:
-      - '.github/workflows/**'
-      - 'src/**'
-      - 'data/**/*.json'
+      - ".github/workflows/**"
+      - "src/**"
+      - "data/**/*.json"
   pull_request:
     paths:
-      - '.github/workflows/**'
-      - 'src/**'
-      - 'data/**/*.json'
+      - ".github/workflows/**"
+      - "src/**"
+      - "data/**/*.json"
   workflow_dispatch:
 
 # If another web build starts for the same branch, cancel the previous build. This
@@ -33,7 +33,6 @@ jobs:
     env:
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
     steps:
-
       # Configure Environment
       - uses: actions/checkout@v4
 
@@ -41,9 +40,9 @@ jobs:
       - uses: actions/setup-node@v4
         id: "setup-node"
         with:
-          node-version: '19'
-          cache: 'npm'
-          cache-dependency-path: 'src/tie-web-interface/package-lock.json'
+          node-version: "19"
+          cache: "npm"
+          cache-dependency-path: "src/tie-web-interface/package-lock.json"
       - name: Install dependencies
         working-directory: src/tie-web-interface/
         run: npm ci
@@ -61,7 +60,7 @@ jobs:
       # Configure Python
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.11.8'
+          python-version: "3.11.8"
       - name: Install Poetry
         run: curl -sSL https://install.python-poetry.org/ | python -
       - name: Add Poetry to PATH
@@ -77,12 +76,12 @@ jobs:
       # Build Website
       - name: Compile Website
         working-directory: src/tie-web-interface/
-        run: npm run build-only -- --base /
+        run: npm run build-only -- --base /technique-inference-engine/
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: tie_website
-          path: src/tie-web-interface/dist/
+          path: ./tie-web-interface/dist/
 
   # Publish to Azure blob only on PRs, not main.
   azure_blob:
@@ -148,17 +147,17 @@ jobs:
       url: $\{\{ steps.deployment.outputs.page_url \}\}
 
     steps:
-    - name: Setup Pages
-      uses: actions/configure-pages@v5
-    - name: Download Web Site
-      uses: actions/download-artifact@v4
-      with:
-        name: tie_website
-        path: tie_website
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: ./tie_website
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Download Web Site
+        uses: actions/download-artifact@v4
+        with:
+          name: tie_website
+          path: tie_website
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./tie_website
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
