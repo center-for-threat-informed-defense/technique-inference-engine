@@ -76,7 +76,7 @@ jobs:
       # Build Website
       - name: Compile Website
         working-directory: src/tie-web-interface/
-        run: npm run build-only -- --base /technique-inference-engine/
+        run: npm run build-only -- --base src/tie-web-interface/
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
