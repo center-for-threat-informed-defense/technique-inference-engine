@@ -4,12 +4,10 @@ on:
   push:
     branches: [main]
     paths:
-      - ".github/workflows/**"
       - "src/**"
       - "data/**/*.json"
   pull_request:
     paths:
-      - ".github/workflows/**"
       - "src/**"
       - "data/**/*.json"
   workflow_dispatch:
@@ -76,16 +74,15 @@ jobs:
       # Build Website
       - name: Compile Website
         working-directory: src/tie-web-interface/
-        run: npm run build-only -- --base src/tie-web-interface/
+        run: npm run build-only -- --base /$BRANCH_NAME/
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: tie_website
-          path: ./src/tie-web-interface/dist/
+          path: src/tie-web-interface/dist/
 
   # Publish to Azure blob only on PRs, not main.
   azure_blob:
-    if: github.ref_name != 'main'
     needs: tie_website_build
     runs-on: ubuntu-latest
     env:
@@ -137,27 +134,27 @@ jobs:
               body: `This PR has been published to https://techniqueinferenceengine.z13.web.core.windows.net/${process.env['BRANCH_NAME']}/`,
             })
 
-  github_pages:
-    # This job only runs when committing or merging to main branch.
-    if: github.ref_name == 'main'
-    needs: tie_website_build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: $\{\{ steps.deployment.outputs.page_url \}\}
+  # github_pages:
+  #   # This job only runs when committing or merging to main branch.
+  #   if: github.ref_name == 'main'
+  #   needs: tie_website_build
+  #   runs-on: ubuntu-latest
+  #   environment:
+  #     name: github-pages
+  #     url: $\{\{ steps.deployment.outputs.page_url \}\}
 
-    steps:
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Download Web Site
-        uses: actions/download-artifact@v4
-        with:
-          name: tie_website
-          path: tie_website
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./tie_website
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+  #   steps:
+  #   - name: Setup Pages
+  #     uses: actions/configure-pages@v2
+  #   - name: Download Web Site
+  #     uses: actions/download-artifact@v3
+  #     with:
+  #       name: tie_website
+  #       path: tie_website
+  #   - name: Upload artifact
+  #     uses: actions/upload-pages-artifact@v1
+  #     with:
+  #       path: ./tie_website
+  #   - name: Deploy to GitHub Pages
+  #     id: deployment
+  #     uses: actions/deploy-pages@v1
