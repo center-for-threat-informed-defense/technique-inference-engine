@@ -39,12 +39,15 @@ jobs:
 
       # Lint
       - name: Lint
+        working-directory: src/tie-web-interface/
         run: npm run lint
 
       # Build and Upload Artifact
       - name: Type Check
+        working-directory: src/tie-web-interface/
         run: npm run type-check
       - name: Build
+        working-directory: src/tie-web-interface/
         run: npm run build-only -- --base /
       - name: Upload artifact
         uses: actions/upload-artifact@v4
