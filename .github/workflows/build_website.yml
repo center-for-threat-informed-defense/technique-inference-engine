@@ -67,9 +67,9 @@ jobs:
         run: poetry install
 
       # Train Model
-      # - name: Retrain Technique Inference Engine Model
-      #   working-directory: src/tie-web-interface/
-      #   run: npm run build-model
+      - name: Retrain Technique Inference Engine Model
+        working-directory: src/tie-web-interface/
+        run: npm run build-model
 
       # Build Website
       - name: Compile Website
@@ -134,27 +134,27 @@ jobs:
               body: `This PR has been published to https://techniqueinferenceengine.z13.web.core.windows.net/${process.env['BRANCH_NAME']}/`,
             })
 
-  # github_pages:
-  #   # This job only runs when committing or merging to main branch.
-  #   if: github.ref_name == 'main'
-  #   needs: tie_website_build
-  #   runs-on: ubuntu-latest
-  #   environment:
-  #     name: github-pages
-  #     url: $\{\{ steps.deployment.outputs.page_url \}\}
+  github_pages:
+    # This job only runs when committing or merging to main branch.
+    if: github.ref_name == 'main'
+    needs: tie_website_build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: $\{\{ steps.deployment.outputs.page_url \}\}
 
-  #   steps:
-  #   - name: Setup Pages
-  #     uses: actions/configure-pages@v2
-  #   - name: Download Web Site
-  #     uses: actions/download-artifact@v3
-  #     with:
-  #       name: tie_website
-  #       path: tie_website
-  #   - name: Upload artifact
-  #     uses: actions/upload-pages-artifact@v1
-  #     with:
-  #       path: ./tie_website
-  #   - name: Deploy to GitHub Pages
-  #     id: deployment
-  #     uses: actions/deploy-pages@v1
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+      - name: Download Web Site
+        uses: actions/download-artifact@v4
+        with:
+          name: tie_website
+          path: tie_website
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./tie_website
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
