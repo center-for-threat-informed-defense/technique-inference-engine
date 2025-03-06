@@ -53,7 +53,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tat_website
-          path: src/tie-web-interface/dist/
+          path: ./src/tie-web-interface/dist/
 
   github_pages:
     # This job only runs when committing or merging to main branch.
