@@ -100,7 +100,6 @@
 // Dependencies
 import { defineComponent } from "vue";
 // Components
-import { RouterLink } from "vue-router";
 import IconEmail from "../Icons/IconEmail.vue"
 import IconGitHub from "../Icons/IconGitHub.vue";
 import IconYoutube from "../Icons/IconYoutube.vue";
@@ -108,7 +107,7 @@ import IconLinkedIn from "../Icons/IconLinkedIn.vue";
 
 export default defineComponent({
   name: "NavigationFooter",
-  components: { RouterLink, IconEmail, IconGitHub, IconYoutube, IconLinkedIn }
+  components: { IconEmail, IconGitHub, IconYoutube, IconLinkedIn }
 });
 </script>
 
