@@ -118,7 +118,7 @@ $header-padding: scale.size("h");
 /*
  * The header's calculated height.
  */
-$header-height: calc(($header-padding * 2) + ($_fs * $_lh / scale.$units));
+$header-height: calc(($header-padding * 1.5) + ($_fs * $_lh / scale.$units));
 
 /** === Main Control === */
 
@@ -136,7 +136,7 @@ $header-height: calc(($header-padding * 2) + ($_fs * $_lh / scale.$units));
   justify-content: space-between;
   text-wrap: nowrap;
   max-width: scale.$max-width;
-  padding: $header-padding scale.size("xxl");
+  padding: scale.size("xl") scale.size("xxl");
 }
 
 .navigation-buffer {
@@ -161,7 +161,7 @@ $header-height: calc(($header-padding * 2) + ($_fs * $_lh / scale.$units));
 }
 
 .logo-text {
-  @include scale.h6;
+  @include scale.h3;
   text-decoration: none;
 }
 
@@ -244,6 +244,10 @@ $header-height: calc(($header-padding * 2) + ($_fs * $_lh / scale.$units));
       visibility 0.2s ease-in-out 0.05s,
       transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.45s;
     cursor: pointer;
+  }
+
+  .page-links-container {
+    margin: auto 0;
   }
 
   .page-link:hover .section-links-container {
