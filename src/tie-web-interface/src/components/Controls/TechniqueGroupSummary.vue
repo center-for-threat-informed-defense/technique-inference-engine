@@ -81,7 +81,7 @@ svg:not(.collapsed) {
   display: flex;
   align-items: stretch;
   color: #fff;
-  background: #6241c5;
+  background: var(--engenuity-navy);
 }
 
 .technique-name {

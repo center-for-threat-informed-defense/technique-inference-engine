@@ -1,31 +1,34 @@
 <template>
   <div class="navigation-footer-control">
-    <div class="navigation-buffer"></div>
     <div class="navigation-footer-main theme-dark">
       <div class="navigation-footer-contents">
         <div class="ctid-section">
           <div class="ctid-info">
-            <img class="ctid-logo" src="@/assets/images/engenuity_ctid_logo.png">
+            <h3>The Center for Threat-Informed Defense</h3>
             <p class="site-description">
-              The <a href="https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/">Center for
+              The <a href="https://ctid.mitre.org/" target="_blank">Center for
                 Threat-Informed Defense</a> is a non-profit, privately funded research and
               development
               organization. Our mission is to advance the state of the art and the state of the practice in
               threat-informed defense globally.
             </p>
-            <div class="social-icons">
-              <a href="mailto:ctid@mitre-engenuity.org?subject=Technique%20Inference%20Engine">
-                <IconEmail />
-              </a>
-              <a href="https://www.linkedin.com/showcase/center-for-threat-informed-defense/">
-                <IconLinkedIn />
-              </a>
-              <a href="https://www.youtube.com/@mitreengenuity">
-                <IconYoutube />
-              </a>
-              <a href="https://github.com/center-for-threat-informed-defense/technique-inference-engine">
-                <IconGitHub />
-              </a>
+            <div class="footer-row">
+              <img class="ctid-logo" src="@/assets/images/engenuity_ctid_logo.png"
+                alt="Center for Threat-Informed Defense">
+              <div class="social-icons">
+                <a href="mailto:ctid@mitre.org?subject=Technique%20Inference%20Engine">
+                  <IconEmail aria-label="email the center for threat-informed defense" />
+                </a>
+                <a href="https://www.linkedin.com/showcase/center-for-threat-informed-defense/">
+                  <IconLinkedIn aria-label="center for threat-informed defense linkedin" />
+                </a>
+                <a href="https://www.youtube.com/playlist?list=PLALq3Th79NnpUkRy8TUYVBKvysCp9xwNh">
+                  <IconYoutube aria-label="center for threat-informed defense youtube" />
+                </a>
+                <a href="https://github.com/center-for-threat-informed-defense/technique-inference-engine">
+                  <IconGitHub aria-label="center for threat-informed defense github" />
+                </a>
+              </div>
             </div>
           </div>
           <div class="ctid-links">
@@ -33,22 +36,22 @@
               <h5>About Us</h5>
               <ul>
                 <li>
-                  <a href="https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/">
+                  <a href="https://ctid.mitre.org/">
                     Home
                   </a>
                 </li>
                 <li>
-                  <a href="https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/our-work/">
+                  <a href="https://ctid.mitre.org/projects/">
                     Our Work
                   </a>
                 </li>
                 <li>
-                  <a href="https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/participants/">
+                  <a href="https://ctid.mitre.org/membership/">
                     Membership
                   </a>
                 </li>
                 <li>
-                  <a href="https://mitre-engenuity.org/cybersecurity/center-for-threat-informed-defense/membership/">
+                  <a href="https://ctid.mitre.org/get-involved/">
                     Get Involved
                   </a>
                 </li>
@@ -79,37 +82,12 @@
                 </li>
               </ul>
             </div>
-            <div class="link-list">
-              <h5>TIE</h5>
-              <ul>
-                <li>
-                  <RouterLink to="/">
-                    Home
-                  </RouterLink>
-                </li>
-                <li>
-                  <RouterLink to="/about">
-                    About
-                  </RouterLink>
-                </li>
-                <li>
-                  <RouterLink to="/about#dataset">
-                    Our Dataset
-                  </RouterLink>
-                </li>
-                <li>
-                  <RouterLink to="/resources">
-                    Resources
-                  </RouterLink>
-                </li>
-              </ul>
-            </div>
           </div>
         </div>
 
         <div class="disclosures-section">
           <small>
-            Copyright © 2024 MITRE Engenuity. Approved for public release. Document number(s) CT0124.
+            Copyright © 2024 MITRE. Approved for public release. Document number(s) CT0124.
           </small>
         </div>
 
@@ -122,15 +100,14 @@
 // Dependencies
 import { defineComponent } from "vue";
 // Components
-import { RouterLink } from "vue-router";
-import IconEmail from "@/components/Icons/IconEmail.vue"
+import IconEmail from "../Icons/IconEmail.vue"
 import IconGitHub from "../Icons/IconGitHub.vue";
 import IconYoutube from "../Icons/IconYoutube.vue";
 import IconLinkedIn from "../Icons/IconLinkedIn.vue";
 
 export default defineComponent({
   name: "NavigationFooter",
-  components: { RouterLink, IconEmail, IconGitHub, IconYoutube, IconLinkedIn }
+  components: { IconEmail, IconGitHub, IconYoutube, IconLinkedIn }
 });
 </script>
 
@@ -181,19 +158,30 @@ export default defineComponent({
 }
 
 .site-description {
-  margin: scale.size("xl") 0px;
+  margin: scale.size("s") 0px scale.size("xl");
+}
+
+.footer-row {
+  display: flex;
+  gap: scale.size("xl");
 }
 
 .social-icons {
-  @include scale.grid-layout-dynamic(4, "m", 1, "m");
+  @include scale.grid-layout-dynamic(4, "s", 1, "s");
 }
 
 .social-icons a {
-  @include scale.box("xxl");
-  @include color.box-link;
+  height: scale.size("xl");
+  width: auto;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 100%;
+}
+
+.social-icons a svg {
+  height: 100%;
+  width: 100%;
 }
 
 .ctid-links {
@@ -217,7 +205,6 @@ export default defineComponent({
 
 .disclosures-section {
   padding-top: scale.size("s");
-  border-top: solid 1px;
   margin-top: scale.size("xxl");
 }
 

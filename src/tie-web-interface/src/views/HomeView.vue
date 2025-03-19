@@ -1,6 +1,6 @@
 <template>
   <div class="home-page">
-    <div class="info-banner theme-dark">
+    <div class="info-banner theme-light">
       <div class="info-banner-contents">
         <div class="abstract">
           <h2 class="project-cta">
@@ -80,12 +80,16 @@ export default defineComponent({
   width: 100%;
 }
 
+.info-banner.theme-light {
+  background-color: var(--engenuity-core-color-9);
+}
+
 .info-banner-contents {
   display: flex;
   width: 100%;
   min-width: 0;
   max-width: scale.$max-width;
-  padding: scale.size("xxl") scale.size("xxh") scale.size("xxh");
+  padding: scale.size("xxh") scale.size("xxh");
 }
 
 .project-cta {
