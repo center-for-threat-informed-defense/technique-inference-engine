@@ -1,4 +1,4 @@
-[![MITRE ATT&CK® v15](https://img.shields.io/badge/MITRE%20ATT%26CK®-v15-red)](https://attack.mitre.org/versions/v15/)
+[![MITRE ATT&CK® v18.1](https://img.shields.io/badge/MITRE%20ATT%26CK®-v18.1-red)](https://attack.mitre.org/versions/v18/)
 
 # Technique Inference Engine
 
@@ -8,7 +8,7 @@ techniques from previously observed techniques. TIE enables defenders to build a
 complete picture of an adversary and their actions. TIE also offers one of the largest
 publicly available datasets of its kind, linking CTI Reports to ATT&CK Techniques. The
 dataset includes 43,899 technique observations across 6,236 CTI Reports, achieving 96%
-coverage of ATT&CK Enterprise v15.0. This project is created and maintained by the
+coverage of ATT&CK Enterprise v18.1. This project is created and maintained by the
 [MITRE Center for Threat-Informed
 Defense](https://ctid.mitre.org/)
 in furtherance of our mission to advance the start of the art and the state of the
