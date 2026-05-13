@@ -9,6 +9,7 @@ const BASE_URL = "https://raw.githubusercontent.com/mitre-attack/attack-stix-dat
  */
 const ENTERPRISE_SOURCES = new Map(
     [
+        "19.0",
         "14.1", "14.0", "13.1", "13.0",
         "12.1", "12.0", "11.2", "11.1",
         "11.0", "10.1", "10.0", "9.0",
