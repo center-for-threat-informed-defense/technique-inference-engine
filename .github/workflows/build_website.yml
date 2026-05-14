@@ -86,7 +86,7 @@ jobs:
     needs: tie_website_build
     runs-on: ubuntu-latest
     env:
-      AZURE_STORAGE_ACCOUNT: techniqueinferenceengine
+      AZURE_STORAGE_ACCOUNT: ctidinform
       AZURE_STORAGE_SAS_TOKEN: ${{ secrets.AZURE_SAS_TOKEN }}
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
       STATICRYPT_PASS: ${{ secrets.STATICRYPT_PASS }}
@@ -107,7 +107,7 @@ jobs:
             --password $STATICRYPT_PASS --short \
             --template-title "Technique Inference Engine (branch: $BRANCH_NAME)" \
             --template-instructions "The contents of this site are marked TLP:AMBER:CTID-R&D:22-80. Do not share with unauthorized individuals." \
-            --template-color-primary "#6241c5" \
+            --template-color-primary "#005b94" \
             --template-color-secondary "#b2b2b2" \
             --template-button "Log In" \
             -r tie_website/
@@ -131,7 +131,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `This PR has been published to https://techniqueinferenceengine.z13.web.core.windows.net/${process.env['BRANCH_NAME']}/`,
+              body: `This PR has been published to https://ctidinform.z13.web.core.windows.net/${process.env['BRANCH_NAME']}/`,
             })
 
   github_pages:
