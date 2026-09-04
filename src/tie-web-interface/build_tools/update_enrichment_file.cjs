@@ -108,4 +108,4 @@ async function updateEnrichmentFile(path, domain, version) {
 /**
  * Main
  */
-updateEnrichmentFile(ENRICHMENT_FILE, "enterprise", "19.1");
+updateEnrichmentFile(ENRICHMENT_FILE, "enterprise", "19.2");

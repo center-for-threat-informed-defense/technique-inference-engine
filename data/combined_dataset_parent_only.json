@@ -158678,6 +158678,1289 @@
                 "T1190": 1
             },
             "id": 6235
+        },
+        {
+            "mitre_techniques": {
+                "T1003": 1,
+                "T1005": 1,
+                "T1016": 1,
+                "T1018": 1,
+                "T1021": 3,
+                "T1036": 2,
+                "T1047": 1,
+                "T1048": 1,
+                "T1053": 1,
+                "T1057": 1,
+                "T1059": 3,
+                "T1069": 2,
+                "T1070": 4,
+                "T1071": 1,
+                "T1074": 1,
+                "T1078": 4,
+                "T1083": 1,
+                "T1087": 2,
+                "T1090": 1,
+                "T1098": 4,
+                "T1105": 1,
+                "T1114": 1,
+                "T1133": 1,
+                "T1140": 1,
+                "T1190": 1,
+                "T1195": 1,
+                "T1199": 1,
+                "T1213": 2,
+                "T1218": 1,
+                "T1482": 1,
+                "T1484": 1,
+                "T1539": 1,
+                "T1546": 1,
+                "T1550": 3,
+                "T1552": 1,
+                "T1553": 1,
+                "T1555": 2,
+                "T1558": 1,
+                "T1560": 1,
+                "T1568": 1,
+                "T1583": 1,
+                "T1584": 1,
+                "T1587": 1,
+                "T1589": 1,
+                "T1606": 2,
+                "T1665": 1,
+                "T1680": 1,
+                "T1685": 2,
+                "T1686": 1
+            },
+            "references": [
+                {
+                    "name": "Volexity SolarWinds",
+                    "url": "https://www.volexity.com/blog/2020/12/14/dark-halo-leverages-solarwinds-compromise-to-breach-organizations/"
+                },
+                {
+                    "name": "CrowdStrike StellarParticle January 2022",
+                    "url": "https://www.crowdstrike.com/blog/observations-from-the-stellarparticle-campaign/"
+                },
+                {
+                    "name": "USG Joint Statement SolarWinds January 2021",
+                    "url": "https://www.cisa.gov/news-events/news/joint-statement-federal-bureau-investigation-fbi-cybersecurity-and-infrastructure"
+                },
+                {
+                    "name": "FireEye SUNBURST Backdoor December 2020",
+                    "url": "https://www.fireeye.com/blog/threat-research/2020/12/evasive-attacker-leverages-solarwinds-supply-chain-compromises-with-sunburst-backdoor.html"
+                },
+                {
+                    "name": "Mandiant UNC2452 APT29 April 2022",
+                    "url": "https://www.mandiant.com/resources/blog/unc2452-merged-into-apt29"
+                },
+                {
+                    "name": "MSTIC NOBELIUM May 2021",
+                    "url": "https://www.microsoft.com/security/blog/2021/05/27/new-sophisticated-email-based-attack-from-nobelium/"
+                },
+                {
+                    "name": "Microsoft Internal Solorigate Investigation Blog",
+                    "url": "https://msrc-blog.microsoft.com/2021/02/18/microsoft-internal-solorigate-investigation-final-update/"
+                },
+                {
+                    "name": "Microsoft Analyzing Solorigate Dec 2020",
+                    "url": "https://www.microsoft.com/security/blog/2020/12/18/analyzing-solorigate-the-compromised-dll-file-that-started-a-sophisticated-cyberattack-and-how-microsoft-defender-helps-protect/"
+                },
+                {
+                    "name": "NSA Joint Advisory SVR SolarWinds April 2021",
+                    "url": "https://media.defense.gov/2021/Apr/15/2002621240/-1/-1/0/CSA_SVR_TARGETS_US_ALLIES_UOO13234021.PDF/CSA_SVR_TARGETS_US_ALLIES_UOO13234021.PDF"
+                },
+                {
+                    "name": "SolarWinds Advisory Dec 2020",
+                    "url": "https://www.solarwinds.com/sa-overview/securityadvisory"
+                },
+                {
+                    "name": "SolarWinds Sunburst Sunspot Update January 2021",
+                    "url": "https://orangematter.solarwinds.com/2021/01/11/new-findings-from-our-investigation-of-sunburst/"
+                },
+                {
+                    "name": "UK NSCS Russia SolarWinds April 2021",
+                    "url": "https://www.ncsc.gov.uk/news/uk-and-us-call-out-russia-for-solarwinds-compromise"
+                },
+                {
+                    "name": "Unit 42 SolarStorm December 2020",
+                    "url": "https://unit42.paloaltonetworks.com/solarstorm-supply-chain-attack-timeline/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "SolarWinds Compromise"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6236
+        },
+        {
+            "mitre_techniques": {
+                "T1003": 2,
+                "T1005": 1,
+                "T1021": 3,
+                "T1027": 1,
+                "T1055": 1,
+                "T1056": 2,
+                "T1059": 2,
+                "T1070": 3,
+                "T1071": 1,
+                "T1078": 1,
+                "T1082": 1,
+                "T1095": 1,
+                "T1105": 1,
+                "T1190": 1,
+                "T1205": 1,
+                "T1505": 1,
+                "T1554": 1,
+                "T1560": 1,
+                "T1572": 1,
+                "T1584": 1,
+                "T1588": 1,
+                "T1594": 1,
+                "T1595": 1,
+                "T1685": 1
+            },
+            "references": [
+                {
+                    "name": "Volexity Ivanti Global Exploitation January 2024",
+                    "url": "https://www.volexity.com/blog/2024/01/15/ivanti-connect-secure-vpn-exploitation-goes-global/"
+                },
+                {
+                    "name": "Mandiant Cutting Edge Part 3 February 2024",
+                    "url": "https://www.mandiant.com/resources/blog/investigating-ivanti-exploitation-persistence"
+                },
+                {
+                    "name": "Mandiant Cutting Edge Part 2 January 2024",
+                    "url": "https://www.mandiant.com/resources/blog/investigating-ivanti-zero-day-exploitation"
+                },
+                {
+                    "name": "Mandiant Cutting Edge January 2024",
+                    "url": "https://www.mandiant.com/resources/blog/suspected-apt-targets-ivanti-zero-day"
+                },
+                {
+                    "name": "Volexity Ivanti Zero-Day Exploitation January 2024",
+                    "url": "https://www.volexity.com/blog/2024/01/10/active-exploitation-of-two-zero-day-vulnerabilities-in-ivanti-connect-secure-vpn/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Cutting Edge"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6237
+        },
+        {
+            "mitre_techniques": {
+                "T1003": 1,
+                "T1027": 1,
+                "T1036": 1,
+                "T1053": 1,
+                "T1056": 1,
+                "T1059": 1,
+                "T1573": 1,
+                "T1587": 1,
+                "T1588": 1,
+                "T1595": 1
+            },
+            "references": [
+                {
+                    "name": "Triton-EENews-2017",
+                    "url": "https://www.eenews.net/articles/the-inside-story-of-the-worlds-most-dangerous-malware/"
+                },
+                {
+                    "name": "FireEye TRITON 2017",
+                    "url": "https://www.fireeye.com/blog/threat-research/2017/12/attackers-deploy-new-ics-attack-framework-triton.html"
+                },
+                {
+                    "name": "FireEye TRITON 2018",
+                    "url": "https://web.archive.org/web/20200618231942/https://www.fireeye.com/blog/threat-research/2018/06/totally-tubular-treatise-on-triton-and-tristation.html"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Triton Safety Instrumented System Attack"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6238
+        },
+        {
+            "mitre_techniques": {
+                "T1003": 1,
+                "T1021": 2,
+                "T1036": 1,
+                "T1053": 1,
+                "T1059": 1,
+                "T1070": 2,
+                "T1074": 1,
+                "T1078": 1,
+                "T1133": 1,
+                "T1505": 1,
+                "T1546": 1,
+                "T1571": 1,
+                "T1572": 1,
+                "T1583": 1,
+                "T1588": 1
+            },
+            "references": [
+                {
+                    "name": "FireEye TRITON 2019",
+                    "url": "https://www.fireeye.com/blog/threat-research/2019/04/triton-actor-ttp-profile-custom-attack-tools-detections.html"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "C0032"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6239
+        },
+        {
+            "mitre_techniques": {
+                "T1036": 1,
+                "T1053": 1,
+                "T1059": 1,
+                "T1095": 1,
+                "T1484": 1,
+                "T1485": 1,
+                "T1505": 1,
+                "T1543": 1,
+                "T1570": 1,
+                "T1572": 1
+            },
+            "references": [
+                {
+                    "name": "Dragos-Sandworm-Ukraine-2022",
+                    "url": "https://www.dragos.com/blog/new-details-electrum-ukraine-electric-sector-compromise-2022/"
+                },
+                {
+                    "name": "Mandiant-Sandworm-Ukraine-2022",
+                    "url": "https://www.mandiant.com/resources/blog/sandworm-disrupts-power-ukraine-operational-technology"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "2022 Ukraine Electric Power Attack"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6240
+        },
+        {
+            "mitre_techniques": {
+                "T1016": 1,
+                "T1036": 2,
+                "T1055": 1,
+                "T1057": 1,
+                "T1059": 1,
+                "T1070": 1,
+                "T1082": 1,
+                "T1083": 1,
+                "T1095": 1,
+                "T1105": 1,
+                "T1222": 1,
+                "T1518": 1,
+                "T1546": 1,
+                "T1564": 1,
+                "T1571": 1,
+                "T1573": 1,
+                "T1583": 1,
+                "T1584": 1,
+                "T1685": 1
+            },
+            "references": [
+                {
+                    "name": "Lumen KVBotnet 2023",
+                    "url": "https://blog.lumen.com/routers-roasting-on-an-open-firewall-the-kv-botnet-investigation/"
+                },
+                {
+                    "name": "DOJ KVBotnet 2024",
+                    "url": "https://www.justice.gov/opa/pr/us-government-disrupts-botnet-peoples-republic-china-used-conceal-hacking-critical"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "KV Botnet Activity"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6241
+        },
+        {
+            "mitre_techniques": {
+                "T1059": 2,
+                "T1566": 1,
+                "T1574": 1
+            },
+            "references": [
+                {
+                    "name": "Elastic Pikabot 2024",
+                    "url": "https://www.elastic.co/security-labs/pikabot-i-choose-you"
+                },
+                {
+                    "name": "Zscaler Pikabot 2024",
+                    "url": "https://www.zscaler.com/blogs/security-research/d-evolution-pikabot"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Pikabot Distribution February 2024"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6242
+        },
+        {
+            "mitre_techniques": {
+                "T1059": 2,
+                "T1105": 1,
+                "T1140": 1,
+                "T1204": 3,
+                "T1218": 1,
+                "T1566": 1,
+                "T1589": 1
+            },
+            "references": [
+                {
+                    "name": "TrendMicro Pikabot 2024",
+                    "url": "https://www.trendmicro.com/en_us/research/24/a/a-look-into-pikabot-spam-wave-campaign.html"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Water Curupira Pikabot Distribution"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6243
+        },
+        {
+            "mitre_techniques": {
+                "T1003": 1,
+                "T1021": 2,
+                "T1036": 1,
+                "T1041": 1,
+                "T1046": 1,
+                "T1047": 1,
+                "T1059": 2,
+                "T1078": 2,
+                "T1087": 1,
+                "T1098": 1,
+                "T1105": 1,
+                "T1114": 1,
+                "T1134": 1,
+                "T1190": 1,
+                "T1486": 1,
+                "T1505": 1,
+                "T1561": 1,
+                "T1570": 1,
+                "T1588": 2,
+                "T1685": 2
+            },
+            "references": [
+                {
+                    "name": "CISA Iran Albanian Attacks September 2022",
+                    "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-264a"
+                },
+                {
+                    "name": "Mandiant ROADSWEEP August 2022",
+                    "url": "https://cloud.google.com/blog/topics/threat-intelligence/likely-iranian-threat-actor-conducts-politically-motivated-disruptive-activity-against/"
+                },
+                {
+                    "name": "Microsoft Albanian Government Attacks September 2022",
+                    "url": "https://www.microsoft.com/en-us/security/blog/2022/09/08/microsoft-investigates-iranian-attacks-against-the-albanian-government/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "HomeLand Justice"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6244
+        },
+        {
+            "mitre_techniques": {
+                "T1056": 1,
+                "T1071": 1,
+                "T1095": 1,
+                "T1190": 1,
+                "T1505": 1,
+                "T1573": 1,
+                "T1584": 1,
+                "T1587": 1
+            },
+            "references": [
+                {
+                    "name": "Lumen Versa 2024",
+                    "url": "https://blog.lumen.com/taking-the-crossroads-the-versa-director-zero-day-exploitation/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Versa Director Zero Day Exploitation"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6245
+        },
+        {
+            "mitre_techniques": {
+                "T1027": 1,
+                "T1036": 1,
+                "T1070": 1,
+                "T1071": 1,
+                "T1074": 1,
+                "T1102": 1,
+                "T1105": 1,
+                "T1119": 1,
+                "T1213": 1,
+                "T1505": 1,
+                "T1543": 1,
+                "T1553": 1,
+                "T1560": 1,
+                "T1567": 1,
+                "T1569": 1,
+                "T1573": 1,
+                "T1574": 1,
+                "T1583": 1,
+                "T1586": 1,
+                "T1588": 1,
+                "T1593": 1,
+                "T1594": 1,
+                "T1596": 1
+            },
+            "references": [
+                {
+                    "name": "Google Cloud APT41 2024",
+                    "url": "https://cloud.google.com/blog/topics/threat-intelligence/apt41-arisen-from-dust"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "APT41 DUST"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6246
+        },
+        {
+            "mitre_techniques": {
+                "T1003": 1,
+                "T1071": 1,
+                "T1190": 1,
+                "T1505": 1,
+                "T1689": 1
+            },
+            "references": [
+                {
+                    "name": "Dragos FROSTYGOOP 2024",
+                    "url": "https://hub.dragos.com/hubfs/Reports/Dragos-FrostyGoop-ICS-Malware-Intel-Brief-0724_r2.pdf"
+                },
+                {
+                    "name": "Nozomi BUSTLEBERM 2024",
+                    "url": "https://www.nozominetworks.com/blog/protecting-against-frostygoop-bustleberm-malware"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "FrostyGoop Incident"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6247
+        },
+        {
+            "mitre_techniques": {
+                "T1027": 1,
+                "T1059": 1,
+                "T1071": 1,
+                "T1105": 1,
+                "T1217": 1,
+                "T1584": 1,
+                "T1585": 1,
+                "T1587": 1
+            },
+            "references": [
+                {
+                    "name": "ESET OilRig Campaigns Sep 2023",
+                    "url": "https://www.welivesecurity.com/en/eset-research/oilrigs-outer-space-juicy-mix-same-ol-rig-new-drill-pipes/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Outer Space"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6248
+        },
+        {
+            "mitre_techniques": {
+                "T1071": 1,
+                "T1568": 1,
+                "T1571": 1,
+                "T1573": 1,
+                "T1583": 1,
+                "T1584": 1,
+                "T1588": 1,
+                "T1599": 1
+            },
+            "references": [
+                {
+                    "name": "RecordedFuture RedEcho 2021",
+                    "url": "https://go.recordedfuture.com/hubfs/reports/cta-2021-0228.pdf"
+                },
+                {
+                    "name": "RecordedFuture RedEcho 2022",
+                    "url": "https://go.recordedfuture.com/hubfs/reports/ta-2022-0406.pdf"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Indian Critical Infrastructure Intrusions"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6249
+        },
+        {
+            "mitre_techniques": {
+                "T1053": 1,
+                "T1059": 2,
+                "T1071": 1,
+                "T1074": 1,
+                "T1082": 1,
+                "T1132": 1,
+                "T1140": 1,
+                "T1217": 1,
+                "T1518": 1,
+                "T1555": 2,
+                "T1584": 1,
+                "T1587": 1
+            },
+            "references": [
+                {
+                    "name": "ESET OilRig Campaigns Sep 2023",
+                    "url": "https://www.welivesecurity.com/en/eset-research/oilrigs-outer-space-juicy-mix-same-ol-rig-new-drill-pipes/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Juicy Mix"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6250
+        },
+        {
+            "mitre_techniques": {
+                "T1003": 1,
+                "T1016": 1,
+                "T1027": 1,
+                "T1059": 1,
+                "T1068": 1,
+                "T1105": 1,
+                "T1190": 1,
+                "T1496": 1,
+                "T1546": 1,
+                "T1588": 1
+            },
+            "references": [
+                {
+                    "name": "Oligo ShadowRay Campaign MAR 2024",
+                    "url": "https://www.oligo.security/blog/shadowray-attack-ai-workloads-actively-exploited-in-the-wild"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "ShadowRay"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6251
+        },
+        {
+            "mitre_techniques": {
+                "T1014": 1,
+                "T1020": 1,
+                "T1036": 1,
+                "T1037": 1,
+                "T1040": 1,
+                "T1041": 1,
+                "T1055": 1,
+                "T1059": 1,
+                "T1070": 1,
+                "T1071": 1,
+                "T1082": 1,
+                "T1102": 1,
+                "T1119": 1,
+                "T1133": 1,
+                "T1140": 1,
+                "T1190": 1,
+                "T1556": 1,
+                "T1557": 1,
+                "T1583": 2,
+                "T1587": 2,
+                "T1653": 1,
+                "T1685": 1,
+                "T1690": 1
+            },
+            "references": [
+                {
+                    "name": "CCCS ArcaneDoor 2024",
+                    "url": "https://www.cyber.gc.ca/en/news-events/cyber-activity-impacting-cisco-asa-vpns"
+                },
+                {
+                    "name": "Cisco ArcaneDoor 2024",
+                    "url": "https://blog.talosintelligence.com/arcanedoor-new-espionage-focused-campaign-found-targeting-perimeter-network-devices/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "ArcaneDoor"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6252
+        },
+        {
+            "mitre_techniques": {
+                "T1027": 1,
+                "T1036": 1,
+                "T1059": 1,
+                "T1071": 1,
+                "T1082": 1,
+                "T1090": 1,
+                "T1095": 1,
+                "T1203": 1,
+                "T1204": 2,
+                "T1218": 2,
+                "T1480": 1,
+                "T1547": 1,
+                "T1553": 1,
+                "T1564": 1,
+                "T1566": 2,
+                "T1574": 1,
+                "T1583": 1,
+                "T1588": 1,
+                "T1608": 1
+            },
+            "references": [
+                {
+                    "name": "Recorded Future RedDelta 2025",
+                    "url": "https://go.recordedfuture.com/hubfs/reports/cta-cn-2025-0109.pdf"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "RedDelta Modified PlugX Infection Chain Operations"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6253
+        },
+        {
+            "mitre_techniques": {
+                "T1003": 1,
+                "T1005": 1,
+                "T1021": 2,
+                "T1053": 1,
+                "T1059": 1,
+                "T1071": 1,
+                "T1074": 1,
+                "T1078": 2,
+                "T1090": 1,
+                "T1105": 1,
+                "T1190": 1,
+                "T1559": 1,
+                "T1584": 2,
+                "T1588": 1
+            },
+            "references": [
+                {
+                    "name": "Palo Alto MidnightEclipse APR 2024",
+                    "url": "https://unit42.paloaltonetworks.com/cve-2024-3400/"
+                },
+                {
+                    "name": "Volexity UPSTYLE 2024",
+                    "url": "https://www.volexity.com/blog/2024/04/12/zero-day-exploitation-of-unauthenticated-remote-code-execution-vulnerability-in-globalprotect-cve-2024-3400/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Operation MidnightEclipse"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6254
+        },
+        {
+            "mitre_techniques": {
+                "T1018": 1,
+                "T1021": 2,
+                "T1041": 1,
+                "T1056": 1,
+                "T1068": 1,
+                "T1074": 1,
+                "T1078": 3,
+                "T1082": 1,
+                "T1111": 1,
+                "T1135": 1,
+                "T1190": 1,
+                "T1212": 1,
+                "T1213": 1,
+                "T1482": 1,
+                "T1505": 1,
+                "T1528": 1,
+                "T1552": 2,
+                "T1558": 1,
+                "T1588": 1,
+                "T1594": 1,
+                "T1615": 1,
+                "T1686": 1
+            },
+            "references": [
+                {
+                    "name": "CISA Leviathan 2024",
+                    "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-190a"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Leviathan Australian Intrusions"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6255
+        },
+        {
+            "mitre_techniques": {
+                "T1036": 1,
+                "T1583": 1,
+                "T1587": 1,
+                "T1588": 1
+            },
+            "references": [
+                {
+                    "name": "Lumen J-Magic JAN 2025",
+                    "url": "https://blog.lumen.com/the-j-magic-show-magic-packets-and-where-to-find-them/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "J-magic Campaign"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6256
+        },
+        {
+            "mitre_techniques": {
+                "T1003": 2,
+                "T1006": 1,
+                "T1016": 1,
+                "T1021": 2,
+                "T1059": 2,
+                "T1074": 1,
+                "T1090": 1,
+                "T1110": 1,
+                "T1140": 1,
+                "T1560": 1,
+                "T1561": 1,
+                "T1567": 1,
+                "T1584": 1,
+                "T1669": 1,
+                "T1686": 1
+            },
+            "references": [
+                {
+                    "name": "Nearest Neighbor Volexity",
+                    "url": "https://www.volexity.com/blog/2024/11/22/the-nearest-neighbor-attack-how-a-russian-apt-weaponized-nearby-wi-fi-networks-for-covert-access/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "APT28 Nearest Neighbor Campaign"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6257
+        },
+        {
+            "mitre_techniques": {
+                "T1090": 1,
+                "T1190": 1,
+                "T1583": 1,
+                "T1588": 1
+            },
+            "references": [
+                {
+                    "name": "ORB Mandiant",
+                    "url": "https://cloud.google.com/blog/topics/threat-intelligence/china-nexus-espionage-orb-networks"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "SPACEHOP Activity"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6258
+        },
+        {
+            "mitre_techniques": {
+                "T1059": 2,
+                "T1090": 1,
+                "T1190": 1,
+                "T1583": 1,
+                "T1584": 1
+            },
+            "references": [
+                {
+                    "name": "ORB Mandiant",
+                    "url": "https://cloud.google.com/blog/topics/threat-intelligence/china-nexus-espionage-orb-networks"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "FLORAHOX Activity"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6259
+        },
+        {
+            "mitre_techniques": {
+                "T1027": 1,
+                "T1059": 1,
+                "T1071": 2,
+                "T1090": 2,
+                "T1105": 1,
+                "T1110": 1,
+                "T1190": 1,
+                "T1571": 1,
+                "T1584": 2,
+                "T1589": 1,
+                "T1665": 1,
+                "T1685": 1
+            },
+            "references": [
+                {
+                    "name": "Bitsight 7777 Botnet",
+                    "url": "https://www.bitsight.com/blog/7777-botnet-insights-multi-target-botnet"
+                },
+                {
+                    "name": "Medium 777-Botnet",
+                    "url": "https://gi7w0rm.medium.com/the-curious-case-of-the-7777-botnet-86e3464c3ffd"
+                },
+                {
+                    "name": "Microsoft Storm-0940",
+                    "url": "https://www.microsoft.com/en-us/security/blog/2024/10/31/chinese-threat-actor-storm-0940-uses-credentials-from-password-spray-attacks-from-a-covert-network/"
+                },
+                {
+                    "name": "TP-Link Quad 7 AUG 2025",
+                    "url": "https://www.tp-link.com/us/support/faq/4365/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Quad7 Activity"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6260
+        },
+        {
+            "mitre_techniques": {
+                "T1014": 1,
+                "T1016": 1,
+                "T1027": 1,
+                "T1036": 1,
+                "T1040": 1,
+                "T1041": 1,
+                "T1055": 1,
+                "T1057": 1,
+                "T1059": 2,
+                "T1070": 2,
+                "T1078": 1,
+                "T1090": 2,
+                "T1095": 1,
+                "T1104": 1,
+                "T1105": 1,
+                "T1140": 1,
+                "T1203": 1,
+                "T1205": 1,
+                "T1554": 1,
+                "T1571": 1,
+                "T1573": 1,
+                "T1587": 1,
+                "T1690": 1
+            },
+            "references": [
+                {
+                    "name": "Juniper RedPenguin MAR 2025",
+                    "url": "https://supportportal.juniper.net/sfc/servlet.shepherd/document/download/069Dp00000FzdmIIAR?operationContext=S1"
+                },
+                {
+                    "name": "Mandiant UNC3886 Juniper Routers MAR 2025",
+                    "url": "https://cloud.google.com/blog/topics/threat-intelligence/china-nexus-espionage-targets-juniper-routers"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "RedPenguin"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6261
+        },
+        {
+            "mitre_techniques": {
+                "T1027": 3,
+                "T1055": 2,
+                "T1071": 1,
+                "T1078": 1,
+                "T1102": 1,
+                "T1189": 1,
+                "T1195": 1,
+                "T1203": 1,
+                "T1217": 1,
+                "T1218": 2,
+                "T1543": 1,
+                "T1546": 1,
+                "T1553": 1,
+                "T1559": 1,
+                "T1573": 1,
+                "T1574": 1,
+                "T1620": 1,
+                "T1678": 1
+            },
+            "references": [
+                {
+                    "name": "3cx official statement 2023",
+                    "url": "https://www.3cx.com/blog/news/mandiant-security-update2/"
+                },
+                {
+                    "name": "Krebs 3cx overview 2023",
+                    "url": "https://krebsonsecurity.com/2023/04/3cx-breach-was-a-double-supply-chain-compromise/"
+                },
+                {
+                    "name": "Kaspersky 3CX Gopuram 2023",
+                    "url": "https://securelist.com/gopuram-backdoor-deployed-through-3cx-supply-chain-attack/109344/"
+                },
+                {
+                    "name": "Mandiant 3cx UNC4736 2023",
+                    "url": "https://cloud.google.com/blog/topics/threat-intelligence/3cx-software-supply-chain-compromise/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "3CX Supply Chain Attack"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6262
+        },
+        {
+            "mitre_techniques": {
+                "T1003": 1,
+                "T1005": 1,
+                "T1027": 2,
+                "T1033": 1,
+                "T1041": 1,
+                "T1047": 1,
+                "T1053": 1,
+                "T1059": 2,
+                "T1071": 1,
+                "T1074": 1,
+                "T1082": 1,
+                "T1083": 1,
+                "T1090": 1,
+                "T1105": 1,
+                "T1112": 1,
+                "T1119": 1,
+                "T1140": 1,
+                "T1190": 1,
+                "T1484": 1,
+                "T1486": 1,
+                "T1505": 2,
+                "T1552": 1,
+                "T1569": 1,
+                "T1570": 1,
+                "T1572": 1,
+                "T1583": 1,
+                "T1585": 1,
+                "T1588": 1,
+                "T1595": 1,
+                "T1620": 1,
+                "T1657": 1,
+                "T1685": 1
+            },
+            "references": [
+                {
+                    "name": "Trend Micro SharePoint Attacks JUL 2025",
+                    "url": "https://www.trendmicro.com/en_us/research/25/g/cve-2025-53770-and-cve-2025-53771-sharepoint-attacks.html"
+                },
+                {
+                    "name": "ESET ToolShell JUL 2025",
+                    "url": "https://www.welivesecurity.com/en/eset-research/toolshell-an-all-you-can-eat-buffet-for-threat-actors/"
+                },
+                {
+                    "name": "Eye Research ToolShell JUL 2025",
+                    "url": "https://research.eye.security/sharepoint-under-siege/"
+                },
+                {
+                    "name": "Microsoft SharePoint Exploit JUL 2025",
+                    "url": "https://www.microsoft.com/en-us/security/blog/2025/07/22/disrupting-active-exploitation-of-on-premises-sharepoint-vulnerabilities/#storm-2603"
+                },
+                {
+                    "name": "Palo Alto SharePoint Vulnerabilities JUL 2025",
+                    "url": "https://unit42.paloaltonetworks.com/microsoft-sharepoint-cve-2025-49704-cve-2025-49706-cve-2025-53770/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "SharePoint ToolShell Exploitation"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6263
+        },
+        {
+            "mitre_techniques": {
+                "T1020": 1,
+                "T1036": 1,
+                "T1059": 1,
+                "T1078": 1,
+                "T1083": 1,
+                "T1090": 2,
+                "T1213": 1,
+                "T1567": 1,
+                "T1585": 2,
+                "T1586": 1,
+                "T1587": 1,
+                "T1588": 1,
+                "T1598": 1,
+                "T1608": 1,
+                "T1671": 1,
+                "T1684": 1
+            },
+            "references": [
+                {
+                    "name": "FBI Salesforce Data Theft SEP 2025",
+                    "url": "https://www.ic3.gov/CSA/2025/250912.pdf"
+                },
+                {
+                    "name": "Google Salesforce JUN 2025",
+                    "url": "https://cloud.google.com/blog/topics/threat-intelligence/voice-phishing-data-extortion"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Salesforce Data Exfiltration"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6264
+        },
+        {
+            "mitre_techniques": {
+                "T1016": 1,
+                "T1036": 1,
+                "T1047": 1,
+                "T1059": 3,
+                "T1070": 1,
+                "T1082": 1,
+                "T1083": 1,
+                "T1127": 1,
+                "T1137": 1,
+                "T1204": 2,
+                "T1217": 1,
+                "T1219": 2,
+                "T1553": 1,
+                "T1566": 2,
+                "T1585": 2,
+                "T1586": 1,
+                "T1587": 1,
+                "T1588": 1,
+                "T1608": 1,
+                "T1685": 1
+            },
+            "references": [
+                {
+                    "name": "ESET MirrorFace 2025",
+                    "url": "https://www.welivesecurity.com/en/eset-research/operation-akairyu-mirrorface-invites-europe-expo-2025-revives-anel-backdoor/"
+                },
+                {
+                    "name": "Trend Micro Earth Kasha Anel NOV 2024",
+                    "url": "https://www.trendmicro.com/en_us/research/24/k/return-of-anel-in-the-recent-earth-kasha-spearphishing-campaign.html"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Operation AkaiRy\u016b"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6265
+        },
+        {
+            "mitre_techniques": {
+                "T1003": 2,
+                "T1018": 1,
+                "T1021": 1,
+                "T1033": 1,
+                "T1036": 1,
+                "T1059": 1,
+                "T1069": 1,
+                "T1070": 1,
+                "T1087": 1,
+                "T1098": 1,
+                "T1106": 1,
+                "T1190": 1,
+                "T1219": 1,
+                "T1505": 1,
+                "T1543": 1,
+                "T1550": 1,
+                "T1569": 1,
+                "T1588": 1,
+                "T1591": 1,
+                "T1614": 1,
+                "T1665": 1
+            },
+            "references": [
+                {
+                    "name": "sentinelone operationDigitalEye Dec 2024",
+                    "url": "https://www.sentinelone.com/labs/operation-digital-eye-chinese-apt-compromises-critical-digital-infrastructure-via-visual-studio-code-tunnels/"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Operation Digital Eye"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6266
+        },
+        {
+            "mitre_techniques": {
+                "T1005": 1,
+                "T1016": 1,
+                "T1046": 1,
+                "T1049": 1,
+                "T1074": 1,
+                "T1078": 2,
+                "T1082": 1,
+                "T1083": 1,
+                "T1087": 1,
+                "T1119": 1,
+                "T1136": 1,
+                "T1190": 1,
+                "T1213": 1,
+                "T1552": 1,
+                "T1567": 1,
+                "T1584": 1,
+                "T1587": 1,
+                "T1588": 2,
+                "T1590": 1,
+                "T1592": 2,
+                "T1595": 2,
+                "T1683": 1
+            },
+            "references": [
+                {
+                    "name": "Anthropic Disrupting AI Espionage NOV 2025",
+                    "url": "https://www.anthropic.com/news/disrupting-AI-espionage"
+                },
+                {
+                    "name": "Anthropic AI Orchestrated Campaign NOV 2025",
+                    "url": "https://assets.anthropic.com/m/ec212e6566a0d47/original/Disrupting-the-first-reported-AI-orchestrated-cyber-espionage-campaign.pdf"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "Anthropic AI-orchestrated Campaign"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6267
+        },
+        {
+            "mitre_techniques": {
+                "T1003": 3,
+                "T1006": 1,
+                "T1016": 1,
+                "T1021": 1,
+                "T1027": 1,
+                "T1036": 1,
+                "T1046": 1,
+                "T1048": 1,
+                "T1049": 1,
+                "T1053": 1,
+                "T1057": 1,
+                "T1059": 3,
+                "T1074": 1,
+                "T1078": 2,
+                "T1083": 1,
+                "T1090": 2,
+                "T1102": 1,
+                "T1105": 1,
+                "T1110": 1,
+                "T1113": 1,
+                "T1114": 1,
+                "T1133": 1,
+                "T1140": 1,
+                "T1484": 1,
+                "T1485": 1,
+                "T1490": 1,
+                "T1495": 1,
+                "T1529": 1,
+                "T1530": 1,
+                "T1550": 1,
+                "T1555": 1,
+                "T1556": 1,
+                "T1558": 1,
+                "T1560": 1,
+                "T1567": 1,
+                "T1570": 1,
+                "T1571": 1,
+                "T1583": 1,
+                "T1584": 3,
+                "T1587": 1,
+                "T1588": 1,
+                "T1590": 1,
+                "T1602": 1,
+                "T1608": 1,
+                "T1686": 1
+            },
+            "references": [
+                {
+                    "name": "CERT Polska",
+                    "url": "https://cert.pl/uploads/docs/CERT_Polska_Energy_Sector_Incident_Report_2025.pdf"
+                },
+                {
+                    "name": "ESET DynoWiper Update JAN 2026",
+                    "url": "https://www.welivesecurity.com/en/eset-research/dynowiper-update-technical-analysis-attribution/"
+                },
+                {
+                    "name": "ESET DynoWiper JAN 2026",
+                    "url": "https://www.eset.com/us/about/newsroom/research/eset-research-russian-sandwormapt-attacks-energy-company-poland-with-dynowiper/"
+                },
+                {
+                    "name": "Dragos ELECTRUM JAN 2026",
+                    "url": "https://5943619.hs-sites.com/hubfs/Reports/dragos-2025-poland-attack-report.pdf"
+                }
+            ],
+            "associated_groups": [],
+            "associated_software": [],
+            "associated_campaigns": [
+                "2025 Poland Wiper Attacks"
+            ],
+            "origin_of_data": "MITRE ATT&CK Campaigns",
+            "id": 6268
         }
     ],
     "update_date": "08/24/2026"
