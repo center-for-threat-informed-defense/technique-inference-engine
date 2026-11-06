@@ -161,8 +161,9 @@
         subset. In this case, the model will only provide prediction values for techniques that exist in the training
         set. It would not be possible to provide a prediction value for techniques not in the training set as there is
         no reference for the model to associate the technique with any others. This would be a challenge with a small
-        sample size, however, <b>611 of the 637 techniques (96%)</b> in the latest version of ATT&CK are represented in
-        the training data. The <b>total number of reports is 6,236</b>, which are retrieved from a combination of
+        sample size, however, <b>{{ NUMBER_OF_REPRESENTED_TECHNIQUES }} of the {{ NUMBER_OF_ACTIVE_TECHNIQUES }} techniques
+          ({{ Math.round(100 * NUMBER_OF_REPRESENTED_TECHNIQUES / NUMBER_OF_ACTIVE_TECHNIQUES) }}%)</b> in the latest version of ATT&CK are represented in
+        the training data. The <b>total number of reports is {{ NUMBER_OF_CTI_REPORTS.toLocaleString("en-US") }}</b>, which are retrieved from a combination of
         sources that include:
       </p>
       <ul>
@@ -213,8 +214,20 @@ import { RouterLink } from "vue-router";
 // Declarations
 declare const MathJax: { typeset: () => void }
 
+// Update these when updating ATT&CK versions.
+const NUMBER_OF_ACTIVE_TECHNIQUES = 706;
+const NUMBER_OF_REPRESENTED_TECHNIQUES = 627;
+const NUMBER_OF_CTI_REPORTS = 6269;
+
 export default defineComponent({
   name: "AboutView",
+  setup() {
+    return {
+      NUMBER_OF_ACTIVE_TECHNIQUES,
+      NUMBER_OF_REPRESENTED_TECHNIQUES,
+      NUMBER_OF_CTI_REPORTS
+    };
+  },
   mounted() {
     MathJax.typeset();
   },
