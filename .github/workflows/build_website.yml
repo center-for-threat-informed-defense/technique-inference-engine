@@ -27,7 +27,8 @@ permissions:
 
 jobs:
   tie_website_build:
-    runs-on: ubuntu-latest
+        # Python 3.9 binaries are unavailable for Ubuntu 26.04.
+    runs-on: ubuntu-24.04
     env:
       BRANCH_NAME: ${{ github.ref_name == 'main' && 'technique-inference-engine' || github.ref_name }}
     steps:
@@ -84,7 +85,8 @@ jobs:
   # Publish to Azure blob only on PRs, not main.
   azure_blob:
     needs: tie_website_build
-    runs-on: ubuntu-latest
+        # Python 3.9 binaries are unavailable for Ubuntu 26.04.
+    runs-on: ubuntu-24.04
     env:
       AZURE_STORAGE_ACCOUNT: ctidinform
       AZURE_STORAGE_SAS_TOKEN: ${{ secrets.AZURE_SAS_TOKEN }}
@@ -138,7 +140,8 @@ jobs:
     # This job only runs when committing or merging to main branch.
     if: github.ref_name == 'main'
     needs: tie_website_build
-    runs-on: ubuntu-latest
+        # Python 3.9 binaries are unavailable for Ubuntu 26.04.
+    runs-on: ubuntu-24.04
     environment:
       name: github-pages
       url: $\{\{ steps.deployment.outputs.page_url \}\}
