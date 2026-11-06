@@ -1,4 +1,4 @@
-[![MITRE ATT&CK® v15](https://img.shields.io/badge/MITRE%20ATT%26CK®-v15-red)](https://attack.mitre.org/versions/v15/)
+[![MITRE ATT&CK® v20](https://img.shields.io/badge/MITRE%20ATT%26CK®-v20-red)](https://attack.mitre.org/versions/v20/)
 
 # Technique Inference Engine
 
@@ -7,8 +7,8 @@ next steps by predicting associated [MITRE ATT&CK](<(https://attack.mitre.org/)>
 techniques from previously observed techniques. TIE enables defenders to build a
 complete picture of an adversary and their actions. TIE also offers one of the largest
 publicly available datasets of its kind, linking CTI Reports to ATT&CK Techniques. The
-dataset includes 43,899 technique observations across 6,236 CTI Reports, achieving 96%
-coverage of ATT&CK Enterprise v15.0. This project is created and maintained by the
+dataset includes 50,633 technique observations across 6,269 CTI Reports, achieving 89%
+coverage of ATT&CK Enterprise v20.1. This project is created and maintained by the
 [MITRE Center for Threat-Informed
 Defense](https://ctid.mitre.org/)
 in furtherance of our mission to advance the start of the art and the state of the
@@ -62,7 +62,7 @@ Copyright 2024 MITRE. Approved for public release. Document number CT0124.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
 file except in compliance with the License. You may obtain a copy of the License at
 
-http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software distributed under
 the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
