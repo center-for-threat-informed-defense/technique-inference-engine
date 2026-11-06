@@ -1,7 +1,7 @@
 {
     "name": "TIE_training_dataset",
     "create_date": "03/06/2024",
-    "attack_version": 19.2,
+    "attack_version": 20.1,
     "description": "Combined dataset including adversary emulation plans, attackflows, Vectr, Tram, and OpenCTI reports. Use the 'origin_of_data' field to filter on these data sources.",
     "reports": [
         {
@@ -163674,5 +163674,5 @@
             "id": 6268
         }
     ],
-    "update_date": "08/24/2026"
+    "update_date": "11/06/2026"
 }
